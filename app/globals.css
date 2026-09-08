@@ -1,0 +1,275 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@font-face {
+  font-family: "Ravi";
+  src: url("/fonts/Ravi/Ravi-Thin.ttf") format("truetype");
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Ravi";
+  src: url("/fonts/Ravi/Ravi-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Ravi";
+  src: url("/fonts/Ravi/Ravi-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Ravi";
+  src: url("/fonts/Ravi/Ravi-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Ravi";
+  src: url("/fonts/Ravi/Ravi-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Ravi";
+  src: url("/fonts/Ravi/Ravi-ExtraBold.ttf") format("truetype");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --background: oklch(0.8635 0.0157 77.0593);
+  --foreground: oklch(0.2538 0.0104 151.3762);
+  --card: oklch(0.8942 0.0155 77.0636);
+  --card-foreground: oklch(0.2538 0.0104 151.3762);
+  --popover: oklch(0.8635 0.0157 77.0593);
+  --popover-foreground: oklch(0.2538 0.0104 151.3762);
+  --primary: oklch(61.33% 0.09032 74.906);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.2998 0.0312 175.6388);
+  --secondary-foreground: oklch(0.8635 0.0157 77.0593);
+  --muted: oklch(0.8635 0.0157 77.0593);
+  --muted-foreground: oklch(44.019% 0.01659 67.31);
+  --accent: oklch(0.7487 0.0682 75.4812);
+  --accent-foreground: oklch(0.2538 0.0104 151.3762);
+  --destructive: oklch(59.41% 0.18391 24.674);
+  --destructive-foreground: oklch(0.9916 0.0017 67.8029);
+  --border: oklch(45.399% 0.07035 65.91);
+  --input: oklch(0.7732 0.0191 78.2134);
+  --ring: oklch(0.6133 0.0904 74.9123);
+
+  --chart-1: oklch(0.6133 0.0904 74.9123);
+  --chart-2: oklch(0.2998 0.0312 175.6388);
+  --chart-3: oklch(0.7487 0.0682 75.4812);
+  --chart-4: oklch(0.4483 0.0684 74.915);
+  --chart-5: oklch(0.454 0.0295 177.1363);
+
+  --sidebar: oklch(0.8269 0.0176 76.0893);
+  --sidebar-foreground: oklch(0.2538 0.0104 151.3762);
+  --sidebar-primary: oklch(0.6133 0.0904 74.9123);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.7487 0.0682 75.4812);
+  --sidebar-accent-foreground: oklch(0.2538 0.0104 151.3762);
+  --sidebar-border: oklch(0.7732 0.0191 78.2134);
+  --sidebar-ring: oklch(0.6133 0.0904 74.9123);
+
+  /* Ravi */
+  --font-sans: "Ravi", sans-serif;
+  --font-serif: Georgia, serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  --radius: 0.5rem;
+  --tracking-normal: 0.01em;
+  --spacing: 0.25rem;
+
+  --shadow-x: 0px;
+  --shadow-y: 4px;
+  --shadow-blur: 10px;
+  --shadow-spread: 0px;
+  --shadow-opacity: 0.1;
+  --shadow-color: #000000;
+  --shadow-2xs: 0px 4px 10px 0px hsl(0 0% 0% / 0.05);
+  --shadow-xs: 0px 4px 10px 0px hsl(0 0% 0% / 0.05);
+  --shadow-sm: 0px 4px 10px 0px hsl(0 0% 0% / 0.1),
+    0px 1px 2px -1px hsl(0 0% 0% / 0.1);
+  --shadow: 0px 4px 10px 0px hsl(0 0% 0% / 0.1),
+    0px 1px 2px -1px hsl(0 0% 0% / 0.1);
+  --shadow-md: 0px 4px 10px 0px hsl(0 0% 0% / 0.1),
+    0px 2px 4px -1px hsl(0 0% 0% / 0.1);
+  --shadow-lg: 0px 4px 10px 0px hsl(0 0% 0% / 0.1),
+    0px 4px 6px -1px hsl(0 0% 0% / 0.1);
+  --shadow-xl: 0px 4px 10px 0px hsl(0 0% 0% / 0.1),
+    0px 8px 10px -1px hsl(0 0% 0% / 0.1);
+  --shadow-2xl: 0px 4px 10px 0px hsl(0 0% 0% / 0.25);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --destructive-foreground: oklch(1 0 0);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+
+  --font-sans: "Ravi", sans-serif;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+  --font-serif: var(--font-serif);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --shadow-2xs: var(--shadow-2xs);
+  --shadow-xs: var(--shadow-xs);
+  --shadow-sm: var(--shadow-sm);
+  --shadow: var(--shadow);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+  --shadow-xl: var(--shadow-xl);
+  --shadow-2xl: var(--shadow-2xl);
+
+  --tracking-tighter: calc(var(--tracking-normal) - 0.05em);
+  --tracking-tight: calc(var(--tracking-normal) - 0.025em);
+  --tracking-normal: var(--tracking-normal);
+  --tracking-wide: calc(var(--tracking-normal) + 0.025em);
+  --tracking-wider: calc(var(--tracking-normal) + 0.05em);
+  --tracking-widest: calc(var(--tracking-normal) + 0.1em);
+  --font-heading: var(--font-sans);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+  --animate-marquee: marquee var(--duration) infinite linear;
+  --animate-marquee-vertical: marquee-vertical var(--duration) linear infinite;
+  @keyframes marquee {
+  from {
+    transform: translateX(0);
+    }
+  to {
+    transform: translateX(calc(-100% - var(--gap)));
+    }
+  }
+  @keyframes marquee-vertical {
+  from {
+    transform: translateY(0);
+    }
+  to {
+    transform: translateY(calc(-100% - var(--gap)));
+    }
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    box-sizing: border-box;
+  }
+
+  html {
+    font-family: "Ravi", sans-serif;
+    @apply font-sans;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: "Ravi", sans-serif;
+    letter-spacing: var(--tracking-normal);
+  }
+
+  .hp {
+    @apply px-4
+  }
+  .vp {
+    @apply py-16
+  }
+  .scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+}
+}
+
