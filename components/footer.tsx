@@ -36,17 +36,44 @@ export default function Footer() {
 
   return (
     <footer className="relative flex w-full justify-center overflow-hidden pt-12">
-      <motion.div
-        initial={{ y: "40%" }}
-        whileInView={{ y: 0 }}
-        viewport={{ once: true, amount: 0.05 }}
-        transition={{
-          duration: 0.8,
-          ease: [0.22, 1, 0.36, 1],
-        }}
-        className="flex w-full max-w-7xl flex-col-reverse items-center justify-center gap-12 rounded-t-md bg-secondary py-10 text-primary md:flex-row md:gap-20 hp"
-      >
-        <div className="flex w-full max-w-2xl flex-col items-center justify-center gap-6 md:items-start">
+<motion.div
+  initial={{
+    y: "40%",
+    width: "80%",
+    borderTopRightRadius: "4px",
+    borderTopLeftRadius: "4px",
+  }}
+  whileInView={{
+    y: 0,
+    width: "100%",
+    borderTopRightRadius: "0",
+    borderTopLeftRadius: "0",
+  }}
+  viewport={{ once: true, amount: 0.05 }}
+  transition={{
+    y: {
+      duration: 0.8,
+      ease: [0.22, 1, 0.36, 1],
+    },
+    width: {
+      duration: 0.8,
+      delay: 0.5,
+      ease: [0.22, 1, 0.36, 1],
+    },
+    borderTopRightRadius: {
+      duration: 0.8,
+      delay: 0.5,
+      ease: [0.22, 1, 0.36, 1],
+    },
+    borderTopLeftRadius: {
+      duration: 0.8,
+      delay: 0.5,
+      ease: [0.22, 1, 0.36, 1],
+    }
+  }}
+  className="flex flex-col-reverse items-center justify-center gap-12 rounded-t-md bg-secondary py-10 text-primary md:flex-row md:gap-20 hp"
+>
+        <div className="flex max-w-3xl w-full flex-col items-center justify-center gap-6 md:items-start">
           <div className="flex w-full flex-col items-center gap-8 md:items-start">
             <h2 className="text-3xl font-black">
               آنچه میماند{" "}
