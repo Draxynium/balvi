@@ -14,8 +14,8 @@ export default function Home() {
   return (
     <main className="min-h-screen flex items-center justify-center flex-col">
       <section className="relative flex justify-center flex-col items-center w-full pt-36 sm:pt-40 md:pt-44 hp max-w-7xl">
-        <ScrollParallax
-          axis="y"
+        <MouseParallex
+          axis="both"
           strength={-50}
           speed={0.02}
           className="w-full h-full"
@@ -25,7 +25,7 @@ export default function Home() {
               className=" max-w-5xl px-12"
             />
           </ScrollReveal>
-        </ScrollParallax>
+        </MouseParallex>
         <ScrollReveal direction="top">
           <div data-navbar="dark" className="relative w-[calc(100%-2rem)] h-screen rounded-lg -mt-5 sm:-mt-8.5 md:-mt-10 lg:-mt-11 max-w-7xl overflow-hidden">
             <button className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 text-2xl text-background  whitespace-nowrap flex justify-center items-center cursor-pointer group w-full h-full pointer-events-none">
