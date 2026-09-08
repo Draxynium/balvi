@@ -286,7 +286,10 @@ export default function AboutUs() {
           </ul>
         </div>
       </section>
-      <section className="relative flex justify-center flex-col items-center w-full vp hp max-w-7xl">
+      <section className="relative flex justify-center flex-col items-center w-full pt-12 hp max-w-7xl">
+        <ScrollReveal direction="right" distance={40} className="w-full">
+          <h2 className="text-3xl font-bold text-right w-full pr-4 pb-4">مقاله ها</h2>
+        </ScrollReveal>
         <ProductCarousel>
           <BlogCard item={{ name: "مقاله اول", description: "لورم ایپسوم متن ساختگی.", image: "/images/blog.png" }} />
           <BlogCard item={{ name: "مقاله دوم", description: "لورم ایپسوم متن ساختگی.", image: "/images/blog.png" }} />
