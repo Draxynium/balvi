@@ -16,7 +16,7 @@ export default function Home() {
       <section className="relative flex justify-center flex-col items-center w-full pt-36 sm:pt-40 md:pt-44 hp max-w-7xl">
         <MouseParallex
           axis="both"
-          strength={-50}
+          strength={50}
           speed={0.02}
           className="w-full h-full"
         >
@@ -205,7 +205,7 @@ export default function Home() {
               <div className="w-full aspect-[1/1.9] rounded-md overflow-hidden">
                 <ScrollParallax
                   axis="y"
-                  strength={40}
+                  strength={-40}
                   speed={0.02}
                   className="w-full h-full"
                 >
@@ -273,7 +273,7 @@ export default function Home() {
               <div className="w-full aspect-[1/1.9] rounded-md overflow-hidden">
                 <ScrollParallax
                   axis="y"
-                  strength={40}
+                  strength={-40}
                   speed={0.02}
                   className="w-full h-full"
                 >

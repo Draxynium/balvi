@@ -9,6 +9,7 @@ interface ScrollRevealProps {
   distance?: number;
   duration?: number;
   delay?: number;
+  blur?: number;
   className?: string;
 }
 
@@ -30,10 +31,12 @@ export default function ScrollReveal({
   const variants: Variants = {
     hidden: {
       opacity: 0,
+      filter: `blur(${blur}px)`,
       ...offsets[direction],
     },
     visible: {
       opacity: 1,
+      filter: "blur(0px)",
       x: 0,
       y: 0,
     },
