@@ -1,6 +1,5 @@
 "use client";
 
-import Logo from "@/public/logo.svg";
 
 import { useEffect, useState } from "react";
 import { Info, Search, ShoppingBag, ShoppingCart } from "lucide-react";
@@ -149,7 +148,8 @@ export default function NavigationBar() {
           `}
         >
           <div className="relative h-8 w-32 overflow-hidden">
-            <Logo
+            <img
+              src="/logo.svg"
               className={`
                 absolute left-1/2 top-1/2
                 -translate-x-1/2 -translate-y-1/2

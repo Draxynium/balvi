@@ -3,9 +3,7 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 
-import Mascot from "@/public/mascot.svg";
 import { ArrowUpLeft } from "lucide-react";
-import { Highlighter } from "@/components/ui/highlighter";
 
 export default function Footer() {
   const columns = [
@@ -102,7 +100,7 @@ export default function Footer() {
         </div>
 
         <div className="flex shrink-0 items-center justify-center">
-          <Mascot className="h-64 w-auto text-primary md:h-72 lg:h-80" />
+          <img src="/mascot.svg" className="h-64 w-auto text-primary md:h-72 lg:h-80" />
         </div>
       </motion.div>
     </footer>
