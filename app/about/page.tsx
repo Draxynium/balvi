@@ -159,7 +159,6 @@ export default function AboutUs() {
           direction="bottom"
           distance={30}
           duration={1.4}
-          blur={8}
         >
           <h2 className="max-w-2xl text-center text-4xl  font-black leading-[1.5]">
             اصالت را نمی‌توان ساخت؛<br/>باید آن را سال‌ها زندگی کرد.
