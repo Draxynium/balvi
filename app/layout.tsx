@@ -21,7 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fa" dir="rtl" className={cn("h-full antialiased", "font-sans", geist.variable)} data-scroll-behavior="smooth">
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col overflow-x-hidden">
         <PageTransition>
           <NavigationBar/>
           {children}
