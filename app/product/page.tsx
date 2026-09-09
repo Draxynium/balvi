@@ -6,7 +6,7 @@ import { Minus, Plus, ShoppingBag, ChevronDown } from "lucide-react";
 import ScrollReveal from "@/components/scroll-reveal";
 import ScrollParallax from "@/components/scroll-parallax";
 import ItemCard from "@/components/item-card";
-import ProductCarousel from "@/components/items-carousel";
+import ItemsCarousel from "@/components/items-carousel";
 
 export default function ProductPage() {
   const [size, setSize] = useState("42");
@@ -371,7 +371,7 @@ export default function ProductPage() {
           </div>
         </ScrollReveal>
 
-        <ProductCarousel>
+        <ItemsCarousel>
           <ItemCard item={{name: "بوت مشکی", colors: ["#1f1f1f", "#301b1b"], beforePrice: 2500000, price: 2000000, image: "/images/boot.png"}} />
           <ItemCard item={{name: "بوت مشکی", colors: ["#1f1f1f", "#301b1b"], beforePrice: 2500000, price: 2000000, image: "/images/boot.png"}} />
           <ItemCard item={{name: "بوت مشکی", colors: ["#1f1f1f", "#301b1b"], beforePrice: 2500000, price: 2000000, image: "/images/boot.png"}} />
@@ -380,7 +380,7 @@ export default function ProductPage() {
           <ItemCard item={{name: "بوت مشکی", colors: ["#1f1f1f", "#301b1b"], beforePrice: 2500000, price: 2000000, image: "/images/boot.png"}} />
           <ItemCard item={{name: "بوت مشکی", colors: ["#1f1f1f", "#301b1b"], beforePrice: 2500000, price: 2000000, image: "/images/boot.png"}} />
           <ItemCard item={{name: "بوت مشکی", colors: ["#1f1f1f", "#301b1b"], beforePrice: 2500000, price: 2000000, image: "/images/boot.png"}} />
-        </ProductCarousel>
+        </ItemsCarousel>
       </section>
     </main>
   );

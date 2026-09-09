@@ -23,8 +23,8 @@ export default function Home() {
   const scale = useTransform(scrollYProgress, [0, 1], [1, 1.2]);
 
   return (
-    <main className="min-h-screen flex items-center justify-center flex-col">
-      <section className="relative flex justify-center flex-col items-center w-full pt-36 sm:pt-40 md:pt-44 hp max-w-7xl">
+    <main className="min-h-screen flex items-center justify-center flex-col ">
+      <section className="relative flex justify-center flex-col items-center w-full pt-24  max-w-7xl">
         <MouseParallex
           axis="both"
           strength={50}
@@ -32,7 +32,7 @@ export default function Home() {
           className="w-full h-full"
         >
           <ScrollReveal delay={0.2} direction="bottom" className="w-full h-full flex justify-center items-center">
-            <img src="/text-logo.svg" alt="Logo" className="max-w-5xl px-12" />
+            <img src="/text-logo.svg" alt="Logo" className="max-w-5xl px-4" />
           </ScrollReveal>
         </MouseParallex>
 
@@ -41,7 +41,7 @@ export default function Home() {
             ref={videoRef}
             style={{ scale }}
             data-navbar="dark"
-            className="relative w-[calc(100%-2rem)] h-screen rounded-lg -mt-5 sm:-mt-8.5 md:-mt-10 lg:-mt-11 max-w-7xl overflow-hidden"
+            className="relative  h-screen rounded-lg -mt-5 sm:-mt-8.5 md:-mt-10 lg:-mt-11 max-w-7xl overflow-hidden"
           >
             <button className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 text-2xl text-background whitespace-nowrap flex justify-center items-center cursor-pointer group w-full h-full pointer-events-none">
               <span className="z-3 p-12 pointer-events-auto font-light">
@@ -60,7 +60,7 @@ export default function Home() {
           </motion.div>
         </ScrollReveal>
       </section>
-      <section className="relative flex justify-center flex-col items-center w-full vp hp max-w-7xl">
+      <section className="relative flex justify-center flex-col items-center w-full vp hp max-w-7xl pt-34">
         <motion.img
           src="/poet.svg"
           alt="poet"
