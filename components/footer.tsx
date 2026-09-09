@@ -10,26 +10,26 @@ export default function Footer() {
     {
       title: "محصولات",
       links: [
-        { label: "محصولات", href: "/products" },
+        { label: "محصولات", href: "/" },
         { label: "درباره ما", href: "/about" },
-        { label: "مقاله ها", href: "/articles" },
-        { label: "تماس با ما", href: "/contact" },
+        { label: "مقاله ها", href: "/" },
+        { label: "تماس با ما", href: "/" },
       ],
     },
     {
       title: "شرکت",
       links: [
         { label: "درباره ما", href: "/about" },
-        { label: "مقاله ها", href: "/articles" },
-        { label: "فرصت‌های شغلی", href: "/careers" },
+        { label: "مقاله ها", href: "/" },
+        { label: "فرصت‌های شغلی", href: "/" },
       ],
     },
     {
       title: "پشتیبانی",
       links: [
-        { label: "تماس با ما", href: "/contact" },
-        { label: "سوالات متداول", href: "/faq" },
-        { label: "پیگیری سفارش", href: "/track-order" },
+        { label: "تماس با ما", href: "/" },
+        { label: "سوالات متداول", href: "/" },
+        { label: "پیگیری سفارش", href: "/" },
       ],
     },
   ];

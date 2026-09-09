@@ -4,6 +4,8 @@ import NavigationBar from "@/components/navigation-bar";
 import { Geist } from "next/font/google";
 import { cn } from "@/lib/utils";
 import Footer from "@/components/footer";
+import SmoothScroll from "@/components/smooth-scroll";
+import PageTransition from "@/components/page-transition";
 
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
@@ -18,11 +20,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fa" dir="rtl" className={cn("h-full antialiased", "font-sans", geist.variable)}>
+    <html lang="fa" dir="rtl" className={cn("h-full antialiased", "font-sans", geist.variable)} data-scroll-behavior="smooth">
       <body className="min-h-full flex flex-col">
-        <NavigationBar/>
-        {children}
-        <Footer/>
+        <PageTransition>
+          <NavigationBar/>
+          {children}
+          <Footer/>
+          <SmoothScroll/>
+        </PageTransition>
       </body>
     </html>
   );

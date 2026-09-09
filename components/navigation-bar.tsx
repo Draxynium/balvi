@@ -193,7 +193,7 @@ export default function NavigationBar() {
         </a>
 
         <a
-          href="/"
+          href="/about"
           className={`
             text-sm font-medium
             transition-colors
