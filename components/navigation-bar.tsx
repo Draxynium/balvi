@@ -124,6 +124,7 @@ export default function NavigationBar() {
         </div>
       </div>
 
+      
       <nav className="fixed z-200 flex h-16 w-full items-center justify-center py-2">
         <div className={`px-4 py-2 h-full flex items-center justify-center divide-x rounded-full backdrop-blur-2xl backdrop-saturate-150 border transition-all duration-500 ease-out w-3xl max-w-full ${darkBackground ? "bg-secondary/50 border-primary/20 divide-primary/20" : "bg-background/20 border-border/20 divide-border/40"} ${scrolled ? "w-4xl!" : "border-border/0!"} ${scrolled && darkBackground ? "bg-secondary/60 border-primary/30" : scrolled ? "bg-background/30 border-border/40" : ""}`}>
           <button onClick={() => setSearchOpen(true)} className={`text-sm font-medium transition-colors w-28 h-full flex items-center justify-center gap-2 ${textColor} ${hoverColor}`}>
