@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
+
 
 import ProductCarousel from "@/components/items-carousel";
 import ItemCard from "@/components/item-card";
@@ -9,93 +9,30 @@ import MouseParallex from "@/components/mouse-parallax"
 import ScrollParallax from "@/components/scroll-parallax";
 import ScrollReveal from "@/components/scroll-reveal";
 import { Highlighter } from "@/components/ui/highlighter";
-import { useRef } from "react";
 
 export default function Home() {
-  const videoRef = useRef(null);
-
-  const { scrollYProgress } = useScroll({
-    target: videoRef,
-    offset: ["start start", "end start"],
-  });
-
-  // Scale from 1 to 1.5 (adjust as needed)
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 1.2]);
-
   return (
     <main className="min-h-screen flex items-center justify-center flex-col ">
-      <section className="relative flex justify-center flex-col items-center w-full pt-24  max-w-7xl">
-        <MouseParallex
-          axis="both"
-          strength={50}
-          speed={0.02}
-          className="w-full h-full"
-        >
-          <ScrollReveal delay={0.2} direction="bottom" className="w-full h-full flex justify-center items-center">
-            <img src="/text-logo.svg" alt="Logo" className="max-w-5xl px-4" />
-          </ScrollReveal>
-        </MouseParallex>
-
+      <section data-navbar="dark" className="relative flex justify-center flex-col items-center w-full">
         <ScrollReveal direction="top">
-          <motion.div
-            ref={videoRef}
-            style={{ scale }}
-            data-navbar="dark"
-            className="relative  h-screen rounded-lg -mt-5 sm:-mt-8.5 md:-mt-10 lg:-mt-11 max-w-7xl overflow-hidden"
-          >
-            <button className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 text-2xl text-background whitespace-nowrap flex justify-center items-center cursor-pointer group w-full h-full pointer-events-none">
-              <span className="z-3 p-12 pointer-events-auto font-light">
-                مشاهده محصولات
-              </span>
-              <div className="absolute rounded-3xl z-2 transition-all duration-1000 group-hover:ease-out ease-in w-60 h-14 group-hover:w-full group-hover:h-full group-hover:rounded-md backdrop-blur-xl pointer-events-none group-hover:bg-foreground/60 bg-foreground/0" />
-            </button>
-            <video
-              src="/videos/compressed/video-a.mp4"
-              autoPlay
-              muted
-              loop
-              playsInline
-              className="h-full w-full object-cover"
-            />
-          </motion.div>
+          <button className="absolute inset-0 text-2xl text-background whitespace-nowrap flex flex-col justify-end items-center cursor-pointer group w-full h-full pointer-events-none">
+            <span className="z-3 p-12 pointer-events-auto font-light">
+              مشاهده محصولات
+            </span>
+            <div className="absolute bottom-0 inset-x-0 mx-auto rounded-3xl z-2 transition-all duration-1000 group-hover:ease-out ease-in w-60 h-14 group-hover:w-full group-hover:h-full group-hover:rounded-md backdrop-blur-xl pointer-events-none group-hover:bg-foreground/60 bg-foreground/0 mb-9 group-hover:mb-0" />
+          </button>
+          <video
+            src="/videos/compressed/video-a.mp4"
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="h-full w-full object-cover"
+          />
         </ScrollReveal>
       </section>
-      <section className="relative flex justify-center flex-col items-center w-full vp hp max-w-7xl pt-34">
-        <motion.img
-          src="/poet.svg"
-          alt="poet"
-          className="px-12 max-w-5xl"
-          initial={{
-            opacity: 0,
-            filter: "blur(20px)",
-            scale: 1.2,
-          }}
-          whileInView={{
-            opacity: 1,
-            filter: "blur(0px)",
-            scale: 1,
-          }}
-          viewport={{
-            once: true,
-            amount: 0.4,
-          }}
-          transition={{
-            duration: 2,
-            ease: [0.16, 1, 0.3, 1],
-          }}
-        />
-      </section>
-      <section className="relative flex justify-center flex-col items-center w-full vp hp max-w-7xl">
-        <ProductCarousel>
-          <ItemCard item={{name: "بوت مشکی", colors: ["#1f1f1f", "#301b1b"], beforePrice: 2500000, price: 2000000, image: "/images/boot.png"}} />
-          <ItemCard item={{name: "بوت مشکی", colors: ["#1f1f1f", "#301b1b"], beforePrice: 2500000, price: 2000000, image: "/images/boot.png"}} />
-          <ItemCard item={{name: "بوت مشکی", colors: ["#1f1f1f", "#301b1b"], beforePrice: 2500000, price: 2000000, image: "/images/boot.png"}} />
-          <ItemCard item={{name: "بوت مشکی", colors: ["#1f1f1f", "#301b1b"], beforePrice: 2500000, price: 2000000, image: "/images/boot.png"}} />
-          <ItemCard item={{name: "بوت مشکی", colors: ["#1f1f1f", "#301b1b"], beforePrice: 2500000, price: 2000000, image: "/images/boot.png"}} />
-          <ItemCard item={{name: "بوت مشکی", colors: ["#1f1f1f", "#301b1b"], beforePrice: 2500000, price: 2000000, image: "/images/boot.png"}} />
-          <ItemCard item={{name: "بوت مشکی", colors: ["#1f1f1f", "#301b1b"], beforePrice: 2500000, price: 2000000, image: "/images/boot.png"}} />
-          <ItemCard item={{name: "بوت مشکی", colors: ["#1f1f1f", "#301b1b"], beforePrice: 2500000, price: 2000000, image: "/images/boot.png"}} />
-        </ProductCarousel>
+      <section className="relative flex justify-center flex-col items-center w-full vp hp max-w-7xl pt-28">
+
       </section>
       <section className="relative flex justify-center flex-col items-center w-full vp hp max-w-7xl gap-8 pt-0 pb-8">
         <div className="flex gap-8 max-w-5xl max-md:flex-col">
