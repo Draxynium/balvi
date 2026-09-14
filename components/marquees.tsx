@@ -1,10 +1,8 @@
 "use client";
 
-import Star from "@/public/star.svg";
-import React from "react";
+import React, { useRef } from "react";
 import { Marquee } from "./ui/marquee";
-import { motion } from "framer-motion";
-import ScrollReveal from "./scroll-reveal";
+import { motion, useInView } from "framer-motion";
 
 export default function Marquees() {
   const texts = [
@@ -27,35 +25,61 @@ export default function Marquees() {
     "امضایی برای ماندن",
   ];
 
+  const textClass =
+    "shrink-0 whitespace-nowrap font-medium px-4 sm:px-6 md:px-8 text-base sm:text-xl md:text-2xl lg:text-4xl border-l";
+
+  const tiltA = "rotate-[8deg] sm:rotate-[6deg] md:rotate-[5deg]";
+  const tiltB = "-rotate-[8deg] sm:-rotate-[6deg] md:-rotate-[5deg]";
+
+  const barBase =
+    "absolute top-1/2 left-1/2 h-12 sm:h-14 md:h-16 -translate-y-1/2 -translate-x-1/2 w-[calc(100%+3rem)]";
+
+  /* ---------- STABLE OBSERVER (not on the transformed element) ---------- */
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const inView = useInView(sectionRef, { once: true, amount: 0.2 });
+
   return (
-    <section dir="ltr" className="relative w-full h-68 overflow-hidden">
-      <div className="absolute inset-0 h-16 text-primary rotate-5 top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 w-[calc(100%+2rem)]" >
-        <motion.div  
-          className="h-full relative bg-secondary"
-          initial={{ x: "90%", opacity: "0%", filter: "blur(20px)" }}
-          whileInView={{ x: 0, opacity: "100%", filter: "blur(0)" }}
-          viewport={{ once: true, amount: 0.05 }}
+    <section
+      ref={sectionRef}
+      dir="ltr"
+      className="relative w-full h-44 sm:h-52 md:h-60 lg:h-68 overflow-hidden"
+    >
+      {/* ---------- BAR 1 ---------- */}
+      <div className={`${barBase} ${tiltA} text-primary`}>
+        <motion.div
+          className="relative h-full bg-secondary shadow-md"
+          initial={{ x: "90%", opacity: 0, filter: "blur(20px)" }}
+          animate={
+            inView
+              ? { x: 0, opacity: 1, filter: "blur(0px)" }
+              : undefined
+          }
           transition={{
             duration: 2,
             delay: 0.3,
             ease: [0.22, 1, 0.36, 1],
           }}
         >
-          <Marquee className="h-full flex items-center" >
+          <Marquee className="h-full flex items-center">
             {texts.map((text, index) => (
-                <p key={index} className="shrink-0 whitespace-nowrap text-4xl font-medium px-8 border-l">
-                  {text}
-                </p>
+              <p key={index} className={textClass}>
+                {text}
+              </p>
             ))}
           </Marquee>
         </motion.div>
       </div>
-      <div className="absolute inset-0 h-16  text-secondary -rotate-5 top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 w-[calc(100%+2rem)]">
-        <motion.div  
-          className="h-full relative bg-primary"
-          initial={{ x: "-90%", opacity: "0%", filter: "blur(10px)" }}
-          whileInView={{ x: 0, opacity: "100%", filter: "blur(0)" }}
-          viewport={{ once: true, amount: 0.05 }}
+
+      {/* ---------- BAR 2 ---------- */}
+      <div className={`${barBase} ${tiltB} text-secondary`}>
+        <motion.div
+          className="relative h-full bg-primary shadow-md"
+          initial={{ x: "-90%", opacity: 0, filter: "blur(10px)" }}
+          animate={
+            inView
+              ? { x: 0, opacity: 1, filter: "blur(0px)" }
+              : undefined
+          }
           transition={{
             duration: 2,
             ease: [0.22, 1, 0.36, 1],
@@ -63,9 +87,9 @@ export default function Marquees() {
         >
           <Marquee className="h-full flex items-center" reverse>
             {textsb.map((text, index) => (
-                <p key={index} className="shrink-0 whitespace-nowrap text-4xl font-medium px-8 border-l ">
-                  {text}
-                </p>
+              <p key={index} className={textClass}>
+                {text}
+              </p>
             ))}
           </Marquee>
         </motion.div>

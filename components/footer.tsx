@@ -2,32 +2,23 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-
 import { ArrowUpLeft } from "lucide-react";
 
 export default function Footer() {
   const columns = [
     {
-      title: "محصولات",
+      title: "فروشگاه",
       links: [
-        { label: "محصولات", href: "/" },
+        { label: "محصولات", href: "/products" },
+        { label: "فروش عمده", href: "/products" },
         { label: "درباره ما", href: "/about" },
-        { label: "مقاله ها", href: "/" },
-        { label: "تماس با ما", href: "/" },
-      ],
-    },
-    {
-      title: "شرکت",
-      links: [
-        { label: "درباره ما", href: "/about" },
-        { label: "مقاله ها", href: "/" },
-        { label: "فرصت‌های شغلی", href: "/" },
+        { label: "مقاله ها", href: "/blogs" },
       ],
     },
     {
       title: "پشتیبانی",
       links: [
-        { label: "تماس با ما", href: "/" },
+        { label: "تماس با ما", href: "/contact" },
         { label: "سوالات متداول", href: "/" },
         { label: "پیگیری سفارش", href: "/" },
       ],
@@ -35,99 +26,107 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="relative flex w-full justify-center overflow-hidden pt-12">
-<motion.div
-  initial={{
-    y: "40%",
-    width: "80%",
-    borderTopRightRadius: "4px",
-    borderTopLeftRadius: "4px",
-  }}
-  whileInView={{
-    y: 0,
-    width: "100%",
-    borderTopRightRadius: "0",
-    borderTopLeftRadius: "0",
-  }}
-  viewport={{ once: true, amount: 0.05 }}
-  transition={{
-    y: {
-      duration: 0.8,
-      ease: [0.22, 1, 0.36, 1],
-    },
-    width: {
-      duration: 0.8,
-      delay: 0.5,
-      ease: [0.22, 1, 0.36, 1],
-    },
-    borderTopRightRadius: {
-      duration: 0.8,
-      delay: 0.5,
-      ease: [0.22, 1, 0.36, 1],
-    },
-    borderTopLeftRadius: {
-      duration: 0.8,
-      delay: 0.5,
-      ease: [0.22, 1, 0.36, 1],
-    }
-  }}
-  className="flex flex-col-reverse items-center justify-center gap-12 rounded-t-md bg-secondary py-10 text-primary md:flex-row md:gap-20 hp"
->
-        <div className="flex max-w-3xl w-full flex-col items-center justify-center gap-6 md:items-start">
-          <div className="flex w-full flex-col items-center gap-8 md:items-start">
-            <h2 className="text-3xl font-black">
-              آنچه میماند{" "}
-               اصالت است و هنر
-            </h2>
+    <footer className="relative flex w-full justify-center overflow-hidden pt-6 sm:pt-8 md:pt-12">
+      <motion.div
+        initial={{
+          y: "25%",
+          width: "92%",
+          borderTopRightRadius: "12px",
+          borderTopLeftRadius: "12px",
+        }}
+        whileInView={{
+          y: 0,
+          width: "100%",
+          borderTopRightRadius: "0",
+          borderTopLeftRadius: "0",
+        }}
+        viewport={{ once: true, amount: 0.05 }}
+        transition={{
+          y: { duration: 0.8, ease: [0.22, 1, 0.36, 1] },
+          width: { duration: 0.8, delay: 0.4, ease: [0.22, 1, 0.36, 1] },
+          borderTopRightRadius: {
+            duration: 0.8,
+            delay: 0.4,
+            ease: [0.22, 1, 0.36, 1],
+          },
+          borderTopLeftRadius: {
+            duration: 0.8,
+            delay: 0.4,
+            ease: [0.22, 1, 0.36, 1],
+          },
+        }}
+        className="flex w-full flex-col gap-8 rounded-t-md bg-secondary px-5 py-9 text-primary sm:gap-10 sm:px-8 sm:py-10 md:flex-row md:items-center md:justify-center md:gap-14 md:px-10 md:py-12 lg:gap-20 lg:px-12"
+      >
+        {/* ---------- CONTENT (top on mobile, right on desktop RTL) ---------- */}
+        <div className="flex w-full max-w-3xl flex-col gap-6 sm:gap-7 md:items-start md:gap-8">
+          <h2 className="text-center text-2xl font-black leading-snug sm:text-3xl md:text-left md:text-4xl">
+            آنچه می‌ماند
+            <br className="md:hidden" />{" "}
+            <span className="md:inline">اصالت است و هنر</span>
+          </h2>
 
-            <nav className="flex w-full flex-col items-center gap-16 md:flex-row md:items-start">
-              {columns.map((col) => (
-                <div
-                  key={col.title}
-                  className="flex flex-col items-center gap-4 md:items-start"
-                >
-                  <h3 className="text-sm font-semibold">{col.title}</h3>
+          {/* ---------- NAV (side-by-side even on mobile) ---------- */}
+          <nav className="flex w-full items-start justify-between gap-3 sm:gap-6 md:justify-start md:gap-12 lg:gap-16">
+            {columns.map((col) => (
+              <div
+                key={col.title}
+                className="flex flex-col items-center gap-2.5 sm:gap-3 md:items-start"
+              >
+                <h3 className="text-[11px] font-bold uppercase tracking-wide opacity-60 sm:text-xs md:text-sm md:opacity-100">
+                  {col.title}
+                </h3>
 
-                  <div className="flex flex-col items-start gap-3 text-sm">
-                    {col.links.map((link) => (
-                      <Link
-                        key={link.label}
-                        href={link.href}
-                        className="flex items-center transition-opacity hover:opacity-70"
-                      >
-                        <span>{link.label}</span>
-                        <ArrowUpLeft />
-                      </Link>
-                    ))}
-                  </div>
+                <div className="flex flex-col items-center gap-2 text-[11px] sm:text-xs md:items-start md:text-sm">
+                  {col.links.map((link) => (
+                    <Link
+                      key={link.label}
+                      href={link.href}
+                      className="flex items-center gap-0.5 whitespace-nowrap transition-opacity hover:opacity-70"
+                    >
+                      <span>{link.label}</span>
+                      <ArrowUpLeft className="h-3 w-3 shrink-0 sm:h-3.5 sm:w-3.5" />
+                    </Link>
+                  ))}
                 </div>
-              ))}
-            </nav>
-          </div>
+              </div>
+            ))}
+          </nav>
 
-          <div className="h-px w-full bg-primary" />
+          <div className="h-px w-full bg-primary/25" />
 
-          <div className="flex w-full items-center justify-between gap-6 text-xs">
-            <span>تمامی حقوق محفوظ است - ۱۴۰۳</span>
-
-            <Link href="/">
-              <span>حریم خصوصی</span>
-            </Link>
-
-            <Link href="/">
-              <span>قوانین و مقررات</span>
-            </Link>
-
+          {/* ---------- BOTTOM BAR ---------- */}
+          <div className="flex w-full flex-col items-center gap-4 text-[11px] sm:text-xs md:flex-row md:justify-between md:gap-6">
+            {/* Logo — top on mobile, left on desktop */}
             <img
               src="/text-logo.svg"
               alt="Logo"
-              className="w-32"
+              className="order-1 w-24 sm:w-28 md:order-3 md:w-32"
             />
+
+            {/* Legal links — middle on mobile */}
+            <div className="order-2 flex items-center gap-5 sm:gap-6 md:order-2">
+              <Link href="/" className="transition-opacity hover:opacity-70">
+                حریم خصوصی
+              </Link>
+              <Link href="/" className="transition-opacity hover:opacity-70">
+                قوانین و مقررات
+              </Link>
+            </div>
+
+            {/* Copyright — bottom on mobile, right on desktop */}
+            <span className="order-3 text-center opacity-70 md:order-1 md:opacity-100">
+              تمامی حقوق محفوظ است - ۱۴۰۳
+            </span>
           </div>
         </div>
 
+        {/* ---------- MASCOT ---------- */}
         <div className="flex shrink-0 items-center justify-center">
-          <img src="/mascot.svg" className="h-64 w-auto text-primary md:h-72 lg:h-80" />
+          <img
+            src="/mascot.svg"
+            alt="Mascot"
+            className="h-32 w-auto sm:h-40 md:h-72 lg:h-80"
+          />
         </div>
       </motion.div>
     </footer>

@@ -245,6 +245,10 @@
     box-sizing: border-box;
   }
 
+  button{
+    cursor: pointer;
+  }
+
   html {
     font-family: "Ravi", sans-serif;
     @apply font-sans;

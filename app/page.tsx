@@ -1,54 +1,68 @@
 "use client";
 
-
-
 import ProductCarousel from "@/components/items-carousel";
 import ItemCard from "@/components/item-card";
 import Marquees from "@/components/marquees";
-import MouseParallex from "@/components/mouse-parallax"
+import MouseParallex from "@/components/mouse-parallax";
 import ScrollParallax from "@/components/scroll-parallax";
 import ScrollReveal from "@/components/scroll-reveal";
 import { Highlighter } from "@/components/ui/highlighter";
+import FlipCards from "@/components/landing/flip-cards";
 
 export default function Home() {
   return (
-    <main className="min-h-screen flex items-center justify-center flex-col ">
-      <section data-navbar="dark" className="relative flex justify-center flex-col items-center w-full">
-        <ScrollReveal direction="top">
-          <button className="absolute inset-0 text-2xl text-background whitespace-nowrap flex flex-col justify-end items-center cursor-pointer group w-full h-full pointer-events-none">
-            <span className="z-3 p-12 pointer-events-auto font-light">
-              مشاهده محصولات
-            </span>
-            <div className="absolute bottom-0 inset-x-0 mx-auto rounded-3xl z-2 transition-all duration-1000 group-hover:ease-out ease-in w-60 h-14 group-hover:w-full group-hover:h-full group-hover:rounded-md backdrop-blur-xl pointer-events-none group-hover:bg-foreground/60 bg-foreground/0 mb-9 group-hover:mb-0" />
-          </button>
-          <video
-            src="/videos/compressed/video-a.mp4"
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="h-full w-full object-cover"
-          />
+    <main className="min-h-screen w-full flex items-center justify-center flex-col overflow-x-hidden">
+      {/* ================= HERO ================= */}
+      <section
+        data-navbar="dark"
+        className="relative flex justify-center flex-col items-center w-full"
+      >
+        <ScrollReveal direction="top" className="w-full">
+          <div className="relative w-full">
+            <video
+              src="/videos/compressed/video-a.mp4"
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="w-full h-[70svh] sm:h-[80svh] md:h-[90svh] lg:h-screen object-cover"
+            />
+
+            <button
+              type="button"
+              aria-label="مشاهده محصولات"
+              className="absolute inset-0 z-10 flex flex-col justify-end items-center w-full h-full cursor-pointer group pointer-events-none"
+            >
+              <span className="z-30 p-6 sm:p-8 md:p-12 text-lg sm:text-xl md:text-2xl font-light text-background whitespace-nowrap pointer-events-auto">
+                مشاهده محصولات
+              </span>
+              <div className="absolute bottom-0 inset-x-0 mx-auto rounded-3xl z-20 transition-all duration-1000 ease-in group-hover:ease-out w-48 sm:w-60 h-12 sm:h-14 group-hover:w-full group-hover:h-full group-hover:rounded-md backdrop-blur-xl pointer-events-none bg-foreground/0 group-hover:bg-foreground/60 mb-6 sm:mb-8 md:mb-9 group-hover:mb-0" />
+            </button>
+          </div>
         </ScrollReveal>
       </section>
-      <section className="relative flex justify-center flex-col items-center w-full vp hp max-w-7xl pt-28">
 
-      </section>
-      <section className="relative flex justify-center flex-col items-center w-full vp hp max-w-7xl gap-8 pt-0 pb-8">
-        <div className="flex gap-8 max-w-5xl max-md:flex-col">
-          <div className="order-2 text-right md:flex-2 flex items-center justify-center">
+      {/* ================= SPACER ================= */}
+      <section className="relative flex justify-center flex-col items-center w-full max-w-7xl px-4 sm:px-6 lg:px-8 pt-16 sm:pt-20 md:pt-28" />
+
+      {/* ================= ABOUT ================= */}
+      <section className="relative flex justify-center flex-col items-center w-full gap-8 sm:gap-10 md:gap-12 pb-8 sm:pb-10 md:pb-12">
+        <div className="flex flex-col md:flex-row gap-8 md:gap-10 lg:gap-12 max-w-5xl w-full">
+          {/* Text */}
+          <div className="order-2 md:order-2 text-right md:flex-2 flex items-center justify-center px-2 sm:px-4 md:px-0">
             <ScrollReveal direction="left" distance={50} delay={0.25}>
-                <p className="text-base leading-8 text-foreground md:text-lg max-md:text-center">
-                  بالوی تنها یک نام تجاری نیست؛ بلکه نمایانگر دهه ها هنر，
-                  اصالت ایرانی و تخصص در صنعت تولید کفش است. ما با سال ها
-                  تجربه تخصصی و تمرکز بر کیفیت در تولیدی کفش چرم،
-                  مفتخریم که انتخاب اول کسانی باشیم که به دنبال راحتی،
-                  دوام و زیبایی بی نظیر هستند.
-                </p>
+              <p className="text-sm sm:text-base md:text-lg leading-7 sm:leading-8 text-foreground max-md:text-center">
+                بالوی تنها یک نام تجاری نیست؛ بلکه نمایانگر دهه ها هنر,
+                اصالت ایرانی و تخصص در صنعت تولید کفش است. ما با سال ها
+                تجربه تخصصی و تمرکز بر کیفیت در تولیدی کفش چرم,
+                مفتخریم که انتخاب اول کسانی باشیم که به دنبال راحتی,
+                دوام و زیبایی بی نظیر هستند.
+              </p>
             </ScrollReveal>
           </div>
 
-          <div className="relative order-1 flex justify-center md:flex-1">
+          {/* Image + Heading */}
+          <div className="relative order-1 md:order-1 flex justify-center items-center md:flex-1 w-full min-h-[220px] sm:min-h-[280px] md:min-h-[320px]">
             <ScrollReveal
               direction="bottom"
               distance={30}
@@ -64,20 +78,21 @@ export default function Home() {
               >
                 <img
                   src="text-back.svg"
-                  alt="back"
+                  alt=""
+                  aria-hidden="true"
                   className="h-full w-full object-contain"
                 />
               </MouseParallex>
             </ScrollReveal>
 
             <ScrollReveal direction="right" distance={60} delay={0.1}>
-              <h2 className="relative z-10 max-w-md text-center text-3xl font-black leading-normal md:text-4xl">
+              <h2 className="relative z-10 max-w-md px-4 text-center text-2xl sm:text-3xl md:text-4xl font-black leading-normal whitespace-nowrap">
                 چرم بالوی
                 <br />
                 <Highlighter action="highlight" color="#e0b069">
-                برترین تولیدی
+                  برترین تولیدی
                 </Highlighter>{" "}
-                 کفش
+                کفش
                 <br />
                 چرم طبیعی در قلب تهران
               </h2>
@@ -85,6 +100,7 @@ export default function Home() {
           </div>
         </div>
 
+        {/* Video B */}
         <ScrollReveal
           direction="bottom"
           distance={70}
@@ -92,7 +108,10 @@ export default function Home() {
           delay={0.35}
           className="w-full"
         >
-          <div data-navbar="dark" className="aspect-16/7 w-full overflow-hidden rounded-lg">
+          <div
+            data-navbar="dark"
+            className="aspect-video sm:aspect-video md:aspect-16/7 w-full overflow-hidden"
+          >
             <video
               src="/videos/compressed/video-b.mp4"
               autoPlay
@@ -104,158 +123,27 @@ export default function Home() {
           </div>
         </ScrollReveal>
       </section>
-      <section className="relative flex justify-center flex-col items-center w-full vp hp max-w-7xl">
+
+      {/* ================= PRODUCTS ================= */}
+      <section className="relative flex justify-center flex-col items-center w-full max-w-7xl px-2 sm:px-4 md:px-6 lg:px-8 py-10 sm:py-14 md:py-20">
         <ProductCarousel>
-          <ItemCard item={{name: "بوت مشکی", colors: ["#1f1f1f", "#301b1b"], beforePrice: 2500000, price: 2000000, image: "/images/boot.png"}} />
-          <ItemCard item={{name: "بوت مشکی", colors: ["#1f1f1f", "#301b1b"], beforePrice: 2500000, price: 2000000, image: "/images/boot.png"}} />
-          <ItemCard item={{name: "بوت مشکی", colors: ["#1f1f1f", "#301b1b"], beforePrice: 2500000, price: 2000000, image: "/images/boot.png"}} />
-          <ItemCard item={{name: "بوت مشکی", colors: ["#1f1f1f", "#301b1b"], beforePrice: 2500000, price: 2000000, image: "/images/boot.png"}} />
-          <ItemCard item={{name: "بوت مشکی", colors: ["#1f1f1f", "#301b1b"], beforePrice: 2500000, price: 2000000, image: "/images/boot.png"}} />
-          <ItemCard item={{name: "بوت مشکی", colors: ["#1f1f1f", "#301b1b"], beforePrice: 2500000, price: 2000000, image: "/images/boot.png"}} />
-          <ItemCard item={{name: "بوت مشکی", colors: ["#1f1f1f", "#301b1b"], beforePrice: 2500000, price: 2000000, image: "/images/boot.png"}} />
-          <ItemCard item={{name: "بوت مشکی", colors: ["#1f1f1f", "#301b1b"], beforePrice: 2500000, price: 2000000, image: "/images/boot.png"}} />
+          {Array.from({ length: 8 }).map((_, i) => (
+            <ItemCard
+              key={i}
+              item={{
+                name: "بوت مشکی",
+                colors: ["#1f1f1f", "#301b1b"],
+                beforePrice: 2500000,
+                price: 2000000,
+                image: "/images/boot.png",
+              }}
+            />
+          ))}
         </ProductCarousel>
       </section>
-      <section className="relative flex justify-center flex-col items-center w-full vp hp max-w-7xl">
-        <div className="flex w-full justify-center items-start gap-6">
-          <div className="flex flex-1 min-w-0 flex-col gap-4 text-right">
-            <ScrollReveal delay={0}>
-              <div className="w-full aspect-[1/1.9] rounded-md overflow-hidden">
-                <ScrollParallax
-                  axis="y"
-                  strength={40}
-                  speed={0.02}
-                  className="w-full h-full"
-                >
-                  <img
-                    data-navbar="dark"
-                    src="/images/طبیعی.png"
-                    alt=""
-                    className="w-full h-full object-cover scale-120"
-                  />
-                </ScrollParallax>
-              </div>
-            </ScrollReveal>
 
-            <div>
-              <ScrollReveal direction="right" delay={0.15}>
-                <h3 className="font-bold text-xl">
-                  تضمین اصالت چرم طبیعی
-                </h3>
-              </ScrollReveal>
-
-              <ScrollReveal direction="left" delay={0.3}>
-                <p className="mt-2 text-base leading-7 text-muted-foreground">
-                  با استفاده از باکیفیت ترین چرم های گاوی و استر گوسفاله
-                </p>
-              </ScrollReveal>
-            </div>
-          </div>
-
-          <div className="mt-16 flex flex-1 min-w-0 flex-col gap-4 text-right">
-            <ScrollReveal delay={0.2}>
-              <div className="w-full aspect-[1/1.9] rounded-md overflow-hidden">
-                <ScrollParallax
-                  axis="y"
-                  strength={-40}
-                  speed={0.02}
-                  className="w-full h-full"
-                >
-                  <img
-                    data-navbar="dark"
-                    src="/images/دقت.png"
-                    alt=""
-                    className="w-full h-full object-cover scale-120"
-                  />
-                </ScrollParallax>
-              </div>
-            </ScrollReveal>
-
-            <div>
-              <ScrollReveal direction="right" delay={0.35}>
-                <h3 className="font-bold text-xl">
-                  دوخت دقیق و ماندگار
-                </h3>
-              </ScrollReveal>
-
-              <ScrollReveal direction="left" delay={0.5}>
-                <p className="mt-2 text-base leading-7 text-muted-foreground">
-                  ترکیبی از ظرافت دست و دقت در جزئیات
-                </p>
-              </ScrollReveal>
-            </div>
-          </div>
-
-          <div className="mt-8 flex flex-1 min-w-0 flex-col gap-4 text-right">
-            <ScrollReveal delay={0.4}>
-              <div className="w-full aspect-[1/1.9] rounded-md overflow-hidden">
-                <ScrollParallax
-                  axis="y"
-                  strength={40}
-                  speed={0.02}
-                  className="w-full h-full"
-                >
-                  <img
-                    data-navbar="dark"
-                    src="/images/راحتی.png"
-                    alt=""
-                    className="w-full h-full object-cover scale-120"
-                  />
-                </ScrollParallax>
-              </div>
-            </ScrollReveal>
-
-            <div>
-              <ScrollReveal direction="right" delay={0.55}>
-                <h3 className="font-bold text-xl">
-                  راحتی در هر قدم
-                </h3>
-              </ScrollReveal>
-
-              <ScrollReveal direction="left" delay={0.7}>
-                <p className="mt-2 text-base leading-7 text-muted-foreground">
-                  طراحی شده برای همراهی طولانی و استفاده روزمره
-                </p>
-              </ScrollReveal>
-            </div>
-          </div>
-
-          <div className="flex flex-1 min-w-0 flex-col gap-4 text-right">
-            <ScrollReveal delay={0.6}>
-              <div className="w-full aspect-[1/1.9] rounded-md overflow-hidden">
-                <ScrollParallax
-                  axis="y"
-                  strength={-40}
-                  speed={0.02}
-                  className="w-full h-full"
-                >
-                  <img
-                    data-navbar="dark"
-                    src="/images/وسواس.png"
-                    alt=""
-                    className="w-full h-full object-cover scale-120"
-                  />
-                </ScrollParallax>
-              </div>
-            </ScrollReveal>
-
-            <div>
-              <ScrollReveal direction="right" delay={0.75}>
-                <h3 className="font-bold text-xl">
-                  ساخته شده با وسواس
-                </h3>
-              </ScrollReveal>
-
-              <ScrollReveal direction="left" delay={0.9}>
-                <p className="mt-2 text-base leading-7 text-muted-foreground">
-                  از انتخاب متریال تا آخرین مرحله تولید
-                </p>
-              </ScrollReveal>
-            </div>
-          </div>
-        </div>
-      </section>
-      <Marquees/>
+      <FlipCards />
+      <Marquees />
     </main>
   );
 }

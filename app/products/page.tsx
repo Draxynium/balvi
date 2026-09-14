@@ -1,238 +1,356 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
+import { ArrowDown, ArrowLeft, ArrowUpLeft } from "lucide-react";
+import ProductCarousel from "@/components/items-carousel";
+import ItemCard from "@/components/item-card";
 import ScrollReveal from "@/components/scroll-reveal";
 import ScrollParallax from "@/components/scroll-parallax";
-import ItemsCarousel from "@/components/items-carousel";
-import ItemCard from "@/components/item-card";
 
-// ─── Product data (with unique IDs) ────────────────────────────────────────
+/* ---------------- data ---------------- */
+
 const menProducts = [
-  { id: "men-1", name: "بوت چرمی مشکی", colors: ["#1f1f1f", "#301b1b"], beforePrice: 3200000, price: 2850000, image: "/images/boot.png" },
-  { id: "men-2", name: "کفش رسمی کلاسیک", colors: ["#1c1c1c", "#4a3024"], beforePrice: 2900000, price: 2500000, image: "/images/shoe.png" },
-  { id: "men-3", name: "لوفر چرمی", colors: ["#211b18", "#5a3828"], beforePrice: 2700000, price: 2300000, image: "/images/loafer.png" },
-  { id: "men-4", name: "کیف دستی مردانه", colors: ["#1c1c1c", "#38251d"], beforePrice: 4100000, price: 3600000, image: "/images/bag.png" },
-  { id: "men-5", name: "بوت چرمی مشکی", colors: ["#1f1f1f", "#301b1b"], beforePrice: 3200000, price: 2850000, image: "/images/boot.png" },
-  { id: "men-6", name: "کفش رسمی کلاسیک", colors: ["#1c1c1c", "#4a3024"], beforePrice: 2900000, price: 2500000, image: "/images/shoe.png" },
-  { id: "men-7", name: "لوفر چرمی", colors: ["#211b18", "#5a3828"], beforePrice: 2700000, price: 2300000, image: "/images/loafer.png" },
-  { id: "men-8", name: "کیف دستی مردانه", colors: ["#1c1c1c", "#38251d"], beforePrice: 4100000, price: 3600000, image: "/images/bag.png" },
+  { name: "بوت مشکی", colors: ["#1f1f1f", "#301b1b"], beforePrice: 2500000, price: 2000000, image: "/images/boot.png" },
+  { name: "کفش کلاسیک", colors: ["#241c18", "#111111"], beforePrice: 3200000, price: 2800000, image: "/images/boot.png" },
+  { name: "بوت چرمی قهوه‌ای", colors: ["#5a3825", "#241c18"], beforePrice: 3500000, price: 3100000, image: "/images/boot.png" },
+  { name: "کفش رسمی", colors: ["#111111", "#30251f"], beforePrice: 2900000, price: 2500000, image: "/images/boot.png" },
+  { name: "نیم بوت چرمی", colors: ["#30231c", "#171717"], beforePrice: 3300000, price: 2950000, image: "/images/boot.png" },
 ];
 
 const womenProducts = [
-  { id: "women-1", name: "بوت چرمی زنانه", colors: ["#1f1f1f", "#301b1b"], beforePrice: 3200000, price: 2850000, image: "/images/boot.png" },
-  { id: "women-2", name: "کیف چرمی کلاسیک", colors: ["#1f1f1f", "#5a3828"], beforePrice: 3500000, price: 3100000, image: "/images/bag.png" },
-  { id: "women-3", name: "کفش چرمی زنانه", colors: ["#1c1c1c", "#4a3024"], beforePrice: 2800000, price: 2400000, image: "/images/shoe.png" },
-  { id: "women-4", name: "کیف دوشی چرمی", colors: ["#211b18", "#6a4634"], beforePrice: 3000000, price: 2600000, image: "/images/bag.png" },
-  { id: "women-5", name: "لوفر زنانه", colors: ["#1d1d1d", "#513529"], beforePrice: 2600000, price: 2250000, image: "/images/loafer.png" },
-  { id: "women-6", name: "کیف دستی کوچک", colors: ["#202020", "#754d39"], beforePrice: 2800000, price: 2450000, image: "/images/bag.png" },
-  { id: "women-7", name: "بوت کوتاه چرمی", colors: ["#181818", "#3c2920"], beforePrice: 3100000, price: 2750000, image: "/images/boot.png" },
-  { id: "women-8", name: "کفش کلاسیک زنانه", colors: ["#1d1d1d", "#54372a"], beforePrice: 2700000, price: 2350000, image: "/images/shoe.png" },
+  { name: "بوت زنانه مشکی", colors: ["#1f1f1f", "#301b1b"], beforePrice: 2800000, price: 2400000, image: "/images/boot.png" },
+  { name: "کفش زنانه کلاسیک", colors: ["#3a2921", "#161616"], beforePrice: 2600000, price: 2250000, image: "/images/boot.png" },
+  { name: "بوت قهوه‌ای", colors: ["#62402c", "#241c18"], beforePrice: 3300000, price: 2950000, image: "/images/boot.png" },
+  { name: "کفش روزمره", colors: ["#242424", "#4a3024"], beforePrice: 2400000, price: 2100000, image: "/images/boot.png" },
+  { name: "بوت بلند چرمی", colors: ["#181818", "#38251d"], beforePrice: 3900000, price: 3500000, image: "/images/boot.png" },
 ];
 
+/* ---------------- page ---------------- */
+
 export default function ProductsPage() {
-  // ─── Scroll spy state ────────────────────────────────────────────────────
-  const [activeSection, setActiveSection] = useState<string>("men");
-
-  useEffect(() => {
-    // Smooth scroll for whole document (if not already set globally)
-    document.documentElement.style.scrollBehavior = "smooth";
-
-    const sections = document.querySelectorAll<HTMLElement>("section[id]");
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id);
-          }
-        });
-      },
-      {
-        rootMargin: "-40% 0px -60% 0px", // adjust for navbar offset
-        threshold: 0,
-      }
-    );
-
-    sections.forEach((section) => observer.observe(section));
-
-    return () => {
-      observer.disconnect();
-      document.documentElement.style.scrollBehavior = "";
-    };
-  }, []);
-
   return (
     <main dir="rtl" className="w-full overflow-hidden">
-      {/* ─── HERO ─────────────────────────────────────────────────────────── */}
-      <section className="w-full max-w-7xl mx-auto px-6 lg:px-0 pt-24 pb-28">
-        <div className="grid md:grid-cols-2 gap-10 items-end">
-          <ScrollReveal direction="right" distance={70} duration={1.1}>
-            <div>
-              <p className="text-sm text-muted-foreground mb-6">مجموعه بالوی</p>
-              <h1 className="text-5xl sm:text-6xl md:text-7xl font-medium tracking-tight leading-[1.05]">
-                چرم،
-                <br />
-                به روایت بالوی.
-              </h1>
+      {/* ================= HERO ================= */}
+      <section className="w-full pt-32 pb-14 sm:pt-36 sm:pb-16">
+        <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-10">
+          <ScrollReveal direction="bottom" distance={40}>
+            <div className="flex items-center gap-4 text-xs text-muted-foreground">
+              <span className="tracking-[0.2em]">BALVI / COLLECTION</span>
+              <span className="h-px flex-1 bg-foreground/10" />
+              <span>2026</span>
             </div>
           </ScrollReveal>
 
-          <ScrollReveal direction="left" distance={60} duration={1} delay={0.2}>
-            <p className="max-w-md mr-auto text-xl md:text-2xl leading-[1.5] text-muted-foreground">
-              مجموعه‌ای از محصولاتی که در آن اصالت چرم، هنر دست و نگاه امروزی
-              در کنار هم قرار گرفته‌اند.
-            </p>
+          <div className="mt-10 grid gap-10 lg:grid-cols-[1.4fr_1fr] lg:items-end lg:gap-20">
+            <ScrollReveal direction="right" distance={50} delay={0.1}>
+              <h1 className="text-5xl font-medium leading-[1.05] tracking-tight sm:text-6xl md:text-7xl">
+                مجموعه‌ای
+                <br />
+                از چرم و دقت.
+              </h1>
+            </ScrollReveal>
+
+            <ScrollReveal direction="left" distance={50} delay={0.2}>
+              <p className="max-w-md text-base leading-8 text-muted-foreground lg:pb-3">
+                هر محصول بالوی حاصل انتخاب دقیق چرم، ساخت دست و توجه به
+                جزئیاتی است که با گذر زمان دیده می‌شود. مجموعه‌ی مردانه و
+                زنانه، هر یک با زبان خودشان.
+              </p>
+            </ScrollReveal>
+          </div>
+        </div>
+      </section>
+
+      {/* ================= CATEGORY SPLIT ================= */}
+      <section className="w-full pb-20">
+        <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-10">
+          <div className="grid gap-4 md:grid-cols-2 md:gap-5">
+            <CategoryCard
+              href="#men"
+              eyebrow="MEN / 01"
+              title="مردانه"
+              description="طراحی ماندگار، چرم طبیعی و ساخت دقیق"
+              image="/images/boot.png"
+            />
+            <CategoryCard
+              href="#women"
+              eyebrow="WOMEN / 02"
+              title="زنانه"
+              description="ظرافت، کیفیت و طراحی امروزی در چرم طبیعی"
+              image="/images/boot.png"
+              delay={0.12}
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* ================= MEN ================= */}
+      <section id="men" className="w-full scroll-mt-24 pb-24">
+        <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-10">
+          <ScrollReveal direction="right" distance={40}>
+            <SectionHeader
+              index="01"
+              title="مردانه"
+              description="طراحی ماندگار، چرم طبیعی و ساخت دقیق"
+              href="/products/men"
+            />
+          </ScrollReveal>
+
+          <ScrollReveal
+            direction="bottom"
+            distance={40}
+            duration={1}
+            delay={0.15}
+            className="mt-10 w-full"
+          >
+            <ProductCarousel>
+              {menProducts.map((product, i) => (
+                <ItemCard key={`${product.name}-${i}`} item={product} />
+              ))}
+            </ProductCarousel>
+          </ScrollReveal>
+
+          <div className="mt-8 flex justify-end sm:hidden">
+            <Link
+              href="/products/men"
+              className="flex items-center gap-2 text-sm text-muted-foreground"
+            >
+              مشاهده مجموعه مردانه
+              <ArrowLeft size={15} />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ================= EDITORIAL BREAK ================= */}
+      <section className="relative h-[50vh] min-h-[360px] w-full overflow-hidden">
+        <ScrollParallax
+          speed={0.08}
+          className="absolute inset-0 h-[115%] w-full"
+        >
+          <video
+            src="/videos/compressed/video-c.mp4"
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+        </ScrollParallax>
+
+        <div className="absolute inset-0 bg-black/40" />
+
+        <div className="relative z-10 flex h-full w-full items-center justify-center px-6 text-white">
+          <ScrollReveal direction="bottom" distance={35} duration={1}>
+            <div className="flex flex-col items-center gap-5 text-center">
+              <span className="text-[10px] tracking-[0.3em] text-white/60 sm:text-xs">
+                NATURAL LEATHER
+              </span>
+
+              <h2 className="max-w-2xl text-3xl leading-[1.25] tracking-tight sm:text-4xl md:text-5xl">
+                چرم، ماده‌ای که با گذر زمان
+                <br className="hidden sm:block" />
+                شخصیت پیدا می‌کند.
+              </h2>
+            </div>
           </ScrollReveal>
         </div>
       </section>
 
-      {/* ─── CATEGORY NAV ──────────────────────────────────────────────────── */}
-      <section className="w-full max-w-7xl mx-auto px-6 lg:px-0 pb-20">
-        <ScrollReveal direction="bottom" distance={25}>
-          <div className="flex items-center gap-3 border-b pb-5">
-            <Link
-              href="#men"
-              aria-current={activeSection === "men" ? "page" : undefined}
-              className={`px-6 py-2.5 rounded-full transition ${
-                activeSection === "men"
-                  ? "bg-foreground text-background"
-                  : "border hover:bg-muted"
-              }`}
-            >
-              مردانه
-            </Link>
-            <Link
-              href="#women"
-              aria-current={activeSection === "women" ? "page" : undefined}
-              className={`px-6 py-2.5 rounded-full transition ${
-                activeSection === "women"
-                  ? "bg-foreground text-background"
-                  : "border hover:bg-muted"
-              }`}
-            >
-              زنانه
-            </Link>
-          </div>
-        </ScrollReveal>
-      </section>
+      {/* ================= WOMEN ================= */}
+      <section id="women" className="w-full scroll-mt-24 pb-24 pt-24">
+        <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-10">
+          <ScrollReveal direction="right" distance={40}>
+            <SectionHeader
+              index="02"
+              title="زنانه"
+              description="ظرافت، کیفیت و طراحی امروزی در چرم طبیعی"
+              href="/products/women"
+            />
+          </ScrollReveal>
 
-      {/* ─── MEN ──────────────────────────────────────────────────────────── */}
-      <section
-        id="men"
-        className="w-full max-w-7xl mx-auto px-6 lg:px-0 pb-36 scroll-mt-24"
-      >
-        <ScrollReveal direction="right" distance={55}>
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-14">
-            <div>
-              <p className="text-sm text-muted-foreground mb-4">مجموعه مردانه</p>
-              <h2 className="text-4xl md:text-5xl font-medium tracking-tight">
-                مردانه
-              </h2>
-            </div>
-            <p className="max-w-md text-lg leading-[1.5] text-muted-foreground">
-              طراحی‌هایی با خطوط ساده و متریال اصیل؛ برای آن‌هایی که کیفیت را
-              در جزئیات می‌بینند.
-            </p>
-          </div>
-        </ScrollReveal>
-
-        <ItemsCarousel>
-          <ItemCard item={{name: "بوت مشکی", colors: ["#1f1f1f", "#301b1b"], beforePrice: 2500000, price: 2000000, image: "/images/boot.png"}} />
-          <ItemCard item={{name: "بوت مشکی", colors: ["#1f1f1f", "#301b1b"], beforePrice: 2500000, price: 2000000, image: "/images/boot.png"}} />
-          <ItemCard item={{name: "بوت مشکی", colors: ["#1f1f1f", "#301b1b"], beforePrice: 2500000, price: 2000000, image: "/images/boot.png"}} />
-          <ItemCard item={{name: "بوت مشکی", colors: ["#1f1f1f", "#301b1b"], beforePrice: 2500000, price: 2000000, image: "/images/boot.png"}} />
-          <ItemCard item={{name: "بوت مشکی", colors: ["#1f1f1f", "#301b1b"], beforePrice: 2500000, price: 2000000, image: "/images/boot.png"}} />
-          <ItemCard item={{name: "بوت مشکی", colors: ["#1f1f1f", "#301b1b"], beforePrice: 2500000, price: 2000000, image: "/images/boot.png"}} />
-          <ItemCard item={{name: "بوت مشکی", colors: ["#1f1f1f", "#301b1b"], beforePrice: 2500000, price: 2000000, image: "/images/boot.png"}} />
-          <ItemCard item={{name: "بوت مشکی", colors: ["#1f1f1f", "#301b1b"], beforePrice: 2500000, price: 2000000, image: "/images/boot.png"}} />
-        </ItemsCarousel>
-      </section>
-
-      {/* ─── EDITORIAL VIDEO ──────────────────────────────────────────────── */}
-      <section className="w-full max-w-7xl mx-auto px-6 lg:px-0 pb-36">
-        <ScrollReveal direction="bottom" distance={70} duration={1.2}>
-          <div
-            data-navbar="dark"
-            className="relative h-[60vh] min-h-[460px] rounded-lg overflow-hidden"
+          <ScrollReveal
+            direction="bottom"
+            distance={40}
+            duration={1}
+            delay={0.15}
+            className="mt-10 w-full"
           >
-            <ScrollParallax
-              axis="y"
-              strength={35}
-              speed={0.04}
-              className="absolute inset-0 w-full h-full"
-            >
-              <video
-                src="/videos/compressed/video-f.mp4"
-                autoPlay
-                muted
-                loop
-                playsInline
-                className="w-full h-full object-cover scale-110"
-              />
-            </ScrollParallax>
+            <ProductCarousel>
+              {womenProducts.map((product, i) => (
+                <ItemCard key={`${product.name}-${i}`} item={product} />
+              ))}
+            </ProductCarousel>
+          </ScrollReveal>
 
-            <div className="absolute inset-0 flex items-end p-8 sm:p-12 md:p-16">
-              <div className="max-w-2xl text-background">
-                <ScrollReveal direction="right" distance={55} delay={0.3}>
-                  <h2 className="text-4xl sm:text-5xl md:text-6xl font-medium leading-[1.1]">
-                    هر تکه از چرم،
-                    <br />
-                    داستانی برای گفتن دارد.
+          <div className="mt-8 flex justify-end sm:hidden">
+            <Link
+              href="/products/women"
+              className="flex items-center gap-2 text-sm text-muted-foreground"
+            >
+              مشاهده مجموعه زنانه
+              <ArrowLeft size={15} />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ================= BRAND STATEMENT ================= */}
+      <section className="w-full pb-20">
+        <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-10">
+          <ScrollReveal direction="bottom" distance={35} duration={1}>
+            <div className="border-y border-foreground/10 py-12">
+              <div className="flex flex-col items-start gap-8 lg:flex-row lg:items-center lg:justify-between">
+                <div className="max-w-lg">
+                  <span className="text-xs text-muted-foreground">
+                    BALVI / PHILOSOPHY
+                  </span>
+
+                  <h2 className="mt-3 text-2xl leading-[1.3] tracking-tight sm:text-3xl">
+                    ساخته شده از چرم، پرداخته شده با هنر.
                   </h2>
-                </ScrollReveal>
+                </div>
+
+                <div className="grid grid-cols-1 gap-6 text-sm sm:grid-cols-3 sm:gap-12">
+                  <Statement title="چرم طبیعی" desc="انتخاب شده با دقت" />
+                  <Statement title="ساخت دقیق" desc="توجه به جزئیات" />
+                  <Statement title="اصالت بالوی" desc="تجربه‌ای ماندگار" />
+                </div>
               </div>
             </div>
-          </div>
-        </ScrollReveal>
+          </ScrollReveal>
+        </div>
       </section>
 
-      {/* ─── WOMEN ────────────────────────────────────────────────────────── */}
-      <section
-        id="women"
-        className="w-full max-w-7xl mx-auto px-6 lg:px-0 scroll-mt-24"
-      >
-        <ScrollReveal direction="left" distance={55}>
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-14">
-            <div>
-              <p className="text-sm text-muted-foreground mb-4">مجموعه زنانه</p>
-              <h2 className="text-4xl md:text-5xl font-medium tracking-tight">
-                زنانه
-              </h2>
+      {/* ================= FINAL CTA ================= */}
+      <section className="w-full pb-24">
+        <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-10">
+          <ScrollReveal direction="bottom" distance={30} duration={1}>
+            <div className="flex flex-col gap-6 border-t border-foreground/10 pt-10 sm:flex-row sm:items-center sm:justify-between">
+              <p className="max-w-sm text-sm leading-7 text-muted-foreground">
+                برای دریافت اطلاعات بیشتر درباره محصولات، قیمت عمده یا
+                هماهنگی بازدید از کارگاه با ما در تماس باشید.
+              </p>
+
+              <Link
+                href="/contact"
+                className="group flex items-center gap-3 text-sm"
+              >
+                تماس با ما
+                <span className="flex h-9 w-9 items-center justify-center rounded-full border border-foreground/10 transition-transform duration-300 group-hover:-translate-x-1">
+                  <ArrowUpLeft size={15} />
+                </span>
+              </Link>
             </div>
-            <p className="max-w-md text-lg leading-[1.5] text-muted-foreground">
-              ظرافتی آرام و بی‌تکلف، شکل‌گرفته از چرم اصیل و توجه به کوچک‌ترین
-              جزئیات.
-            </p>
-          </div>
-        </ScrollReveal>
-
-        <ScrollReveal direction="bottom" distance={50} duration={1} delay={0.15}>
-            <ItemsCarousel>
-            <ItemCard item={{name: "بوت مشکی", colors: ["#1f1f1f", "#301b1b"], beforePrice: 2500000, price: 2000000, image: "/images/boot.png"}} />
-            <ItemCard item={{name: "بوت مشکی", colors: ["#1f1f1f", "#301b1b"], beforePrice: 2500000, price: 2000000, image: "/images/boot.png"}} />
-            <ItemCard item={{name: "بوت مشکی", colors: ["#1f1f1f", "#301b1b"], beforePrice: 2500000, price: 2000000, image: "/images/boot.png"}} />
-            <ItemCard item={{name: "بوت مشکی", colors: ["#1f1f1f", "#301b1b"], beforePrice: 2500000, price: 2000000, image: "/images/boot.png"}} />
-            <ItemCard item={{name: "بوت مشکی", colors: ["#1f1f1f", "#301b1b"], beforePrice: 2500000, price: 2000000, image: "/images/boot.png"}} />
-            <ItemCard item={{name: "بوت مشکی", colors: ["#1f1f1f", "#301b1b"], beforePrice: 2500000, price: 2000000, image: "/images/boot.png"}} />
-            <ItemCard item={{name: "بوت مشکی", colors: ["#1f1f1f", "#301b1b"], beforePrice: 2500000, price: 2000000, image: "/images/boot.png"}} />
-            <ItemCard item={{name: "بوت مشکی", colors: ["#1f1f1f", "#301b1b"], beforePrice: 2500000, price: 2000000, image: "/images/boot.png"}} />
-            </ItemsCarousel>
-        </ScrollReveal>
+          </ScrollReveal>
+        </div>
       </section>
-
-      {/* ─── BRAND STATEMENT ─────────────────────────────────────────────── */}
-      <section className="w-full max-w-7xl mx-auto px-6 lg:px-0 py-10">
-        <ScrollReveal direction="bottom" distance={35} duration={1.3}>
-          <div className="border-t pt-16">
-            <h2 className="max-w-4xl text-4xl md:text-6xl font-medium leading-[1.12] tracking-tight">
-              اصالت را نمی‌توان ساخت؛
-              <br />
-              باید سال‌ها آن را زندگی کرد.
-            </h2>
-          </div>
-        </ScrollReveal>
-      </section>
-
     </main>
+  );
+}
+
+/* ---------------- helpers ---------------- */
+
+function CategoryCard({
+  href,
+  eyebrow,
+  title,
+  description,
+  image,
+  delay = 0,
+}: {
+  href: string;
+  eyebrow: string;
+  title: string;
+  description: string;
+  image: string;
+  delay?: number;
+}) {
+  return (
+    <ScrollReveal direction="bottom" distance={40} delay={delay}>
+      <Link
+        href={href}
+        className="group relative flex aspect-[4/3] w-full overflow-hidden rounded-md bg-muted md:aspect-[5/4]"
+      >
+        <img
+          src={image}
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-[1.04]"
+        />
+
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+
+        <div className="relative z-10 flex h-full w-full flex-col justify-between p-6 text-white sm:p-8">
+          <span className="text-[10px] tracking-[0.25em] text-white/70">
+            {eyebrow}
+          </span>
+
+          <div className="flex items-end justify-between gap-6">
+            <div>
+              <h2 className="text-3xl font-medium tracking-tight sm:text-4xl">
+                {title}
+              </h2>
+              <p className="mt-2 max-w-xs text-sm leading-6 text-white/80">
+                {description}
+              </p>
+            </div>
+
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/30 transition-all duration-300 group-hover:bg-white group-hover:text-black">
+              <ArrowDown size={16} />
+            </span>
+          </div>
+        </div>
+      </Link>
+    </ScrollReveal>
+  );
+}
+
+function SectionHeader({
+  index,
+  title,
+  description,
+  href,
+}: {
+  index: string;
+  title: string;
+  description: string;
+  href: string;
+}) {
+  return (
+    <div className="flex flex-col gap-6 border-t border-foreground/10 pt-8 sm:flex-row sm:items-end sm:justify-between">
+      <div className="flex items-start gap-5 sm:gap-8">
+        <span className="pt-3 text-xs text-muted-foreground">{index}</span>
+
+        <div className="flex flex-col gap-2">
+          <h2 className="text-3xl font-medium tracking-tight sm:text-4xl md:text-5xl">
+            {title}
+          </h2>
+          <p className="text-sm text-muted-foreground sm:text-base">
+            {description}
+          </p>
+        </div>
+      </div>
+
+      <Link
+        href={href}
+        className="group hidden items-center gap-2 text-sm sm:flex"
+      >
+        مشاهده همه
+        <ArrowLeft
+          size={16}
+          className="transition-transform group-hover:-translate-x-1"
+        />
+      </Link>
+    </div>
+  );
+}
+
+function Statement({ title, desc }: { title: string; desc: string }) {
+  return (
+    <div className="flex flex-col gap-1">
+      <span className="text-foreground">{title}</span>
+      <span className="text-muted-foreground">{desc}</span>
+    </div>
   );
 }
