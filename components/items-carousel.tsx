@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import ScrollReveal from "./scroll-reveal";
 
@@ -19,14 +19,33 @@ export default function ItemsCarousel({
     moved: false,
   });
 
+  // Track text direction so the arrows point the right way and
+  // scroll the right way, no matter where this is mounted.
+  const [isRTL, setIsRTL] = useState(true); // site is RTL by default
+
+  useEffect(() => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    setIsRTL(getComputedStyle(el).direction === "rtl");
+  }, []);
+
   /* ---------- ARROW BUTTON SCROLL ---------- */
   const scrollBy = (direction: "prev" | "next") => {
     const el = scrollerRef.current;
     if (!el) return;
 
     const amount = el.clientWidth * 0.8;
+    const rtl = getComputedStyle(el).direction === "rtl";
+
+    // In LTR, "next" moves scrollLeft positive (content shifts left).
+    // In spec-compliant RTL (Chrome/Firefox/Safari), scrollLeft is
+    // 0 (or negative) at the start and goes MORE negative as you
+    // move forward through the content, so the sign has to flip.
+    const sign = direction === "next" ? 1 : -1;
+    const effectiveSign = rtl ? -sign : sign;
+
     el.scrollBy({
-      left: direction === "next" ? amount : -amount,
+      left: effectiveSign * amount,
       behavior: "smooth",
     });
   };
@@ -85,8 +104,8 @@ export default function ItemsCarousel({
         className={`
           flex w-full items-stretch gap-3 sm:gap-4
           overflow-x-auto overscroll-x-contain
-          px-4 sm:px-6 md:px-8 pb-2
-          [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden
+           pb-2
+          scrollbar-none [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden
           select-none
           ${isDown ? "cursor-grabbing" : "cursor-grab"}
           ${isDown ? "" : "snap-x snap-mandatory scroll-smooth"}
@@ -97,17 +116,6 @@ export default function ItemsCarousel({
 
       {/* ---------- CONTROLS ---------- */}
       <div className="flex w-full items-center justify-center gap-3 px-4 sm:px-6 md:justify-start md:px-8">
-        <ScrollReveal direction="left" distance={40} duration={0.8} delay={0.15}>
-          <button
-            type="button"
-            aria-label="بعدی"
-            onClick={() => scrollBy("next")}
-            className="flex h-10 w-14 sm:h-11 sm:w-20 md:h-12 md:w-24 items-center justify-center rounded-full bg-accent/30 cursor-pointer transition-colors hover:bg-accent/50 active:scale-95"
-          >
-            <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
-          </button>
-        </ScrollReveal>
-
         <ScrollReveal direction="right" distance={40} duration={0.8} delay={0.25}>
           <button
             type="button"
@@ -115,7 +123,26 @@ export default function ItemsCarousel({
             onClick={() => scrollBy("prev")}
             className="flex h-10 w-14 sm:h-11 sm:w-20 md:h-12 md:w-24 items-center justify-center rounded-full bg-accent/30 cursor-pointer transition-colors hover:bg-accent/50 active:scale-95"
           >
-            <ArrowLeft className="h-4 w-4 sm:h-5 sm:w-5" />
+            {isRTL ? (
+              <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
+            ) : (
+              <ArrowLeft className="h-4 w-4 sm:h-5 sm:w-5" />
+            )}
+          </button>
+        </ScrollReveal>
+
+        <ScrollReveal direction="left" distance={40} duration={0.8} delay={0.15}>
+          <button
+            type="button"
+            aria-label="بعدی"
+            onClick={() => scrollBy("next")}
+            className="flex h-10 w-14 sm:h-11 sm:w-20 md:h-12 md:w-24 items-center justify-center rounded-full bg-accent/30 cursor-pointer transition-colors hover:bg-accent/50 active:scale-95"
+          >
+            {isRTL ? (
+              <ArrowLeft className="h-4 w-4 sm:h-5 sm:w-5" />
+            ) : (
+              <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
+            )}
           </button>
         </ScrollReveal>
       </div>
