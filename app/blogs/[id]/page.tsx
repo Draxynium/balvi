@@ -44,7 +44,7 @@ export default async function BlogPage({
       <header className="flex w-full max-w-7xl flex-col items-center px-6 pb-12 pt-36 md:pb-16 md:pt-44">
         <div className="flex w-full max-w-3xl flex-col items-center text-center">
           {category && (
-            <div className="mb-6 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-xs text-primary">
+            <div className="mb-6 rounded-md border border-primary/20 bg-primary/5 px-4 py-1.5 text-xs text-primary">
               {category}
             </div>
           )}
@@ -83,7 +83,7 @@ export default async function BlogPage({
               {tags.map((tag) => (
                 <span
                   key={tag}
-                  className="rounded-full bg-foreground/[0.04] px-3 py-1 text-xs text-foreground/50"
+                  className="rounded-md bg-foreground/[0.04] px-3 py-1 text-xs text-foreground/50"
                 >
                   #{tag}
                 </span>

@@ -416,7 +416,7 @@ function CheckoutStepItem({
     >
       <div className="relative">
         {completed ? (
-          <div className="w-[38px] h-[38px] rounded-full bg-foreground text-background flex items-center justify-center">
+          <div className="w-[38px] h-[38px] rounded-md bg-foreground text-background flex items-center justify-center">
             <Check size={19} />
           </div>
         ) : (
@@ -545,12 +545,12 @@ function PaymentGateway({
       }`}
     >
       <div
-        className={`w-5 h-5 rounded-full border flex items-center justify-center shrink-0 ${
+        className={`w-5 h-5 rounded-md border flex items-center justify-center shrink-0 ${
           active ? "border-foreground" : "border-foreground/20"
         }`}
       >
         {active && (
-          <div className="w-2.5 h-2.5 rounded-full bg-foreground" />
+          <div className="w-2.5 h-2.5 rounded-md bg-foreground" />
         )}
       </div>
 

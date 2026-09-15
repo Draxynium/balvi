@@ -136,7 +136,7 @@ export default function PrivacyPage() {
                         href={`#${s.id}`}
                         className="group relative block rounded-l-md py-2 pl-3 pr-4 text-sm leading-6 text-foreground/60 transition-colors hover:bg-foreground/[0.03] hover:text-foreground"
                       >
-                        <span className="absolute right-0 top-1/2 h-0 w-[2px] -translate-y-1/2 rounded-full bg-transparent transition-all duration-200 group-hover:h-[30%] group-hover:bg-foreground/20" />
+                        <span className="absolute right-0 top-1/2 h-0 w-[2px] -translate-y-1/2 rounded-md bg-transparent transition-all duration-200 group-hover:h-[30%] group-hover:bg-foreground/20" />
                         {s.title}
                       </a>
                     </li>
@@ -189,7 +189,7 @@ export default function PrivacyPage() {
                 </p>
                 <Link
                   href="/contact"
-                  className="inline-flex h-12 items-center justify-center rounded-full bg-secondary px-7 text-sm font-medium text-background transition-opacity hover:opacity-90"
+                  className="inline-flex h-12 items-center justify-center rounded-md bg-secondary px-7 text-sm font-medium text-background transition-opacity hover:opacity-90"
                 >
                   تماس با ما
                 </Link>

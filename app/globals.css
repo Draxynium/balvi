@@ -267,13 +267,12 @@
     @apply py-16
   }
   .scrollbar-hide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 
-  &::-webkit-scrollbar {
-    display: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
-
-}
 }
 

@@ -14,7 +14,7 @@ export default function BlogCard({
   return (
     <div className="w-40 sm:w-48 md:w-52 shrink-0 flex flex-col gap-2 select-none">
       <div
-        data-navbar="dark"
+        data-navbar-dark
         className="relative w-full aspect-square rounded-md overflow-hidden border border-foreground/20 bg-card-foreground"
       >
         <img

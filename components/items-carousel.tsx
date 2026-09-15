@@ -121,7 +121,7 @@ export default function ItemsCarousel({
             type="button"
             aria-label="قبلی"
             onClick={() => scrollBy("prev")}
-            className="flex h-10 w-14 sm:h-11 sm:w-20 md:h-12 md:w-24 items-center justify-center rounded-full bg-accent/30 cursor-pointer transition-colors hover:bg-accent/50 active:scale-95"
+            className="flex h-10 w-14 sm:h-11 sm:w-20 md:h-12 md:w-24 items-center justify-center rounded-md bg-accent/30 cursor-pointer transition-colors hover:bg-accent/50 active:scale-95"
           >
             {isRTL ? (
               <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
@@ -136,7 +136,7 @@ export default function ItemsCarousel({
             type="button"
             aria-label="بعدی"
             onClick={() => scrollBy("next")}
-            className="flex h-10 w-14 sm:h-11 sm:w-20 md:h-12 md:w-24 items-center justify-center rounded-full bg-accent/30 cursor-pointer transition-colors hover:bg-accent/50 active:scale-95"
+            className="flex h-10 w-14 sm:h-11 sm:w-20 md:h-12 md:w-24 items-center justify-center rounded-md bg-accent/30 cursor-pointer transition-colors hover:bg-accent/50 active:scale-95"
           >
             {isRTL ? (
               <ArrowLeft className="h-4 w-4 sm:h-5 sm:w-5" />

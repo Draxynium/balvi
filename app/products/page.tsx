@@ -237,7 +237,7 @@ export default function ProductsPage() {
                 className="group flex items-center gap-3 text-sm"
               >
                 تماس با ما
-                <span className="flex h-9 w-9 items-center justify-center rounded-full border border-foreground/10 transition-transform duration-300 group-hover:-translate-x-1">
+                <span className="flex h-9 w-9 items-center justify-center rounded-md border border-foreground/10 transition-transform duration-300 group-hover:-translate-x-1">
                   <ArrowUpLeft size={15} />
                 </span>
               </Link>
@@ -296,7 +296,7 @@ function CategoryCard({
               </p>
             </div>
 
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/30 transition-all duration-300 group-hover:bg-white group-hover:text-black">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-white/30 transition-all duration-300 group-hover:bg-white group-hover:text-black">
               <ArrowDown size={16} />
             </span>
           </div>

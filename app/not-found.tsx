@@ -43,7 +43,7 @@ export default function NotFound() {
           <div className="mt-9 flex flex-col items-center gap-3 sm:flex-row">
             <Link
               href="/"
-              className="inline-flex h-14 items-center justify-center gap-2 rounded-full bg-secondary px-8 text-sm font-medium text-background transition-opacity hover:opacity-90"
+              className="inline-flex h-14 items-center justify-center gap-2 rounded-md bg-secondary px-8 text-sm font-medium text-background transition-opacity hover:opacity-90"
             >
               بازگشت به خانه
               <ArrowLeft size={16} />
@@ -51,7 +51,7 @@ export default function NotFound() {
 
             <Link
               href="/contact"
-              className="inline-flex h-14 items-center justify-center rounded-full border border-foreground/20 px-8 text-sm font-medium text-foreground/80 transition-colors hover:border-foreground/40 hover:text-foreground"
+              className="inline-flex h-14 items-center justify-center rounded-md border border-foreground/20 px-8 text-sm font-medium text-foreground/80 transition-colors hover:border-foreground/40 hover:text-foreground"
             >
               تماس با ما
             </Link>
@@ -66,21 +66,21 @@ export default function NotFound() {
             >
               فروشگاه
             </Link>
-            <span className="h-1 w-1 rounded-full bg-foreground/20" />
+            <span className="h-1 w-1 rounded-md bg-foreground/20" />
             <Link
               href="/about"
               className="transition-colors hover:text-foreground"
             >
               درباره بالوی
             </Link>
-            <span className="h-1 w-1 rounded-full bg-foreground/20" />
+            <span className="h-1 w-1 rounded-md bg-foreground/20" />
             <Link
               href="/blog"
               className="transition-colors hover:text-foreground"
             >
               مقاله‌ها
             </Link>
-            <span className="h-1 w-1 rounded-full bg-foreground/20" />
+            <span className="h-1 w-1 rounded-md bg-foreground/20" />
             <Link
               href="/wholesale"
               className="transition-colors hover:text-foreground"

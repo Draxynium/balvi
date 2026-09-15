@@ -48,7 +48,7 @@ export default function ArticleToc({ content }: ArticleTocProps) {
     <aside dir="rtl" className="hidden w-64 shrink-0 lg:block">
       <div className="sticky top-32">
         <div className="mb-6 flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-foreground/45">
-          <span className="h-1 w-1 rounded-full bg-primary" />
+          <span className="h-1 w-1 rounded-md bg-primary" />
           در این مقاله
         </div>
 
@@ -79,7 +79,7 @@ export default function ArticleToc({ content }: ArticleTocProps) {
                     {/* active bar on the right rail */}
                     <span
                       className={[
-                        "absolute right-0 top-1/2 -translate-y-1/2 w-[2px] rounded-full transition-all duration-200",
+                        "absolute right-0 top-1/2 -translate-y-1/2 w-[2px] rounded-md transition-all duration-200",
                         active
                           ? "h-[60%] bg-primary"
                           : "h-0 bg-transparent group-hover:h-[30%] group-hover:bg-foreground/20",

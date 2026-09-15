@@ -16,7 +16,7 @@ export default function AboutUs() {
           className="w-full"
         >
           <div
-            data-navbar="dark"
+            data-navbar-dark
             className="relative w-full h-[60svh] sm:h-[65svh] md:h-[70vh] rounded-lg overflow-hidden bg-white flex items-end"
           >
             <video

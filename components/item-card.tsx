@@ -19,7 +19,7 @@ export default function ItemCard({
     <div className="w-32 sm:w-40 md:w-48 lg:w-52 flex flex-col gap-1.5 sm:gap-2 shrink-0 snap-start select-none">
       {/* ---------- IMAGE ---------- */}
       <div
-        data-navbar="dark"
+        data-navbar-dark
         className="relative w-full aspect-square rounded-md bg-card-foreground overflow-hidden"
       >
         <img
@@ -47,7 +47,7 @@ export default function ItemCard({
             {item.colors.map((color, index) => (
               <div
                 key={index}
-                className="w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 rounded-full ring-1 ring-foreground/10"
+                className="w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 rounded-md ring-1 ring-foreground/10"
                 style={{ backgroundColor: color }}
               />
             ))}
@@ -63,7 +63,7 @@ export default function ItemCard({
           <p className="text-[10px] sm:text-[11px] md:text-sm text-muted-foreground line-through whitespace-nowrap">
             {item.beforePrice.toLocaleString("fa-IR")}
           </p>
-          <p className="bg-destructive text-white text-[9px] sm:text-[10px] md:text-xs rounded-full px-1.5 sm:px-2 py-0.5 flex items-center justify-center whitespace-nowrap">
+          <p className="bg-destructive text-white text-[9px] sm:text-[10px] md:text-xs rounded-md px-1.5 sm:px-2 py-0.5 flex items-center justify-center whitespace-nowrap">
             {discount}%
           </p>
         </div>

@@ -147,7 +147,7 @@ export default function TermsPage() {
                         href={`#${s.id}`}
                         className="group relative block rounded-l-md py-2 pl-3 pr-4 text-sm leading-6 text-foreground/60 transition-colors hover:bg-foreground/[0.03] hover:text-foreground"
                       >
-                        <span className="absolute right-0 top-1/2 h-0 w-[2px] -translate-y-1/2 rounded-full bg-transparent transition-all duration-200 group-hover:h-[30%] group-hover:bg-foreground/20" />
+                        <span className="absolute right-0 top-1/2 h-0 w-[2px] -translate-y-1/2 rounded-md bg-transparent transition-all duration-200 group-hover:h-[30%] group-hover:bg-foreground/20" />
                         {s.title}
                       </a>
                     </li>
@@ -202,13 +202,13 @@ export default function TermsPage() {
                 <div className="flex flex-col gap-3 sm:flex-row">
                   <Link
                     href="/contact"
-                    className="inline-flex h-12 items-center justify-center rounded-full bg-secondary px-7 text-sm font-medium text-background transition-opacity hover:opacity-90"
+                    className="inline-flex h-12 items-center justify-center rounded-md bg-secondary px-7 text-sm font-medium text-background transition-opacity hover:opacity-90"
                   >
                     تماس با ما
                   </Link>
                   <Link
                     href="/privacy"
-                    className="inline-flex h-12 items-center justify-center rounded-full border border-foreground/20 px-7 text-sm font-medium text-foreground/80 transition-colors hover:border-foreground/40 hover:text-foreground"
+                    className="inline-flex h-12 items-center justify-center rounded-md border border-foreground/20 px-7 text-sm font-medium text-foreground/80 transition-colors hover:border-foreground/40 hover:text-foreground"
                   >
                     حریم خصوصی
                   </Link>

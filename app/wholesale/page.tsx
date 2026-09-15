@@ -123,7 +123,7 @@ export default function WholesalePage() {
             className="w-full"
         >
             <div
-            data-navbar="dark"
+            data-navbar-dark
             className="relative flex items-end w-full h-[80svh] sm:h-[88svh] md:h-screen overflow-hidden bg-white"
             >
             <video
@@ -185,7 +185,7 @@ export default function WholesalePage() {
                 <div className="flex flex-col gap-3 mt-7 sm:flex-row">
                     <a
                     href="#contact"
-                    className="inline-flex items-center justify-center h-14 gap-2 px-8 text-sm font-medium transition-opacity rounded-full bg-background text-foreground hover:opacity-90"
+                    className="inline-flex items-center justify-center h-14 gap-2 px-8 text-sm font-medium transition-opacity rounded-md bg-background text-foreground hover:opacity-90"
                     >
                     درخواست همکاری
                     <ArrowLeft size={16} />
@@ -193,7 +193,7 @@ export default function WholesalePage() {
 
                     <Link
                     href="/contact"
-                    className="inline-flex items-center justify-center h-14 px-8 text-sm font-medium transition-colors border rounded-full border-background/30 text-background hover:border-background/60"
+                    className="inline-flex items-center justify-center h-14 px-8 text-sm font-medium transition-colors border rounded-md border-background/30 text-background hover:border-background/60"
                     >
                     گفت‌وگو با تیم فروش
                     </Link>
@@ -410,7 +410,7 @@ export default function WholesalePage() {
                 delay={i * 0.06}
               >
                 <li className="flex items-start gap-3 px-5 py-4 text-sm leading-[1.6] border rounded-md border-foreground/10 bg-muted/40 text-muted-foreground md:text-base">
-                  <span className="flex items-center justify-center rounded-full shrink-0 mt-0.5 w-5 h-5 bg-primary/15 text-primary">
+                  <span className="flex items-center justify-center rounded-md shrink-0 mt-0.5 w-5 h-5 bg-primary/15 text-primary">
                     <Check size={12} strokeWidth={2.5} />
                   </span>
                   {c}
@@ -447,7 +447,7 @@ export default function WholesalePage() {
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
             <Link
                 href="/contact"
-                className="inline-flex h-14 items-center justify-center gap-2 rounded-full bg-secondary px-8 text-sm font-medium text-background transition-opacity hover:opacity-90"
+                className="inline-flex h-14 items-center justify-center gap-2 rounded-md bg-secondary px-8 text-sm font-medium text-background transition-opacity hover:opacity-90"
             >
                 رفتن به صفحه تماس
                 <ArrowLeft size={16} />
@@ -455,7 +455,7 @@ export default function WholesalePage() {
 
             <a
                 href="tel:+982112345678"
-                className="inline-flex h-14 items-center justify-center rounded-full border border-foreground/20 px-8 text-sm font-medium text-foreground/80 transition-colors hover:border-foreground/40 hover:text-foreground"
+                className="inline-flex h-14 items-center justify-center rounded-md border border-foreground/20 px-8 text-sm font-medium text-foreground/80 transition-colors hover:border-foreground/40 hover:text-foreground"
                 dir="ltr"
             >
                 ۰۲۱-۱۲۳۴۵۶۷۸

@@ -148,7 +148,7 @@ export default function NavigationBar() {
   }, []);
 
   useEffect(() => {
-    const navbarSections = document.querySelectorAll("[data-navbar]");
+    const navbarSections = document.querySelectorAll("[data-navbar-dark]");
 
     if (!navbarSections.length) return;
 
@@ -158,9 +158,7 @@ export default function NavigationBar() {
       const observer = new IntersectionObserver(
         (entries) => {
           const activeDarkSection = entries.some(
-            (entry) =>
-              entry.isIntersecting &&
-              entry.target.getAttribute("data-navbar") === "dark"
+            (entry) => entry.isIntersecting
           );
 
           setDarkBackground(activeDarkSection);
@@ -420,7 +418,7 @@ export default function NavigationBar() {
             />
             <button
               onClick={() => setSearchOpen(false)}
-              className="absolute left-5 top-1/2 -translate-y-1/2 rounded-full p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+              className="absolute left-5 top-1/2 -translate-y-1/2 rounded-md p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
             >
               <X size={20} />
             </button>
@@ -457,7 +455,7 @@ export default function NavigationBar() {
           >
             <button
               onClick={closeAuth}
-              className="absolute left-4 top-4 rounded-full p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+              className="absolute left-4 top-4 rounded-md p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
             >
               <X size={20} />
             </button>
@@ -465,7 +463,7 @@ export default function NavigationBar() {
             {authView === "success" ? (
               /* ---------------------------- success ---------------------------- */
               <div className="flex flex-col items-center py-6 text-center">
-                <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
+                <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-md bg-primary/10 text-primary">
                   <Check size={32} strokeWidth={2.2} />
                 </div>
                 <h2 className="text-xl font-semibold">خوش آمدید!</h2>
@@ -699,7 +697,7 @@ export default function NavigationBar() {
       {/* ------------------------------- burger ------------------------------- */}
       <button
         className={cn(
-          "fixed right-2 top-2 z-203 aspect-square h-12 gap-1 rounded-full border p-4 backdrop-blur-2xl transition-all duration-300 max-md:scale-80",
+          "fixed right-2 top-2 z-203 aspect-square h-12 gap-1 rounded-md border p-4 backdrop-blur-2xl transition-all duration-300 max-md:scale-80",
           darkBackground
             ? "border-primary/20 bg-secondary/50"
             : "border-border/20 bg-background/20",
@@ -711,7 +709,7 @@ export default function NavigationBar() {
         <div className="absolute h-full w-full" />
         <div
           className={cn(
-            "absolute right-3 top-[calc(42%-1px)] h-0.5 w-[calc(100%-1.5rem)] rounded-full transition-all duration-300",
+            "absolute right-3 top-[calc(42%-1px)] h-0.5 w-[calc(100%-1.5rem)] rounded-md transition-all duration-300",
             darkBackground ? "bg-background" : "bg-foreground",
             sideMenuOpen &&
               "left-1/2 right-0 top-1/2 w-[calc(100%-1.5rem)] -translate-x-1/2 -translate-y-1/2 rotate-45 bg-foreground!"
@@ -719,7 +717,7 @@ export default function NavigationBar() {
         />
         <div
           className={cn(
-            "absolute right-3 top-[calc(58%-1px)] h-0.5 w-[calc(100%-2rem)] rounded-full transition-all duration-300",
+            "absolute right-3 top-[calc(58%-1px)] h-0.5 w-[calc(100%-2rem)] rounded-md transition-all duration-300",
             darkBackground ? "bg-background" : "bg-foreground",
             sideMenuOpen &&
               "left-1/2 right-0 top-1/2 w-[calc(100%-1.5rem)] -translate-x-1/2 -translate-y-1/2 -rotate-45 bg-foreground!"
@@ -730,7 +728,7 @@ export default function NavigationBar() {
       {/* ------------------------------ navbar -------------------------------- */}
       <nav className="fixed z-199 flex h-16 w-full items-center justify-center px-4 py-2">
         <div
-          className={`flex h-full items-center justify-center divide-x rounded-full border px-4 py-2 backdrop-blur-2xl transition-all duration-500 ease-out max-md:scale-80 md:w-md lg:w-3xl max-w-full ${
+          className={`flex h-full items-center justify-center divide-x rounded-md border px-4 py-2 backdrop-blur-2xl transition-all duration-500 ease-out max-md:scale-80 md:w-md lg:w-3xl max-w-full ${
             darkBackground
               ? "divide-primary/20 border-primary/20 bg-secondary/50"
               : "divide-border/40 border-border/20 bg-background/20"

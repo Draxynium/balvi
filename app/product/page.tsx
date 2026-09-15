@@ -129,7 +129,7 @@ export default function ProductPage() {
                       <button
                         key={item.name}
                         onClick={() => setColor(item.name)}
-                        className={`w-10 h-10 sm:w-9 sm:h-9 rounded-full border-2 p-1 transition-colors ${
+                        className={`w-10 h-10 sm:w-9 sm:h-9 rounded-md border-2 p-1 transition-colors ${
                           color === item.name
                             ? "border-foreground"
                             : "border-transparent hover:border-foreground/30"
@@ -138,7 +138,7 @@ export default function ProductPage() {
                         aria-pressed={color === item.name}
                       >
                         <span
-                          className="block w-full h-full rounded-full"
+                          className="block w-full h-full rounded-md"
                           style={{ backgroundColor: item.value }}
                         />
                       </button>

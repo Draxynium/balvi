@@ -42,7 +42,7 @@ export default function ContactUsPage() {
 
                 <div className="space-y-7">
                   <div className="flex items-start gap-4">
-                    <div className="shrink-0 w-11 h-11 rounded-full bg-muted flex items-center justify-center text-secondary">
+                    <div className="shrink-0 w-11 h-11 rounded-md bg-muted flex items-center justify-center text-secondary">
                       <Phone size={19} strokeWidth={1.8} />
                     </div>
 
@@ -55,7 +55,7 @@ export default function ContactUsPage() {
                   </div>
 
                   <div className="flex items-start gap-4">
-                    <div className="shrink-0 w-11 h-11 rounded-full bg-muted flex items-center justify-center text-secondary">
+                    <div className="shrink-0 w-11 h-11 rounded-md bg-muted flex items-center justify-center text-secondary">
                       <Mail size={19} strokeWidth={1.8} />
                     </div>
 
@@ -68,7 +68,7 @@ export default function ContactUsPage() {
                   </div>
 
                   <div className="flex items-start gap-4">
-                    <div className="shrink-0 w-11 h-11 rounded-full bg-muted flex items-center justify-center text-secondary">
+                    <div className="shrink-0 w-11 h-11 rounded-md bg-muted flex items-center justify-center text-secondary">
                       <MapPin size={19} strokeWidth={1.8} />
                     </div>
 

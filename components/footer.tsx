@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowUpLeft } from "lucide-react";
+import { ArrowUpLeft, Send } from "lucide-react";
 
 export default function Footer() {
   const columns = [
@@ -26,7 +26,7 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="relative flex w-full justify-center overflow-hidden pt-6 sm:pt-8 md:pt-12">
+    <footer data-navbar-dark className="relative flex min-h-screen w-full justify-center overflow-hidden pt-6 sm:pt-8 md:pt-12">
       <motion.div
         initial={{
           y: "25%",
@@ -55,77 +55,85 @@ export default function Footer() {
             ease: [0.22, 1, 0.36, 1],
           },
         }}
-        className="flex w-full flex-col gap-8 rounded-t-md bg-secondary px-5 py-9 text-primary sm:gap-10 sm:px-8 sm:py-10 md:flex-row md:items-center md:justify-center md:gap-14 md:px-10 md:py-12 lg:gap-20 lg:px-12"
+        className="relative flex min-h-screen w-full flex-col gap-8 overflow-hidden rounded-t-md bg-secondary px-5 py-9 text-primary sm:gap-10 sm:px-8 sm:py-10 md:px-10 md:py-12 lg:px-12"
       >
-        {/* ---------- CONTENT (top on mobile, right on desktop RTL) ---------- */}
-        <div className="flex w-full max-w-3xl flex-col gap-6 sm:gap-7 md:items-start md:gap-8">
-          <h2 className="text-center text-2xl font-black leading-snug sm:text-3xl md:text-left md:text-4xl">
-            آنچه می‌ماند
-            <br className="md:hidden" />{" "}
-            <span className="md:inline">اصالت است و هنر</span>
-          </h2>
+        {/* ---------- TOP: CONTENT + MASCOT ---------- */}
+        <div className="flex w-full flex-1 flex-col gap-8 sm:gap-10 md:flex-row md:items-center md:justify-center md:gap-14 lg:gap-20">
+          <div className="flex w-full max-w-3xl flex-col gap-6 sm:gap-7 md:items-start md:gap-8">
+            <h2 className="text-center text-2xl font-black leading-snug sm:text-3xl md:text-left md:text-4xl">
+              آنچه می‌ماند
+              <br className="md:hidden" />{" "}
+              <span className="md:inline">اصالت است و هنر</span>
+            </h2>
 
-          {/* ---------- NAV (side-by-side even on mobile) ---------- */}
-          <nav className="flex w-full items-start justify-between gap-3 sm:gap-6 md:justify-start md:gap-12 lg:gap-16">
-            {columns.map((col) => (
-              <div
-                key={col.title}
-                className="flex flex-col items-center gap-2.5 sm:gap-3 md:items-start"
-              >
-                <h3 className="text-[11px] font-bold uppercase tracking-wide opacity-60 sm:text-xs md:text-sm md:opacity-100">
-                  {col.title}
-                </h3>
+            {/* ---------- NAV ---------- */}
+            <nav className="flex w-full items-start justify-between gap-3 sm:gap-6 md:justify-start md:gap-12 lg:gap-16">
+              {columns.map((col) => (
+                <div
+                  key={col.title}
+                  className="flex flex-col items-center gap-2.5 sm:gap-3 md:items-start"
+                >
+                  <h3 className="text-[11px] font-bold uppercase tracking-wide opacity-60 sm:text-xs md:text-sm md:opacity-100">
+                    {col.title}
+                  </h3>
 
-                <div className="flex flex-col items-center gap-2 text-[11px] sm:text-xs md:items-start md:text-sm">
-                  {col.links.map((link) => (
-                    <Link
-                      key={link.label}
-                      href={link.href}
-                      className="flex items-center gap-0.5 whitespace-nowrap transition-opacity hover:opacity-70"
-                    >
-                      <span>{link.label}</span>
-                      <ArrowUpLeft className="h-3 w-3 shrink-0 sm:h-3.5 sm:w-3.5" />
-                    </Link>
-                  ))}
+                  <div className="flex flex-col items-center gap-2 text-[11px] sm:text-xs md:items-start md:text-sm">
+                    {col.links.map((link) => (
+                      <Link
+                        key={link.label}
+                        href={link.href}
+                        className="flex items-center gap-0.5 whitespace-nowrap transition-opacity hover:opacity-70"
+                      >
+                        <span>{link.label}</span>
+                        <ArrowUpLeft className="h-3 w-3 shrink-0 sm:h-3.5 sm:w-3.5" />
+                      </Link>
+                    ))}
+                  </div>
                 </div>
+              ))}
+            </nav>
+
+            <div className="h-px w-full bg-primary/25" />
+
+            {/* ---------- BOTTOM BAR ---------- */}
+            <div className="flex w-full flex-col items-center gap-4 text-[11px] sm:text-xs md:flex-row md:justify-between md:gap-6">
+              <div className="order-2 flex items-center gap-5 sm:gap-6 md:order-2">
+                <Link href="/" className="transition-opacity hover:opacity-70">
+                  حریم خصوصی
+                </Link>
+                <Link href="/" className="transition-opacity hover:opacity-70">
+                  قوانین و مقررات
+                </Link>
               </div>
-            ))}
-          </nav>
 
-          <div className="h-px w-full bg-primary/25" />
-
-          {/* ---------- BOTTOM BAR ---------- */}
-          <div className="flex w-full flex-col items-center gap-4 text-[11px] sm:text-xs md:flex-row md:justify-between md:gap-6">
-            {/* Logo — top on mobile, left on desktop */}
-            <img
-              src="/text-logo.svg"
-              alt="Logo"
-              className="order-1 w-24 sm:w-28 md:order-3 md:w-32"
-            />
-
-            {/* Legal links — middle on mobile */}
-            <div className="order-2 flex items-center gap-5 sm:gap-6 md:order-2">
-              <Link href="/" className="transition-opacity hover:opacity-70">
-                حریم خصوصی
-              </Link>
-              <Link href="/" className="transition-opacity hover:opacity-70">
-                قوانین و مقررات
-              </Link>
+              <span className="order-3 text-center opacity-70 md:order-1 md:opacity-100">
+                تمامی حقوق محفوظ است - ۱۴۰۳
+              </span>
             </div>
+          </div>
 
-            {/* Copyright — bottom on mobile, right on desktop */}
-            <span className="order-3 text-center opacity-70 md:order-1 md:opacity-100">
-              تمامی حقوق محفوظ است - ۱۴۰۳
-            </span>
+          {/* ---------- MASCOT ---------- */}
+          <div className="flex shrink-0 items-center justify-center">
+            <img
+              src="/mascot.svg"
+              alt="Mascot"
+              className="h-32 w-auto sm:h-40 md:h-72 lg:h-80"
+            />
           </div>
         </div>
 
-        {/* ---------- MASCOT ---------- */}
-        <div className="flex shrink-0 items-center justify-center">
+        {/* ---------- TEXT LOGO ---------- */}
+        <div className="pointer-events-none relative -mx-5 flex w-[calc(100%+2.5rem)] shrink-0 justify-center sm:-mx-8 sm:w-[calc(100%+4rem)] md:-mx-10 md:w-[calc(100%+5rem)] lg:-mx-12 lg:w-[calc(100%+6rem)]">
           <img
-            src="/mascot.svg"
-            alt="Mascot"
-            className="h-32 w-auto sm:h-40 md:h-72 lg:h-80"
+            src="/text-logo.svg"
+            alt="Logo"
+            className="block w-full max-w-6xl hp"
+            style={{
+              maskImage:
+                "linear-gradient(to top, rgba(0,0,0,0.0) 0%, rgba(0,0,0,0.6) 100%)",
+              WebkitMaskImage:
+                "linear-gradient(to top, rgba(0,0,0,0.0) 0%, rgba(0,0,0,0.8) 100%)",
+            }}
           />
         </div>
       </motion.div>

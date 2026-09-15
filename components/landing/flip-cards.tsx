@@ -115,7 +115,7 @@ function FlipCard({
                   className="w-full h-full"
                 >
                   <img
-                    data-navbar="dark"
+                    data-navbar-dark
                     src={item.image}
                     alt={item.title}
                     className="w-full h-full object-cover scale-[1.2]"
@@ -142,7 +142,7 @@ function FlipCard({
           {/* ---------- BACK ---------- */}
           <div className="absolute inset-0 overflow-hidden rounded-md [backface-visibility:hidden] [transform:rotateY(180deg)]">
             <img
-              data-navbar="dark"
+              data-navbar-dark
               src={item.secondImage}
               alt=""
               aria-hidden="true"
