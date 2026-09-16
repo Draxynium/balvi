@@ -124,49 +124,51 @@ export default function Home() {
       </section>
 
       {/* ================= PRODUCTS ================= */}
-        <section dir="rtl" className="w-full py-24 md:py-32">
-  <div className="mx-auto grid w-full max-w-[1400px] grid-cols-1 gap-8 px-6 md:grid-cols-2 md:px-10">
-    <Link
-      href="/products?gender=male"
-      className="group relative aspect-[4/5] overflow-hidden rounded-md bg-foreground/[0.035]"
-    >
-      <img
-        src="/images/categories/classic.png"
-        alt="مردانه"
-        className="h-full w-full object-cover object-center transition-all duration-700 ease-out group-hover:scale-110 group-hover:blur-xl"
-      />
+        <section dir="rtl" className="w-full py-24 md:py-18">
+          <div className="mx-auto grid w-full max-w-[1400px] grid-cols-1 gap-8 px-6 md:grid-cols-2 md:px-10">
+            <ScrollReveal direction="bottom" distance={70} duration={1} delay={0.15}>
+              <Link
+                href="/products?gender=male"
+                className="group relative block aspect-[4/5] overflow-hidden rounded-md bg-foreground/[0.035]"
+              >
+                <img
+                  src="/images/categories/classic.png"
+                  alt="مردانه"
+                  className="h-full w-full object-cover object-center transition-all duration-700 ease-out group-hover:scale-110 group-hover:blur-xl"
+                />
 
-      {/* لایه تیره ملایم */}
-      <div className="pointer-events-none absolute inset-0 bg-black/15 transition-colors duration-500 group-hover:bg-black/25" />
+                <div className="pointer-events-none absolute inset-0 bg-black/15 transition-colors duration-500 group-hover:bg-black/25" />
 
-      <div className="absolute inset-0 flex items-center justify-center">
-        <span className="translate-y-3 text-3xl font-medium text-white opacity-0 transition-all duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100 md:text-5xl">
-          مردانه
-        </span>
-      </div>
-    </Link>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="translate-y-3 text-3xl font-medium text-white opacity-0 transition-all duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100 md:text-5xl">
+                    مردانه
+                  </span>
+                </div>
+              </Link>
+            </ScrollReveal>
 
-    <Link
-      href="/products?gender=female"
-      className="group relative aspect-[4/5] overflow-hidden rounded-md bg-foreground/[0.035]"
-    >
-      <img
-        src="/images/categories/boot.png"
-        alt="زنانه"
-        className="h-full w-full object-cover object-center transition-all duration-700 ease-out group-hover:scale-110 group-hover:blur-xl"
-      />
+            <ScrollReveal direction="bottom" distance={70} duration={1} delay={0.35}>
+              <Link
+                href="/products?gender=female"
+                className="group relative block aspect-[4/5] overflow-hidden rounded-md bg-foreground/[0.035]"
+              >
+                <img
+                  src="/images/categories/boot.png"
+                  alt="زنانه"
+                  className="h-full w-full object-cover object-center transition-all duration-700 ease-out group-hover:scale-110 group-hover:blur-xl"
+                />
 
-      {/* لایه تیره ملایم */}
-      <div className="pointer-events-none absolute inset-0 bg-black/15 transition-colors duration-500 group-hover:bg-black/25" />
+                <div className="pointer-events-none absolute inset-0 bg-black/15 transition-colors duration-500 group-hover:bg-black/25" />
 
-      <div className="absolute inset-0 flex items-center justify-center">
-        <span className="translate-y-3 text-3xl font-medium text-white opacity-0 transition-all duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100 md:text-5xl">
-          زنانه
-        </span>
-      </div>
-    </Link>
-  </div>
-</section>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="translate-y-3 text-3xl font-medium text-white opacity-0 transition-all duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100 md:text-5xl">
+                    زنانه
+                  </span>
+                </div>
+              </Link>
+            </ScrollReveal>
+          </div>
+        </section>
 
       <FlipCards />
       <Marquees />

@@ -55,7 +55,7 @@ export default function ProductCategories() {
   return (
     <section
       dir="rtl"
-      className="flex w-full justify-center px-6 py-24 md:px-10 md:py-32"
+      className="flex w-full justify-center px-6 py-24 md:px-10 md:py-18 pt-24"
     >
       <div className="flex w-full max-w-[1700px] items-center gap-4">
         <button
@@ -88,7 +88,7 @@ export default function ProductCategories() {
               </div>
 
               <div className="absolute inset-0 flex items-center justify-center">
-                <span className="translate-y-3 text-2xl font-bold text-white opacity-0 transition-all duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100 md:text-4xl">
+                <span className="translate-y-3 text-2xl font-bold text-black opacity-0 transition-all duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100 md:text-4xl">
                   {category.title}
                 </span>
               </div>
