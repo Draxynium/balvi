@@ -9,32 +9,32 @@ const categories = [
   {
     title: "روزمره",
     href: "/products?gender=male&category=روزمره",
-    image: "/images/categories/everyday.jpg",
+    image: "/images/categories/sandal.png",
   },
   {
     title: "اداری",
     href: "/products?gender=male&category=اداری",
-    image: "/images/categories/formal.jpg",
+    image: "/images/categories/edari.png",
   },
   {
     title: "اسپرت",
     href: "/products?gender=male&category=اسپرت",
-    image: "/images/categories/sport.jpg",
+    image: "/images/categories/sport.png",
   },
   {
     title: "کلاسیک",
     href: "/products?gender=male&category=کلاسیک",
-    image: "/images/categories/classic.jpg",
+    image: "/images/categories/classic.png",
   },
   {
     title: "راحتی",
     href: "/products?gender=male&category=راحتی",
-    image: "/images/categories/comfort.jpg",
+    image: "/images/categories/rahati.png",
   },
   {
     title: "بوت و نیم بوت",
     href: "/products?gender=male&category=بوت و نیم بوت",
-    image: "/images/categories/boots.jpg",
+    image: "/images/categories/boot.png",
   },
 ];
 
@@ -75,22 +75,22 @@ export default function ProductCategories() {
             <Link
               key={category.title}
               href={category.href}
-              className="group relative min-w-[78%] overflow-hidden rounded-md bg-foreground/[0.035] sm:min-w-[52%] lg:min-w-[35%] xl:min-w-[27%]"
+              className="group relative min-w-[78%] overflow-hidden rounded-md sm:min-w-[52%] lg:min-w-[35%] xl:min-w-[27%]"
             >
-              <div className="relative aspect-[3/4] w-full overflow-hidden">
+              <div className="relative aspect-[3/4] w-full overflow-hidden rounded-md">
                 <Image
                   src={category.image}
                   alt={category.title}
                   fill
                   sizes="(max-width: 640px) 78vw, (max-width: 1024px) 52vw, (max-width: 1280px) 35vw, 27vw"
-                  className="object-contain p-6 transition-transform duration-700 ease-out group-hover:scale-110 md:p-8"
+                  className="rounded-md object-cover object-bottom transition-all duration-700 ease-out group-hover:scale-110 group-hover:blur-xl"
                 />
+              </div>
 
-                <div className="absolute inset-x-0 bottom-0 flex justify-center pb-7">
-                  <span className="text-base font-medium text-foreground">
-                    {category.title}
-                  </span>
-                </div>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="translate-y-3 text-2xl font-bold text-white opacity-0 transition-all duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100 md:text-4xl">
+                  {category.title}
+                </span>
               </div>
             </Link>
           ))}

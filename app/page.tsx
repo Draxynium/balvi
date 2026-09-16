@@ -19,7 +19,7 @@ export default function Home() {
         <ScrollReveal direction="top" className="w-full">
           <div className="relative w-full">
             <video
-              src="/videos/compressed/video-a.mp4"
+              src="/videos/compressed/video-hero.mp4"
               autoPlay
               muted
               loop
@@ -124,35 +124,43 @@ export default function Home() {
       </section>
 
       {/* ================= PRODUCTS ================= */}
-    <section dir="rtl" className="w-full py-24 md:py-32">
-      <div className="grid w-full grid-cols-1 gap-2 md:grid-cols-2">
-        <Link
-          href="/products?gender=male"
-          className="group relative aspect-[4/3] overflow-hidden bg-foreground/[0.035]"
-        >
-          {/* تصویر مردانه رو اینجا بذار */}
+        <section dir="rtl" className="w-full py-24 md:py-32">
+  <div className="mx-auto grid w-full max-w-[1400px] grid-cols-1 gap-2 px-6 md:grid-cols-2 md:px-10">
+    <Link
+      href="/products?gender=male"
+      className="group relative aspect-[4/5] overflow-hidden rounded-md bg-foreground/[0.035]"
+    >
+      <img
+        src="/images/categories/sandal.png"
+        alt="مردانه"
+        className="h-full w-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
+      />
 
-          <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-2xl font-medium text-white mix-blend-difference md:text-4xl">
-              مردانه
-            </span>
-          </div>
-        </Link>
-
-        <Link
-          href="/products?gender=female"
-          className="group relative aspect-[4/3] overflow-hidden bg-foreground/[0.035]"
-        >
-          {/* تصویر زنانه رو اینجا بذار */}
-
-          <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-2xl font-medium text-white mix-blend-difference md:text-4xl">
-              زنانه
-            </span>
-          </div>
-        </Link>
+      <div className="absolute inset-0 flex items-center justify-center">
+        <span className="text-2xl font-medium text-white mix-blend-difference md:text-4xl">
+          مردانه
+        </span>
       </div>
-    </section>
+    </Link>
+
+    <Link
+      href="/products?gender=female"
+      className="group relative aspect-[4/5] overflow-hidden rounded-md bg-foreground/[0.035]"
+    >
+      <img
+        src="/images/categories/edari.png"
+        alt="زنانه"
+        className="h-full w-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
+      />
+
+      <div className="absolute inset-0 flex items-center justify-center">
+        <span className="text-2xl font-medium text-white mix-blend-difference md:text-4xl">
+          زنانه
+        </span>
+      </div>
+    </Link>
+  </div>
+</section>
 
       <FlipCards />
       <Marquees />
