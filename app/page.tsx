@@ -1,14 +1,12 @@
 "use client";
 
-import ItemsCarousel from "@/components/items-carousel";
-import ItemCard from "@/components/item-card";
 import Marquees from "@/components/marquees";
 import MouseParallex from "@/components/mouse-parallax";
-import ScrollParallax from "@/components/scroll-parallax";
 import ScrollReveal from "@/components/scroll-reveal";
 import { Highlighter } from "@/components/ui/highlighter";
 import FlipCards from "@/components/landing/flip-cards";
-import Items from "@/components/landing/items";
+import ProductCategories from "@/components/landing/product-categories";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -43,8 +41,8 @@ export default function Home() {
         </ScrollReveal>
       </section>
 
-      {/* ================= SPACER ================= */}
-      <section className="relative flex justify-center flex-col items-center w-full max-w-7xl px-4 sm:px-6 lg:px-8 pt-16 sm:pt-20 md:pt-28" />
+      {/* ================= Product Categories ================= */}
+      <ProductCategories/>
 
       {/* ================= ABOUT ================= */}
       <section className="relative flex justify-center flex-col items-center w-full gap-8 sm:gap-10 md:gap-12 pb-8 sm:pb-10 md:pb-12">
@@ -126,7 +124,35 @@ export default function Home() {
       </section>
 
       {/* ================= PRODUCTS ================= */}
-      <Items />
+    <section dir="rtl" className="w-full py-24 md:py-32">
+      <div className="grid w-full grid-cols-1 gap-2 md:grid-cols-2">
+        <Link
+          href="/products?gender=male"
+          className="group relative aspect-[4/3] overflow-hidden bg-foreground/[0.035]"
+        >
+          {/* تصویر مردانه رو اینجا بذار */}
+
+          <div className="absolute inset-0 flex items-center justify-center">
+            <span className="text-2xl font-medium text-white mix-blend-difference md:text-4xl">
+              مردانه
+            </span>
+          </div>
+        </Link>
+
+        <Link
+          href="/products?gender=female"
+          className="group relative aspect-[4/3] overflow-hidden bg-foreground/[0.035]"
+        >
+          {/* تصویر زنانه رو اینجا بذار */}
+
+          <div className="absolute inset-0 flex items-center justify-center">
+            <span className="text-2xl font-medium text-white mix-blend-difference md:text-4xl">
+              زنانه
+            </span>
+          </div>
+        </Link>
+      </div>
+    </section>
 
       <FlipCards />
       <Marquees />

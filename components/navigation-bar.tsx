@@ -1,9 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import {
+  ArrowLeft,
   ArrowRight,
   Check,
+  ChevronDown,
   Info,
   Phone,
   Search,
@@ -27,6 +30,53 @@ const OTP_LENGTH = 6;
 
 const toFa = (value: string | number) =>
   String(value).replace(/\d/g, (digit) => "۰۱۲۳۴۵۶۷۸۹"[Number(digit)]);
+
+/* ------------------------------ sidebar data ----------------------------- */
+
+const buildProductsHref = (gender: string, category: string) =>
+  `/products?gender=${gender}&category=${encodeURIComponent(category)}`;
+
+type SidebarGroup = {
+  id: string;
+  label: string;
+  links: { label: string; href: string }[];
+};
+
+const sidebarGroups: SidebarGroup[] = [
+  {
+    id: "men",
+    label: "کفش چرم مردانه",
+    links: [
+      { label: "بوت و نیم بوت چرم مردانه", href: buildProductsHref("male", "بوت و نیم بوت") },
+      { label: "کفش چرم مجلسی مردانه", href: buildProductsHref("male", "کلاسیک") },
+      { label: "کفش اسپرت و کتونی چرم مردانه", href: buildProductsHref("male", "اسپورت") },
+      { label: "کفش راحتی (روزمره) چرم مردانه", href: buildProductsHref("male", "راحتی") },
+      { label: "کفش چرم اداری و رسمی مردانه", href: buildProductsHref("male", "اداری") },
+      { label: "کفش چرم طبی مردانه", href: buildProductsHref("male", "روزمره") },
+    ],
+  },
+  {
+    id: "women",
+    label: "کفش چرم زنانه",
+    links: [
+      { label: "بوت و نیم بوت چرم زنانه", href: buildProductsHref("female", "بوت و نیم بوت") },
+      { label: "کفش اسپرت (اسنیکر) چرم زنانه", href: buildProductsHref("female", "اسپورت") },
+      { label: "کفش راحتی (روزمره) چرم زنانه", href: buildProductsHref("female", "راحتی") },
+      { label: "کفش اداری چرم زنانه", href: buildProductsHref("female", "اداری") },
+    ],
+  },
+];
+
+const sidebarSimpleLinks = [
+  { label: "ثبت سفارش عمده", href: "/wholesale" },
+  { label: "مقالات", href: "/blog" },
+  { label: "راهنمای سایز کفش", href: "/size-guide" },
+];
+
+const sidebarFooterLinks = [
+  { label: "درباره بالوی", href: "/about" },
+  { label: "تماس با ما", href: "/contact" },
+];
 
 /* ---------------------------------- OTP ---------------------------------- */
 
@@ -116,6 +166,7 @@ export default function NavigationBar() {
   const [darkBackground, setDarkBackground] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [sideMenuOpen, setSideMenuOpen] = useState(false);
+  const [openSection, setOpenSection] = useState<string | null>("men");
 
   const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -461,7 +512,6 @@ export default function NavigationBar() {
             </button>
 
             {authView === "success" ? (
-              /* ---------------------------- success ---------------------------- */
               <div className="flex flex-col items-center py-6 text-center">
                 <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-md bg-primary/10 text-primary">
                   <Check size={32} strokeWidth={2.2} />
@@ -475,7 +525,6 @@ export default function NavigationBar() {
                 </button>
               </div>
             ) : (
-              /* ------------------------------ forms ---------------------------- */
               <>
                 <header className="mb-6 pl-10">
                   <h2 className="text-xl font-semibold">
@@ -486,7 +535,6 @@ export default function NavigationBar() {
                   </p>
                 </header>
 
-                {/* ------------------------------ login ----------------------------- */}
                 {authView === "login" && (
                   <form onSubmit={handleLogin} className="space-y-3">
                     <input
@@ -539,7 +587,6 @@ export default function NavigationBar() {
                   </form>
                 )}
 
-                {/* --------------------------- signup phone ------------------------- */}
                 {authView === "signup-phone" && (
                   <form onSubmit={handleSignupPhone} className="space-y-3">
                     <input
@@ -573,7 +620,6 @@ export default function NavigationBar() {
                   </form>
                 )}
 
-                {/* ------------------------------- otp ------------------------------ */}
                 {isOtpView && (
                   <form onSubmit={handleOtp} className="space-y-5">
                     <OtpInput value={otp} onChange={setOtp} />
@@ -620,7 +666,6 @@ export default function NavigationBar() {
                   </form>
                 )}
 
-                {/* ---------------------------- passwords --------------------------- */}
                 {(authView === "signup-password" ||
                   authView === "forgot-reset") && (
                   <form onSubmit={handlePassword} className="space-y-3">
@@ -676,21 +721,106 @@ export default function NavigationBar() {
       </div>
 
       {/* ------------------------------ side menu ----------------------------- */}
-      <div className="pointer-events-none fixed inset-0 z-201 h-full w-full p-4">
+      <div
+        className={cn(
+          "fixed inset-0 z-201 h-full w-full p-4",
+          sideMenuOpen ? "pointer-events-auto" : "pointer-events-none"
+        )}
+      >
+        {/* Backdrop */}
         <div
           className={cn(
-            "pointer-events-none absolute inset-0 h-full w-full opacity-0 backdrop-blur-2xl transition-all duration-300",
-            sideMenuOpen && "pointer-events-auto z-1 opacity-100"
+            "absolute inset-0 h-full w-full bg-background/50 backdrop-blur-2xl transition-opacity duration-300",
+            sideMenuOpen ? "opacity-100" : "opacity-0"
           )}
-          onClick={() => setSideMenuOpen((prev) => !prev)}
+          onClick={() => setSideMenuOpen(false)}
         />
+
+        {/* Slider */}
         <div
           className={cn(
             "relative left-116 h-full w-full transition-all duration-500 ease-out",
             sideMenuOpen && "left-0"
           )}
         >
-          <div className="relative right-0 top-0 z-2 h-full w-md max-w-full rounded-md border border-foreground/30 bg-background" />
+          <div
+            dir="rtl"
+            className="relative right-0 top-0 z-2 flex h-full w-md max-w-full flex-col overflow-y-auto rounded-md border border-foreground/15 bg-background px-6 py-6 scrollbar-hide"
+          >
+            {/* Chapters (men / women) */}
+            <div className="flex flex-col">
+              {sidebarGroups.map((group) => {
+                const isOpen = openSection === group.id;
+
+                return (
+                  <div
+                    key={group.id}
+                    className="border-b border-border/30"
+                  >
+                    <button
+                      type="button"
+                      onClick={() => setOpenSection(isOpen ? null : group.id)}
+                      className="group flex w-full items-center gap-3 py-4 text-right"
+                    >
+                      <span className="flex-1 text-xl font-black leading-tight tracking-tight text-foreground transition-colors group-hover:text-primary">
+                        {group.label}
+                      </span>
+                      <ChevronDown
+                        size={18}
+                        className={cn(
+                          "shrink-0 text-muted-foreground transition-all duration-300 group-hover:text-foreground",
+                          isOpen && "rotate-180 text-primary"
+                        )}
+                      />
+                    </button>
+
+                    <div
+                      className={cn(
+                        "grid overflow-hidden transition-all duration-300 ease-out",
+                        isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+                      )}
+                    >
+                      <div className="min-h-0">
+                        <ul className="mr-5 mb-4 flex flex-col gap-1 border-r-2 border-primary/40 pr-4">
+                          {group.links.map((link) => (
+                            <li key={link.href}>
+                              <Link
+                                href={link.href}
+                                onClick={() => setSideMenuOpen(false)}
+                                className="block py-1.5 text-sm leading-6 text-muted-foreground transition-colors hover:text-foreground"
+                              >
+                                {link.label}
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* 5 heading links — no borders, no shadows, big bold type */}
+            <div className="mt-5 flex flex-col">
+              {[...sidebarSimpleLinks, ...sidebarFooterLinks].map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setSideMenuOpen(false)}
+                  className="group flex items-center justify-between py-2.5"
+                >
+                  <span className="text-xl font-black leading-tight tracking-tight text-foreground transition-colors group-hover:text-primary">
+                    {link.label}
+                  </span>
+                  <ArrowLeft
+                    size={18}
+                    className="-translate-x-2 text-primary opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100"
+                  />
+                </Link>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
 
@@ -726,9 +856,9 @@ export default function NavigationBar() {
       </button>
 
       {/* ------------------------------ navbar -------------------------------- */}
-      <nav className="fixed z-199 flex h-16 w-full items-center justify-center px-4 py-2">
+      <nav className="fixed z-199 flex h-16 w-full items-center justify-center px-4 py-2 ">
         <div
-          className={`flex h-full items-center justify-center divide-x rounded-md border px-4 py-2 backdrop-blur-2xl transition-all duration-500 ease-out max-md:scale-80 md:w-md lg:w-3xl max-w-full ${
+          className={`flex h-full items-center justify-center divide-x rounded-md border px-4 py-2 backdrop-blur-2xl transition-all duration-500 ease-out max-md:scale-80 md:w-md lg:w-3xl max-w-full main-navbar ${
             darkBackground
               ? "divide-primary/20 border-primary/20 bg-secondary/50"
               : "divide-border/40 border-border/20 bg-background/20"

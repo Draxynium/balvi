@@ -8,7 +8,7 @@ export default function AboutUs() {
   return (
     <main className="flex items-center justify-center flex-col gap-8 sm:gap-10 md:gap-12">
       {/* ============ HERO ============ */}
-      <section className="relative flex justify-center flex-col items-center w-full pt-24 sm:pt-20 md:pt-16 px-4 sm:px-6 lg:px-8 max-w-7xl">
+      <section className="relative flex flex-col items-center justify-center w-full">
         <ScrollReveal
           direction="bottom"
           distance={80}
@@ -17,7 +17,7 @@ export default function AboutUs() {
         >
           <div
             data-navbar-dark
-            className="relative w-full h-[60svh] sm:h-[65svh] md:h-[70vh] rounded-lg overflow-hidden bg-white flex items-end"
+            className="relative w-full h-screen overflow-hidden bg-white flex items-end"
           >
             <video
               src="/videos/compressed/video-c.mp4"
