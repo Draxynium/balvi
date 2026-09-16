@@ -133,11 +133,14 @@ export default function Home() {
       <img
         src="/images/categories/classic.png"
         alt="مردانه"
-        className="h-full w-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
+        className="h-full w-full object-cover object-center transition-all duration-700 ease-out group-hover:scale-110 group-hover:blur-xl"
       />
 
+      {/* لایه تیره ملایم */}
+      <div className="pointer-events-none absolute inset-0 bg-black/15 transition-colors duration-500 group-hover:bg-black/25" />
+
       <div className="absolute inset-0 flex items-center justify-center">
-        <span className="text-3xl font-medium text-white mix-blend-difference md:text-5xl">
+        <span className="translate-y-3 text-3xl font-medium text-white opacity-0 transition-all duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100 md:text-5xl">
           مردانه
         </span>
       </div>
@@ -150,11 +153,14 @@ export default function Home() {
       <img
         src="/images/categories/boot.png"
         alt="زنانه"
-        className="h-full w-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
+        className="h-full w-full object-cover object-center transition-all duration-700 ease-out group-hover:scale-110 group-hover:blur-xl"
       />
 
+      {/* لایه تیره ملایم */}
+      <div className="pointer-events-none absolute inset-0 bg-black/15 transition-colors duration-500 group-hover:bg-black/25" />
+
       <div className="absolute inset-0 flex items-center justify-center">
-        <span className="text-3xl font-medium text-white mix-blend-difference md:text-5xl">
+        <span className="translate-y-3 text-3xl font-medium text-white opacity-0 transition-all duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100 md:text-5xl">
           زنانه
         </span>
       </div>
