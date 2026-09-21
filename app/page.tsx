@@ -7,10 +7,11 @@ import { Highlighter } from "@/components/ui/highlighter";
 import FlipCards from "@/components/landing/flip-cards";
 import ProductCategories from "@/components/landing/product-categories";
 import Link from "next/link";
+import GenderSection from "@/components/landing/gender-section";
 
 export default function Home() {
   return (
-    <main className="min-h-screen w-full flex items-center justify-center flex-col overflow-x-hidden">
+    <main className="w-full flex items-center justify-center flex-col overflow-x-hidden">
       {/* ================= HERO ================= */}
       <section
         data-navbar-dark
@@ -24,7 +25,7 @@ export default function Home() {
               muted
               loop
               playsInline
-              className="w-full h-[70svh] sm:h-[80svh] md:h-[90svh] lg:h-screen object-cover"
+              className="w-full h-[90vh] object-cover"
             />
 
             <button
@@ -123,53 +124,7 @@ export default function Home() {
         </ScrollReveal>
       </section>
 
-      {/* ================= PRODUCTS ================= */}
-        <section dir="rtl" className="w-full py-24 md:py-18">
-          <div className="mx-auto grid w-full max-w-[1400px] grid-cols-1 gap-8 px-6 md:grid-cols-2 md:px-10">
-            <ScrollReveal direction="bottom" distance={70} duration={1} delay={0.15}>
-              <Link
-                href="/products?gender=male"
-                className="group relative block aspect-[4/5] overflow-hidden rounded-md bg-foreground/[0.035]"
-              >
-                <img
-                  src="/images/categories/classic.png"
-                  alt="مردانه"
-                  className="h-full w-full object-cover object-center transition-all duration-700 ease-out group-hover:scale-110 group-hover:blur-xl"
-                />
-
-                <div className="pointer-events-none absolute inset-0 bg-black/15 transition-colors duration-500 group-hover:bg-black/25" />
-
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="translate-y-3 text-3xl font-medium text-white opacity-0 transition-all duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100 md:text-5xl">
-                    مردانه
-                  </span>
-                </div>
-              </Link>
-            </ScrollReveal>
-
-            <ScrollReveal direction="bottom" distance={70} duration={1} delay={0.35}>
-              <Link
-                href="/products?gender=female"
-                className="group relative block aspect-[4/5] overflow-hidden rounded-md bg-foreground/[0.035]"
-              >
-                <img
-                  src="/images/categories/boot.png"
-                  alt="زنانه"
-                  className="h-full w-full object-cover object-center transition-all duration-700 ease-out group-hover:scale-110 group-hover:blur-xl"
-                />
-
-                <div className="pointer-events-none absolute inset-0 bg-black/15 transition-colors duration-500 group-hover:bg-black/25" />
-
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="translate-y-3 text-3xl font-medium text-white opacity-0 transition-all duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100 md:text-5xl">
-                    زنانه
-                  </span>
-                </div>
-              </Link>
-            </ScrollReveal>
-          </div>
-        </section>
-
+      <GenderSection />
       <FlipCards />
       <Marquees />
     </main>

@@ -124,10 +124,10 @@ export default function WholesalePage() {
         >
             <div
             data-navbar-dark
-            className="relative flex items-end w-full h-[80svh] sm:h-[88svh] md:h-screen overflow-hidden bg-white"
+            className="relative flex items-end w-full h-[80vh] overflow-hidden bg-white"
             >
             <video
-                src="/videos/compressed/video-c.mp4"
+                src="/videos/compressed/video-e.mp4"
                 autoPlay
                 muted
                 loop
@@ -144,7 +144,7 @@ export default function WholesalePage() {
                 duration={1}
                 delay={0.35}
                 >
-                <p className="mb-3 text-sm font-medium tracking-wider text-background/70">
+                <p className="mb-3 inline-flex items-center rounded-full bg-foreground/30 px-3 py-1 text-sm font-medium tracking-wider text-primary backdrop-blur-sm">
                     همکاری در فروش عمده
                 </p>
                 </ScrollReveal>
@@ -410,7 +410,7 @@ export default function WholesalePage() {
                 delay={i * 0.06}
               >
                 <li className="flex items-start gap-3 px-5 py-4 text-sm leading-[1.6] border rounded-md border-foreground/10 bg-muted/40 text-muted-foreground md:text-base">
-                  <span className="flex items-center justify-center rounded-md shrink-0 mt-0.5 w-5 h-5 bg-primary/15 text-primary">
+                  <span className="flex items-center justify-center rounded-md shrink-0 mt-0.5 w-5 h-5 bg-secondary/15 text-secondary">
                     <Check size={12} strokeWidth={2.5} />
                   </span>
                   {c}
@@ -455,7 +455,7 @@ export default function WholesalePage() {
 
             <a
                 href="tel:+982112345678"
-                className="inline-flex h-14 items-center justify-center rounded-md border border-foreground/20 px-8 text-sm font-medium text-foreground/80 transition-colors hover:border-foreground/40 hover:text-foreground"
+                className="inline-flex h-14 items-center justify-center rounded-md border border-secondary/40 px-8 text-sm font-medium text-foreground/80 transition-colors hover:border-secondary hover:bg-secondary/10 hover:text-foreground"
                 dir="ltr"
             >
                 ۰۲۱-۱۲۳۴۵۶۷۸
@@ -524,7 +524,7 @@ export default function WholesalePage() {
                 value={`item-${i}`}
                 className="border-b border-foreground/10 last:border-b-0"
             >
-                <AccordionTrigger className="py-5 text-right text-base font-medium hover:no-underline md:text-lg">
+                <AccordionTrigger className="py-5 text-right text-base font-medium hover:text-secondary data-[state=open]:text-secondary hover:no-underline md:text-lg">
                 {f.q}
                 </AccordionTrigger>
                 <AccordionContent className="pb-5 text-sm leading-[1.7] text-muted-foreground md:text-base">

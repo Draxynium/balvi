@@ -17,7 +17,7 @@ export default function AboutUs() {
         >
           <div
             data-navbar-dark
-            className="relative w-full h-screen overflow-hidden bg-white flex items-end"
+            className="relative w-full h-[80vh] overflow-hidden bg-white flex items-end"
           >
             <video
               src="/videos/compressed/video-c.mp4"
@@ -178,7 +178,7 @@ export default function AboutUs() {
         />
         <ScrollReveal direction="bottom" distance={30} duration={1.4}>
           <h2 className="relative max-w-2xl text-center text-2xl sm:text-3xl md:text-4xl font-black leading-[1.5]">
-            اصالت را نمی‌توان ساخت؛
+            <span className="text-secondary">اصالت</span> را نمی‌توان ساخت؛
             <br />
             باید آن را سال‌ها زندگی کرد.
           </h2>
@@ -220,26 +220,35 @@ export default function AboutUs() {
             </h2>
           </ScrollReveal>
 
-          <ul className="space-y-4 sm:space-y-5 text-base sm:text-lg md:text-xl leading-[1.5] md:leading-[1.35] list-disc pr-5 sm:pr-6">
+          <ul className="space-y-4 sm:space-y-5 text-base sm:text-lg md:text-xl leading-[1.5] md:leading-[1.35]">
             <ScrollReveal direction="right" distance={40} delay={0.15}>
-              <li>
-                بالوی روایتِ سال‌ها تجربه در صنعت چرم است؛ جایی که اصالت، کیفیت
-                و هنر دست در کنار هم معنا پیدا می‌کنند.
+              <li className="flex items-start gap-3">
+                <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-secondary" />
+                <span>
+                  بالوی روایتِ سال‌ها تجربه در صنعت چرم است؛ جایی که اصالت، کیفیت
+                  و هنر دست در کنار هم معنا پیدا می‌کنند.
+                </span>
               </li>
             </ScrollReveal>
 
             <ScrollReveal direction="right" distance={40} delay={0.3}>
-              <li>
-                از انتخاب چرم‌های مرغوب تا ظریف‌ترین مراحل تولید، هر محصول با
-                وسواس و دقت ساخته می‌شود تا زیبایی و ماندگاری را هم‌زمان به
-                همراه داشته باشد.
+              <li className="flex items-start gap-3">
+                <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-secondary" />
+                <span>
+                  از انتخاب چرم‌های مرغوب تا ظریف‌ترین مراحل تولید، هر محصول با
+                  وسواس و دقت ساخته می‌شود تا زیبایی و ماندگاری را هم‌زمان به
+                  همراه داشته باشد.
+                </span>
               </li>
             </ScrollReveal>
 
             <ScrollReveal direction="right" distance={40} delay={0.45}>
-              <li>
-                سال‌ها تجربه و دقت در تولید، به ما آموخته که ماندگاری واقعی در
-                جزئیات شکل می‌گیرد.
+              <li className="flex items-start gap-3">
+                <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-secondary" />
+                <span>
+                  سال‌ها تجربه و دقت در تولید، به ما آموخته که ماندگاری واقعی در
+                  جزئیات شکل می‌گیرد.
+                </span>
               </li>
             </ScrollReveal>
           </ul>
@@ -282,32 +291,44 @@ export default function AboutUs() {
             </h2>
           </ScrollReveal>
 
-          <ul className="space-y-4 sm:space-y-5 text-base sm:text-lg md:text-xl leading-[1.5] md:leading-[1.35] list-disc pr-5 sm:pr-6">
+          <ul className="space-y-4 sm:space-y-5 text-base sm:text-lg md:text-xl leading-[1.5] md:leading-[1.35]">
             <ScrollReveal direction="left" distance={40} delay={0.35}>
-              <li>
-                انتخاب چرم مرغوب، نخستین قدم ما برای ساخت محصولی باکیفیت و
-                ماندگار است.
+              <li className="flex items-start gap-3">
+                <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-secondary" />
+                <span>
+                  انتخاب چرم مرغوب، نخستین قدم ما برای ساخت محصولی باکیفیت و
+                  ماندگار است.
+                </span>
               </li>
             </ScrollReveal>
 
-            <ScrollReveal direction="left" distance={40} delay={0.5}>
-              <li>
-                هر برش و هر دوخت با دقت انجام می‌شود تا ظرافت، دوام و زیبایی در
-                کنار هم قرار بگیرند.
+            <ScrollReveal direction="left" delay={0.5} distance={40}>
+              <li className="flex items-start gap-3">
+                <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-secondary" />
+                <span>
+                  هر برش و هر دوخت با دقت انجام می‌شود تا ظرافت، دوام و زیبایی در
+                  کنار هم قرار بگیرند.
+                </span>
               </li>
             </ScrollReveal>
 
             <ScrollReveal direction="left" distance={40} delay={0.65}>
-              <li>
-                تجربه‌ی سال‌ها کار با چرم، در جزئیاتی دیده می‌شود که شاید در
-                نگاه اول به چشم نیایند.
+              <li className="flex items-start gap-3">
+                <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-secondary" />
+                <span>
+                  تجربه‌ی سال‌ها کار با چرم، در جزئیاتی دیده می‌شود که شاید در
+                  نگاه اول به چشم نیایند.
+                </span>
               </li>
             </ScrollReveal>
 
             <ScrollReveal direction="left" distance={40} delay={0.8}>
-              <li>
-                در بالوی، هنر سنتی چرم‌دوزی را با نگاه امروزی همراه کرده‌ایم تا
-                اصالت، شکل تازه‌ای پیدا کند.
+              <li className="flex items-start gap-3">
+                <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-secondary" />
+                <span>
+                  در بالوی، هنر سنتی چرم‌دوزی را با نگاه امروزی همراه کرده‌ایم تا
+                  اصالت، شکل تازه‌ای پیدا کند.
+                </span>
               </li>
             </ScrollReveal>
           </ul>
@@ -317,6 +338,9 @@ export default function AboutUs() {
       {/* ============ BLOG ============ */}
       <section className="relative flex justify-center flex-col items-center w-full pt-8 sm:pt-10 md:pt-12 px-4 sm:px-6 lg:px-8 max-w-7xl">
         <ScrollReveal direction="right" distance={40} className="w-full">
+          <p className="text-sm sm:text-base text-secondary font-medium tracking-wider text-right w-full pr-1 sm:pr-2 mb-2">
+            یادداشت‌های بالوی
+          </p>
           <h2 className="text-2xl sm:text-3xl font-bold text-right w-full pr-1 sm:pr-2 pb-4">
             مقاله ها
           </h2>

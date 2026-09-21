@@ -56,12 +56,7 @@ export default async function ProductsPage({
 
       <section className="flex w-full flex-col items-center">
         <div className="flex w-[95%] items-center justify-between gap-4 py-6">
-          <span className="text-xs text-foreground/45">
-            {filteredProducts.length} محصول
-          </span>
-
           <div className="flex items-center gap-6 text-xs text-foreground/50">
-            {/* Gender pills */}
             <div className="flex items-center gap-2">
               {genderOptions.map((opt) => {
                 const isActive = (gender ?? undefined) === opt.value;
@@ -98,6 +93,10 @@ export default async function ProductsPage({
               مرتب سازی
             </button>
           </div>
+
+          <span className="text-xs text-foreground/45">
+            {filteredProducts.length} محصول
+          </span>
         </div>
 
         {filteredProducts.length > 0 ? (

@@ -47,7 +47,7 @@ export default function Marquees() {
       {/* ---------- BAR 1 ---------- */}
       <div className={`${barBase} ${tiltA} text-primary`}>
         <motion.div
-          className="relative h-full bg-secondary shadow-md"
+          className="relative h-full bg-secondary"
           initial={{ x: "90%", opacity: 0, filter: "blur(20px)" }}
           animate={
             inView
@@ -73,7 +73,7 @@ export default function Marquees() {
       {/* ---------- BAR 2 ---------- */}
       <div className={`${barBase} ${tiltB} text-secondary`}>
         <motion.div
-          className="relative h-full bg-primary shadow-md"
+          className="relative h-full bg-primary"
           initial={{ x: "-90%", opacity: 0, filter: "blur(10px)" }}
           animate={
             inView
