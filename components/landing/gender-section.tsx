@@ -36,6 +36,8 @@ const GRID_COLUMNS = {
   1: "md:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]",
 } as const;
 
+type GridColumnKey = keyof typeof GRID_COLUMNS;
+
 function ArrowIcon() {
   // Points left: "forward" in an RTL layout.
   return (
@@ -85,7 +87,7 @@ function GenderCard({
         alt=""
         aria-hidden="true"
         sizes="(min-width: 768px) 58vw, 100vw"
-        className="object-cover object-center h-full"
+        className="h-full w-full object-cover object-center"
       />
 
       {/* Legibility gradient: keeps the label readable on any photo */}
@@ -119,6 +121,13 @@ function GenderCard({
 export default function GenderSection() {
   const [active, setActive] = useState<number | null>(null);
 
+  // `active` can only ever be 0, 1, or null — narrow it so TS lets us index
+  // GRID_COLUMNS (whose keys are the literals "idle" | 0 | 1).
+  const gridColumns: string =
+    active === 0 || active === 1
+      ? GRID_COLUMNS[active as GridColumnKey]
+      : GRID_COLUMNS.idle;
+
   return (
     <section
       dir="rtl"
@@ -127,9 +136,7 @@ export default function GenderSection() {
     >
       <div className="mx-auto w-full max-w-[1400px] px-6 md:px-10">
         <div
-          className={`grid grid-cols-1 gap-4 md:gap-5 motion-safe:transition-[grid-template-columns] motion-safe:duration-700 motion-safe:ease-[cubic-bezier(0.22,1,0.36,1)] ${
-            GRID_COLUMNS[active ?? "idle"]
-          }`}
+          className={`grid grid-cols-1 gap-4 md:gap-5 motion-safe:transition-[grid-template-columns] motion-safe:duration-700 motion-safe:ease-[cubic-bezier(0.22,1,0.36,1)] ${gridColumns}`}
         >
           {GENDER_CATEGORIES.map((category, index) => (
             <ScrollReveal
