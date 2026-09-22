@@ -80,6 +80,7 @@ function GenderCard({
       className="group relative block h-[26rem] overflow-hidden rounded-2xl bg-foreground/[0.06] outline-none ring-offset-4 ring-offset-background focus-visible:ring-2 focus-visible:ring-foreground/60 sm:h-[30rem] md:h-[min(40rem,80vh)]"
     >
       <img
+        data-navbar-dark
         src={image}
         alt=""
         aria-hidden="true"

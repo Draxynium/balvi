@@ -20,6 +20,7 @@ export default function BlogBento({ blogs }: Props) {
             className="group relative overflow-hidden rounded-md md:col-span-2 min-h-[520px]"
           >
             <Image
+              data-navbar-dark
               src={mainBlog.cover}
               alt={mainBlog.title}
               fill
@@ -44,6 +45,7 @@ export default function BlogBento({ blogs }: Props) {
               className="group relative flex-1 overflow-hidden rounded-md"
             >
               <Image
+                data-navbar-dark
                 src={blog.cover}
                 alt={blog.title}
                 fill

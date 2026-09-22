@@ -12,10 +12,11 @@ function formatDate(iso: string): string {
   const date = new Date(iso);
   if (Number.isNaN(date.getTime())) return "";
 
-  return new Intl.DateTimeFormat("en-US", {
+  return new Intl.DateTimeFormat("fa-IR", {
     year: "numeric",
-    month: "short",
+    month: "long",
     day: "numeric",
+    calendar: "persian",
     timeZone: "UTC",
   }).format(date);
 }
@@ -28,6 +29,7 @@ export default function BlogCard({ blog }: Props) {
       <div className="relative aspect-[4/3] overflow-hidden rounded-md bg-muted">
         {blog.cover ? (
           <Image
+            data-navbar-dark
             src={blog.cover}
             alt={blog.title}
             fill
@@ -47,7 +49,11 @@ export default function BlogCard({ blog }: Props) {
         </p>
 
         {dateLabel ? (
-          <time dateTime={blog.date} className="text-xs text-foreground/40">
+          <time
+            dateTime={blog.date}
+            className="text-sm text-foreground/40"
+            dir="rtl"
+          >
             {dateLabel}
           </time>
         ) : null}

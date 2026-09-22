@@ -69,7 +69,7 @@ const sidebarGroups: SidebarGroup[] = [
 
 const sidebarSimpleLinks = [
   { label: "ثبت سفارش عمده", href: "/wholesale" },
-  { label: "مقالات", href: "/blog" },
+  { label: "مقالات", href: "/blogs" },
   { label: "راهنمای سایز کفش", href: "/size-guide" },
 ];
 
