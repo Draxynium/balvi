@@ -19,24 +19,13 @@ const GENDER_CATEGORIES = [
 
 type GenderCategory = (typeof GENDER_CATEGORIES)[number];
 type CardState = "idle" | "active" | "dimmed";
+type ActiveIndex = 0 | 1;
 
-/**
- * When one card is hovered/focused, its column grows and the other shrinks.
- * Full literal class names so Tailwind can detect them.
- * (In RTL the first column is on the right, matching source order.)
- *
- * Note: idle uses the same `minmax(...) minmax(...)` track syntax as the
- * active states so browsers can interpolate `grid-template-columns` smoothly
- * on the very first hover (mixing `grid-cols-2` with explicit minmax tracks
- * causes a snap).
- */
 const GRID_COLUMNS = {
   idle: "md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]",
   0: "md:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]",
   1: "md:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]",
 } as const;
-
-type GridColumnKey = keyof typeof GRID_COLUMNS;
 
 function ArrowIcon() {
   // Points left: "forward" in an RTL layout.
@@ -74,7 +63,6 @@ function GenderCard({
       href={href}
       aria-label={`مشاهده محصولات ${label}`}
       data-state={state}
-      // Mouse only: touch devices get the stacked layout with no hover state.
       onPointerEnter={(e) => e.pointerType === "mouse" && onActivate()}
       onPointerLeave={(e) => e.pointerType === "mouse" && onDeactivate()}
       onFocus={onActivate}
@@ -90,15 +78,12 @@ function GenderCard({
         className="h-full w-full object-cover object-center"
       />
 
-      {/* Legibility gradient: keeps the label readable on any photo */}
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
 
-      {/* The card you're not looking at steps back */}
       <div className="pointer-events-none absolute inset-0 bg-black/10 transition-colors duration-700 group-data-[state=dimmed]:bg-black/35" />
 
       <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 p-6 text-white md:p-8">
         <div>
-          {/* No letter-spacing on Persian text: it breaks the cursive joins */}
           <span className="block text-4xl font-semibold leading-[1.35] md:text-5xl">
             {label}
           </span>
@@ -119,14 +104,7 @@ function GenderCard({
 }
 
 export default function GenderSection() {
-  const [active, setActive] = useState<number | null>(null);
-
-  // `active` can only ever be 0, 1, or null — narrow it so TS lets us index
-  // GRID_COLUMNS (whose keys are the literals "idle" | 0 | 1).
-  const gridColumns: string =
-    active === 0 || active === 1
-      ? GRID_COLUMNS[active as GridColumnKey]
-      : GRID_COLUMNS.idle;
+  const [active, setActive] = useState<ActiveIndex | null>(null);
 
   return (
     <section
@@ -136,7 +114,9 @@ export default function GenderSection() {
     >
       <div className="mx-auto w-full max-w-[1400px] px-6 md:px-10">
         <div
-          className={`grid grid-cols-1 gap-4 md:gap-5 motion-safe:transition-[grid-template-columns] motion-safe:duration-700 motion-safe:ease-[cubic-bezier(0.22,1,0.36,1)] ${gridColumns}`}
+          className={`grid grid-cols-1 gap-4 md:gap-5 motion-safe:transition-[grid-template-columns] motion-safe:duration-700 motion-safe:ease-[cubic-bezier(0.22,1,0.36,1)] ${
+            GRID_COLUMNS[active ?? "idle"]
+          }`}
         >
           {GENDER_CATEGORIES.map((category, index) => (
             <ScrollReveal
@@ -155,7 +135,7 @@ export default function GenderSection() {
                       ? "active"
                       : "dimmed"
                 }
-                onActivate={() => setActive(index)}
+                onActivate={() => setActive(index as ActiveIndex)}
                 onDeactivate={() =>
                   setActive((current) => (current === index ? null : current))
                 }
