@@ -5,30 +5,13 @@ import Link from "next/link";
 import ScrollReveal from "@/components/scroll-reveal";
 
 const GENDER_CATEGORIES = [
-  {
-    href: "/products?gender=male",
-    label: "مردانه",
-    image: "/images/genders/male.png",
-  },
-  {
-    href: "/products?gender=female",
-    label: "زنانه",
-    image: "/images/genders/female.png",
-  },
+  { href: "/products?gender=male", label: "مردانه", image: "/images/genders/male.png" },
+  { href: "/products?gender=female", label: "زنانه", image: "/images/genders/female.png" },
 ] as const;
 
-type GenderCategory = (typeof GENDER_CATEGORIES)[number];
 type CardState = "idle" | "active" | "dimmed";
-type ActiveIndex = 0 | 1;
-
-const GRID_COLUMNS = {
-  idle: "md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]",
-  0: "md:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]",
-  1: "md:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]",
-} as const;
 
 function ArrowIcon() {
-  // Points left: "forward" in an RTL layout.
   return (
     <svg
       viewBox="0 0 24 24"
@@ -46,18 +29,20 @@ function ArrowIcon() {
 }
 
 function GenderCard({
-  category,
+  href,
+  label,
+  image,
   state,
   onActivate,
   onDeactivate,
 }: {
-  category: GenderCategory;
+  href: string;
+  label: string;
+  image: string;
   state: CardState;
   onActivate: () => void;
   onDeactivate: () => void;
 }) {
-  const { href, label, image } = category;
-
   return (
     <Link
       href={href}
@@ -79,7 +64,6 @@ function GenderCard({
       />
 
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
-
       <div className="pointer-events-none absolute inset-0 bg-black/10 transition-colors duration-700 group-data-[state=dimmed]:bg-black/35" />
 
       <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 p-6 text-white md:p-8">
@@ -104,7 +88,14 @@ function GenderCard({
 }
 
 export default function GenderSection() {
-  const [active, setActive] = useState<ActiveIndex | null>(null);
+  const [active, setActive] = useState<number | null>(null);
+
+  const gridColumns =
+    active === 0
+      ? "md:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]"
+      : active === 1
+        ? "md:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]"
+        : "md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]";
 
   return (
     <section
@@ -114,9 +105,7 @@ export default function GenderSection() {
     >
       <div className="mx-auto w-full max-w-[1400px] px-6 md:px-10">
         <div
-          className={`grid grid-cols-1 gap-4 md:gap-5 motion-safe:transition-[grid-template-columns] motion-safe:duration-700 motion-safe:ease-[cubic-bezier(0.22,1,0.36,1)] ${
-            GRID_COLUMNS[active ?? "idle"]
-          }`}
+          className={`grid grid-cols-1 gap-4 md:gap-5 motion-safe:transition-[grid-template-columns] motion-safe:duration-700 motion-safe:ease-[cubic-bezier(0.22,1,0.36,1)] ${gridColumns}`}
         >
           {GENDER_CATEGORIES.map((category, index) => (
             <ScrollReveal
@@ -127,7 +116,9 @@ export default function GenderSection() {
               delay={0.15 + index * 0.2}
             >
               <GenderCard
-                category={category}
+                href={category.href}
+                label={category.label}
+                image={category.image}
                 state={
                   active === null
                     ? "idle"
@@ -135,7 +126,7 @@ export default function GenderSection() {
                       ? "active"
                       : "dimmed"
                 }
-                onActivate={() => setActive(index as ActiveIndex)}
+                onActivate={() => setActive(index)}
                 onDeactivate={() =>
                   setActive((current) => (current === index ? null : current))
                 }

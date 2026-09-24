@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import ScrollReveal from "./scroll-reveal";
 
@@ -23,11 +23,39 @@ export default function ItemsCarousel({
   // scroll the right way, no matter where this is mounted.
   const [isRTL, setIsRTL] = useState(true); // site is RTL by default
 
+  // Edge fade state
+  const [canScrollStart, setCanScrollStart] = useState(false);
+  const [canScrollEnd, setCanScrollEnd] = useState(false);
+
+  /* ---------- SCROLL STATE (for edge fades) ---------- */
+  const syncScrollState = useCallback(() => {
+    const el = scrollerRef.current;
+    if (!el) return;
+
+    const maxScroll = el.scrollWidth - el.clientWidth;
+    const position = Math.abs(el.scrollLeft);
+
+    setCanScrollStart(position > 1);
+    setCanScrollEnd(position < maxScroll - 1);
+  }, []);
+
   useEffect(() => {
     const el = scrollerRef.current;
     if (!el) return;
+
     setIsRTL(getComputedStyle(el).direction === "rtl");
-  }, []);
+    syncScrollState();
+
+    el.addEventListener("scroll", syncScrollState, { passive: true });
+
+    const resizeObserver = new ResizeObserver(syncScrollState);
+    resizeObserver.observe(el);
+
+    return () => {
+      el.removeEventListener("scroll", syncScrollState);
+      resizeObserver.disconnect();
+    };
+  }, [syncScrollState]);
 
   /* ---------- ARROW BUTTON SCROLL ---------- */
   const scrollBy = (direction: "prev" | "next") => {
@@ -92,26 +120,42 @@ export default function ItemsCarousel({
 
   return (
     <div className="relative flex w-full flex-col gap-5 sm:gap-6 md:gap-8 py-2">
-      {/* ---------- SCROLLER ---------- */}
-      <div
-        ref={scrollerRef}
-        onPointerDown={onPointerDown}
-        onPointerMove={onPointerMove}
-        onPointerUp={endDrag}
-        onPointerLeave={endDrag}
-        onPointerCancel={endDrag}
-        onClickCapture={onClickCapture}
-        className={`
-          flex w-full items-stretch gap-3 sm:gap-4
-          overflow-x-auto overscroll-x-contain
-           pb-2
-          scrollbar-none [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden
-          select-none
-          ${isDown ? "cursor-grabbing" : "cursor-grab"}
-          ${isDown ? "" : "snap-x snap-mandatory scroll-smooth"}
-        `}
-      >
-        {children}
+      {/* ---------- SCROLLER (wrapped for edge fades) ---------- */}
+      <div className="relative w-full">
+        <div
+          ref={scrollerRef}
+          onPointerDown={onPointerDown}
+          onPointerMove={onPointerMove}
+          onPointerUp={endDrag}
+          onPointerLeave={endDrag}
+          onPointerCancel={endDrag}
+          onClickCapture={onClickCapture}
+          className={`
+            flex w-full items-stretch gap-3 sm:gap-4
+            overflow-x-auto overscroll-x-contain
+             pb-2
+            scrollbar-none [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden
+            select-none
+            ${isDown ? "cursor-grabbing" : "cursor-grab"}
+            ${isDown ? "" : "snap-x snap-mandatory scroll-smooth"}
+          `}
+        >
+          {children}
+        </div>
+
+        {/* ---------- EDGE FADES ---------- */}
+        <div
+          aria-hidden="true"
+          className={`pointer-events-none absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-background to-transparent transition-opacity duration-300 md:w-16 ${
+            canScrollStart ? "opacity-100" : "opacity-0"
+          }`}
+        />
+        <div
+          aria-hidden="true"
+          className={`pointer-events-none absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-background to-transparent transition-opacity duration-300 md:w-16 ${
+            canScrollEnd ? "opacity-100" : "opacity-0"
+          }`}
+        />
       </div>
 
       {/* ---------- CONTROLS ---------- */}

@@ -8,6 +8,8 @@ import FlipCards from "@/components/landing/flip-cards";
 import ProductCategories from "@/components/landing/product-categories";
 import Link from "next/link";
 import GenderSection from "@/components/landing/gender-section";
+import BlogCard from "@/components/blog-card";
+import ItemsCarousel from "@/components/items-carousel";
 
 export default function Home() {
   return (
@@ -43,7 +45,7 @@ export default function Home() {
       </section>
 
       {/* ================= Product Categories ================= */}
-      <ProductCategories/>
+      <GenderSection />
 
       {/* ================= ABOUT ================= */}
       <section className="relative flex justify-center flex-col items-center w-full gap-8 sm:gap-10 md:gap-12 pb-8 sm:pb-10 md:pb-12">
@@ -124,8 +126,81 @@ export default function Home() {
         </ScrollReveal>
       </section>
 
-      <GenderSection />
+      <ProductCategories/>
+
       <FlipCards />
+
+      {/* ============ BLOG ============ */}
+      <section className="relative flex justify-center flex-col items-center w-full pt-8 sm:pt-10 md:pt-12 px-4 sm:px-6 lg:px-8 max-w-7xl">
+        <ScrollReveal direction="right" distance={40} className="w-full">
+          <p className="text-sm sm:text-base text-secondary font-medium tracking-wider text-right w-full pr-1 sm:pr-2 mb-2">
+            یادداشت‌های بالوی
+          </p>
+          <h2 className="text-2xl sm:text-3xl font-bold text-right w-full pr-1 sm:pr-2 pb-4">
+            مقاله ها
+          </h2>
+        </ScrollReveal>
+
+        <ItemsCarousel>
+          <BlogCard
+            item={{
+              name: "مقاله اول",
+              description: "لورم ایپسوم متن ساختگی.",
+              image: "/images/blog.png",
+            }}
+          />
+          <BlogCard
+            item={{
+              name: "مقاله دوم",
+              description: "لورم ایپسوم متن ساختگی.",
+              image: "/images/blog.png",
+            }}
+          />
+          <BlogCard
+            item={{
+              name: "مقاله سوم",
+              description: "لورم ایپسوم متن ساختگی.",
+              image: "/images/blog.png",
+            }}
+          />
+          <BlogCard
+            item={{
+              name: "مقاله چهارم",
+              description: "لورم ایپسوم متن ساختگی.",
+              image: "/images/blog.png",
+            }}
+          />
+          <BlogCard
+            item={{
+              name: "مقاله پنجم",
+              description: "لورم ایپسوم متن ساختگی.",
+              image: "/images/blog.png",
+            }}
+          />
+          <BlogCard
+            item={{
+              name: "مقاله ششم",
+              description: "لورم ایپسوم متن ساختگی.",
+              image: "/images/blog.png",
+            }}
+          />
+          <BlogCard
+            item={{
+              name: "مقاله هفتم",
+              description: "لورم ایپسوم متن ساختگی.",
+              image: "/images/blog.png",
+            }}
+          />
+          <BlogCard
+            item={{
+              name: "مقاله هشتم",
+              description: "لورم ایپسوم متن ساختگی.",
+              image: "/images/blog.png",
+            }}
+          />
+        </ItemsCarousel>
+      </section>
+
       <Marquees />
     </main>
   );

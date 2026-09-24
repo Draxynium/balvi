@@ -7,7 +7,7 @@ import { ArrowLeft, Check, Mail, MapPin, Phone } from "lucide-react";
 import ScrollReveal from "@/components/scroll-reveal";
 import ScrollParallax from "@/components/scroll-parallax";
 import MouseParallex from "@/components/mouse-parallax";
-import ProductCarousel from "@/components/items-carousel";
+import ItemsCarousel from "@/components/items-carousel";
 import ItemCard from "@/components/item-card";
 import Marquees from "@/components/marquees";
 import { Highlighter } from "@/components/ui/highlighter";
@@ -364,7 +364,7 @@ export default function WholesalePage() {
           </h2>
         </ScrollReveal>
 
-        <ProductCarousel>
+        <ItemsCarousel>
           {Array.from({ length: 8 }).map((_, i) => (
             <ItemCard
               key={i}
@@ -377,7 +377,7 @@ export default function WholesalePage() {
               }}
             />
           ))}
-        </ProductCarousel>
+        </ItemsCarousel>
       </section>
 
       {/* ================= CONDITIONS ================= */}

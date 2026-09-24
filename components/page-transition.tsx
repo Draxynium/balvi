@@ -67,7 +67,7 @@ export default function PageTransition({
               <img
                 src="/mascot.svg"
                 alt=""
-                className="w-72 h-72 md:w-96 md:h-96 lg:w-[28rem] lg:h-[28rem]"
+                className="w-40 h-40 md:w-52 md:h-52 lg:w-64 lg:h-64"
               />
             </motion.div>
           </motion.div>

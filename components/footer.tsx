@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowUpLeft, Send } from "lucide-react";
+import { ArrowUpLeft } from "lucide-react";
 
 export default function Footer() {
   const columns = [
@@ -26,7 +26,11 @@ export default function Footer() {
   ];
 
   return (
-    <footer data-navbar-dark className="relative flex min-h-screen w-full justify-center overflow-hidden pt-6 sm:pt-8 md:pt-12">
+    <footer
+      dir="rtl"
+      data-navbar-dark
+      className="relative flex w-full justify-center overflow-hidden pt-6 sm:pt-8 md:pt-12"
+    >
       <motion.div
         initial={{
           y: "25%",
@@ -55,11 +59,12 @@ export default function Footer() {
             ease: [0.22, 1, 0.36, 1],
           },
         }}
-        className="relative flex min-h-screen w-full flex-col gap-8 overflow-hidden rounded-t-md bg-secondary px-5 py-9 text-primary sm:gap-10 sm:px-8 sm:py-10 md:px-10 md:py-12 lg:px-12"
+        className="relative flex w-full flex-col gap-8 overflow-hidden bg-secondary px-5 py-9 text-primary sm:gap-10 sm:px-8 sm:py-10 md:px-10 md:py-12 lg:px-12"
       >
         {/* ---------- TOP: CONTENT + MASCOT ---------- */}
-        <div className="flex w-full flex-1 flex-col gap-8 sm:gap-10 md:flex-row md:items-center md:justify-center md:gap-14 lg:gap-20">
+        <div className="flex w-full flex-col gap-8 sm:gap-10 md:flex-row md:items-center md:justify-center md:gap-14 lg:gap-20">
           <div className="flex w-full max-w-3xl flex-col gap-6 sm:gap-7 md:items-start md:gap-8">
+            {/* ---------- HEADING ---------- */}
             <h2 className="text-center text-2xl font-black leading-snug sm:text-3xl md:text-left md:text-4xl">
               آنچه می‌ماند
               <br className="md:hidden" />{" "}
@@ -96,8 +101,12 @@ export default function Footer() {
             <div className="h-px w-full bg-primary/25" />
 
             {/* ---------- BOTTOM BAR ---------- */}
-            <div className="flex w-full flex-col items-center gap-4 text-[11px] sm:text-xs md:flex-row md:justify-between md:gap-6">
-              <div className="order-2 flex items-center gap-5 sm:gap-6 md:order-2">
+            <div className="flex w-full flex-col items-center gap-4 text-[11px] sm:text-xs md:flex-row md:items-center md:justify-between md:gap-6">
+              <span className="text-center opacity-70 md:opacity-100">
+                تمامی حقوق محفوظ است - ۱۴۰۳
+              </span>
+
+              <div className="flex items-center gap-5 sm:gap-6">
                 <Link href="/" className="transition-opacity hover:opacity-70">
                   حریم خصوصی
                 </Link>
@@ -106,9 +115,13 @@ export default function Footer() {
                 </Link>
               </div>
 
-              <span className="order-3 text-center opacity-70 md:order-1 md:opacity-100">
-                تمامی حقوق محفوظ است - ۱۴۰۳
-              </span>
+              <Link href="/" className="shrink-0 transition-opacity hover:opacity-70">
+                <img
+                  src="/text-logo.svg"
+                  alt="Logo"
+                  className="h-5 w-auto sm:h-6"
+                />
+              </Link>
             </div>
           </div>
 
@@ -117,24 +130,9 @@ export default function Footer() {
             <img
               src="/mascot.svg"
               alt="Mascot"
-              className="h-32 w-auto sm:h-40 md:h-72 lg:h-80"
+              className="h-28 w-auto sm:h-36 md:h-56 lg:h-64"
             />
           </div>
-        </div>
-
-        {/* ---------- TEXT LOGO ---------- */}
-        <div className="pointer-events-none relative -mx-5 flex w-[calc(100%+2.5rem)] shrink-0 justify-center sm:-mx-8 sm:w-[calc(100%+4rem)] md:-mx-10 md:w-[calc(100%+5rem)] lg:-mx-12 lg:w-[calc(100%+6rem)]">
-          <img
-            src="/text-logo.svg"
-            alt="Logo"
-            className="block w-full max-w-6xl hp"
-            style={{
-              maskImage:
-                "linear-gradient(to top, rgba(0,0,0,0.0) 0%, rgba(0,0,0,0.6) 100%)",
-              WebkitMaskImage:
-                "linear-gradient(to top, rgba(0,0,0,0.0) 0%, rgba(0,0,0,0.8) 100%)",
-            }}
-          />
         </div>
       </motion.div>
     </footer>

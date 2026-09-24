@@ -1,5 +1,5 @@
 import MouseParallex from "@/components/mouse-parallax";
-import ProductCarousel from "@/components/items-carousel";
+import ItemsCarousel from "@/components/items-carousel";
 import BlogCard from "@/components/blog-card";
 import ScrollReveal from "@/components/scroll-reveal";
 import ScrollParallax from "@/components/scroll-parallax";
@@ -346,7 +346,7 @@ export default function AboutUs() {
           </h2>
         </ScrollReveal>
 
-        <ProductCarousel>
+        <ItemsCarousel>
           <BlogCard
             item={{
               name: "مقاله اول",
@@ -403,7 +403,7 @@ export default function AboutUs() {
               image: "/images/blog.png",
             }}
           />
-        </ProductCarousel>
+        </ItemsCarousel>
       </section>
     </main>
   );
