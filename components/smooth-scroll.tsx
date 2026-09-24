@@ -9,9 +9,17 @@ export default function SmoothScroll() {
       autoRaf: true,
       lerp: 0.1,
       smoothWheel: true,
+      prevent: (node) => node.hasAttribute("data-lenis-prevent"),
     });
 
+    const resizeObserver = new ResizeObserver(() => {
+      lenis.resize();
+    });
+
+    resizeObserver.observe(document.body);
+
     return () => {
+      resizeObserver.disconnect();
       lenis.destroy();
     };
   }, []);

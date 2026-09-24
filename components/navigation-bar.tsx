@@ -745,7 +745,8 @@ export default function NavigationBar() {
         >
           <div
             dir="rtl"
-            className="relative right-0 top-0 z-2 flex h-full w-md max-w-full flex-col overflow-y-auto rounded-md border border-foreground/15 bg-background px-6 py-6 scrollbar-hide"
+            data-lenis-prevent
+            className="relative right-0 top-0 z-2 flex h-full w-md max-w-full flex-col overflow-y-auto rounded-md border border-foreground/15 bg-background px-6 py-6 scrollbar-hide overscroll-contain"
           >
             {/* Chapters (men / women) */}
             <div className="flex flex-col">
