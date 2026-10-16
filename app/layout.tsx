@@ -6,8 +6,10 @@ import { cn } from "@/lib/utils";
 import Footer from "@/components/footer";
 import SmoothScroll from "@/components/smooth-scroll";
 import PageTransition from "@/components/page-transition";
+import { AuthProvider } from "@/features/auth/context/auth-context";
+import { AuthDialogHost } from "@/features/auth/components/auth-dialog-host";
 
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
+const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
   title: "Your Website",
@@ -20,14 +22,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fa" dir="rtl" className={cn("h-full antialiased", "font-sans", geist.variable)} data-scroll-behavior="smooth">
-      <body className="min-h-full flex flex-col overflow-x-hidden">
-        <PageTransition>
-          <NavigationBar/>
-          {children}
-          <Footer/>
-          <SmoothScroll/>
-        </PageTransition>
+    <html
+      lang="fa"
+      dir="rtl"
+      className={cn("h-full antialiased", "font-sans", geist.variable)}
+      data-scroll-behavior="smooth"
+    >
+      <body className="flex min-h-full flex-col overflow-x-hidden">
+        <AuthProvider>
+          <PageTransition>
+            <NavigationBar />
+            {children}
+            <Footer />
+            <SmoothScroll />
+          </PageTransition>
+          <AuthDialogHost />
+        </AuthProvider>
       </body>
     </html>
   );

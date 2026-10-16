@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { productCategories } from "@/lib/products/categories";
+import { productCategoryLabels } from "@/features/catalog/model/categories";
 import { useEffect, useState } from "react";
 
 export default function ProductsCategoryNav() {
@@ -29,12 +29,11 @@ export default function ProductsCategoryNav() {
   }, []);
 
   useEffect(() => {
-    const navbarSections =
-      document.querySelectorAll("[data-navbar-dark]");
+    const navbarSections = document.querySelectorAll("[data-navbar-dark]");
 
     if (!navbarSections.length) {
-      setDarkBackground(false);
-      return;
+      const frame = requestAnimationFrame(() => setDarkBackground(false));
+      return () => cancelAnimationFrame(frame);
     }
 
     const createObserver = () => {
@@ -43,17 +42,15 @@ export default function ProductsCategoryNav() {
       const observer = new IntersectionObserver(
         (entries) => {
           const activeDarkSection = entries.some(
-            (entry) => entry.isIntersecting
+            (entry) => entry.isIntersecting,
           );
 
           setDarkBackground(activeDarkSection);
         },
         {
-          rootMargin: `0px 0px -${
-            window.innerHeight - navbarHeight
-          }px 0px`,
+          rootMargin: `0px 0px -${window.innerHeight - navbarHeight}px 0px`,
           threshold: 0,
-        }
+        },
       );
 
       navbarSections.forEach((section) => {
@@ -78,9 +75,7 @@ export default function ProductsCategoryNav() {
     };
   }, []);
 
-  const textColor = darkBackground
-    ? "text-primary"
-    : "text-muted-foreground";
+  const textColor = darkBackground ? "text-primary" : "text-muted-foreground";
 
   const hoverColor = darkBackground
     ? "hover:text-accent"
@@ -91,7 +86,7 @@ export default function ProductsCategoryNav() {
       label: "همه محصولات",
       value: null,
     },
-    ...productCategories.map((category) => ({
+    ...productCategoryLabels.map((category) => ({
       label: category,
       value: category,
     })),
@@ -100,10 +95,10 @@ export default function ProductsCategoryNav() {
   return (
     <nav
       dir="rtl"
-      className="fixed left-1/2 -translate-x-1/2 top-0 z-198 flex w-full items-center justify-center transition-all duration-500"
+      className="fixed top-0 left-1/2 z-198 flex w-full -translate-x-1/2 items-center justify-center transition-all duration-500"
     >
       <div
-        className={`flex pt-14 w-full items-center justify-center overflow-hidden border  py-1 backdrop-blur-2xl px-4 transition-all duration-500 ease-out ${
+        className={`flex w-full items-center justify-center overflow-hidden border px-4 py-1 pt-14 backdrop-blur-2xl transition-all duration-500 ease-out ${
           darkBackground
             ? "divide-primary/20 border-primary/20 bg-secondary/50"
             : "divide-border/40 border-border/20 bg-background/20"
@@ -115,7 +110,7 @@ export default function ProductsCategoryNav() {
               : "border-border/0!"
         }`}
       >
-        <div className="flex max-w-full items-center justify-start gap-8 overflow-x-auto scrollbar-hide md:h-14 sm:h-12 h-10">
+        <div className="scrollbar-hide flex h-10 max-w-full items-center justify-start gap-8 overflow-x-auto sm:h-12 md:h-14">
           {categories.map((category) => {
             const params = new URLSearchParams();
 
@@ -129,9 +124,7 @@ export default function ProductsCategoryNav() {
 
             const query = params.toString();
 
-            const href = query
-              ? `/products?${query}`
-              : "/products";
+            const href = query ? `/products?${query}` : "/products";
 
             const isActive =
               category.value === activeCategory ||
@@ -141,15 +134,13 @@ export default function ProductsCategoryNav() {
               <Link
                 key={category.label}
                 href={href}
-                className={`relative flex h-full shrink-0 items-center whitespace-nowrap text-sm font-medium transition-colors ${textColor} ${hoverColor} ${category.label === "همه محصولات" && "font-bold!"}`}
+                className={`relative flex h-full shrink-0 items-center text-sm font-medium whitespace-nowrap transition-colors ${textColor} ${hoverColor} ${category.label === "همه محصولات" && "font-bold!"}`}
               >
                 {category.label}
 
                 <span
-                  className={`absolute bottom-0 left-2 right-2 h-px origin-center bg-current transition-transform duration-300 ${
-                    isActive
-                      ? "scale-x-100"
-                      : "scale-x-0"
+                  className={`absolute right-2 bottom-0 left-2 h-px origin-center bg-current transition-transform duration-300 ${
+                    isActive ? "scale-x-100" : "scale-x-0"
                   }`}
                 />
               </Link>

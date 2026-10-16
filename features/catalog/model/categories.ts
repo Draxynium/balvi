@@ -1,12 +1,9 @@
-export const productCategories = [
+export const productCategoryLabels = [
   "کلاسیک",
   "اسپورت",
   "راحتی",
   "بوت و نیم بوت",
   "دمپایی و صندل",
   "اداری",
-  "روزمره"
+  "روزمره",
 ] as const;
-
-export type ProductCategory =
-  (typeof productCategories)[number];

@@ -1,396 +1,491 @@
 "use client";
 
-import { Check, Minus, Plus, Trash2, Truck, CreditCard, ShoppingBag } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import {
+  Check,
+  LoaderCircle,
+  Minus,
+  PackageCheck,
+  Plus,
+  ShoppingBag,
+  Trash2,
+  Truck,
+} from "lucide-react";
 import ScrollReveal from "@/components/scroll-reveal";
-
-type CartItem = {
-  id: number;
-  name: string;
-  color: string;
-  size: string;
-  price: number;
-  quantity: number;
-  image: string;
-};
+import { useAuth } from "@/features/auth/hooks/use-auth";
+import { cartApi } from "@/features/cart/api/cart-api";
+import {
+  formatRialsAsTomans,
+  resolveCartImage,
+} from "@/features/cart/lib/format";
+import type { Cart, City, Order, Province } from "@/features/cart/model/types";
+import {
+  isIranianMobile,
+  normalizeIranianMobile,
+  toEnglishDigits,
+} from "@/features/auth/lib/validation";
+import { getApiErrorMessage } from "@/lib/api/client";
 
 type CheckoutStep = 1 | 2 | 3;
 
-const initialItems: CartItem[] = [
-  {
-    id: 1,
-    name: "بوت مشکی کلاسیک",
-    color: "مشکی",
-    size: "۴۲",
-    price: 2850000,
-    quantity: 1,
-    image: "/images/boot.png",
-  },
-  {
-    id: 2,
-    name: "کفش چرمی کلاسیک",
-    color: "قهوه‌ای",
-    size: "۴۱",
-    price: 2450000,
-    quantity: 2,
-    image: "/images/boot.png",
-  },
-];
-
-const formatPrice = (price: number) => {
-  return `${price.toLocaleString("fa-IR")} تومان`;
+const initialForm = {
+  fullName: "",
+  phoneNumber: "",
+  provinceId: "",
+  cityId: "",
+  address: "",
+  postalCode: "",
 };
 
 export default function CartPage() {
+  const { user, status, openDialog } = useAuth();
   const [step, setStep] = useState<CheckoutStep>(1);
-  const [items, setItems] = useState<CartItem[]>(initialItems);
-  const [gateway, setGateway] = useState<"mellat" | "zarinpal" | null>(null);
+  const [cart, setCart] = useState<Cart | null>(null);
+  const [loadedForUserId, setLoadedForUserId] = useState<string | null>(null);
+  const [provinces, setProvinces] = useState<Province[]>([]);
+  const [cities, setCities] = useState<City[]>([]);
+  const [form, setForm] = useState(initialForm);
+  const [order, setOrder] = useState<Order | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [pendingItemId, setPendingItemId] = useState<string | null>(null);
+  const [error, setError] = useState("");
 
-  const [form, setForm] = useState({
-    name: "",
-    phone: "",
-    province: "",
-    city: "",
-    address: "",
-    postalCode: "",
-  });
+  useEffect(() => {
+    if (status !== "authenticated") return;
+    let active = true;
+    cartApi
+      .get()
+      .then((result) => {
+        if (active) setCart(result);
+      })
+      .catch((reason) => {
+        if (active) setError(getApiErrorMessage(reason));
+      })
+      .finally(() => {
+        if (active) setLoadedForUserId(user?.id ?? null);
+      });
+    return () => {
+      active = false;
+    };
+  }, [status, user?.id]);
 
-  const updateQuantity = (id: number, amount: number) => {
-    setItems((current) =>
-      current.map((item) =>
-        item.id === id
-          ? {
-              ...item,
-              quantity: Math.max(1, item.quantity + amount),
-            }
-          : item
-      )
-    );
+  const loadProvinces = async () => {
+    if (provinces.length) return true;
+    setLoading(true);
+    setError("");
+    try {
+      setProvinces(await cartApi.getProvinces());
+      return true;
+    } catch (reason) {
+      setError(getApiErrorMessage(reason));
+      return false;
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const removeItem = (id: number) => {
-    setItems((current) => current.filter((item) => item.id !== id));
+  const continueToShipping = async () => {
+    if (!cart?.items.length) return;
+    if (await loadProvinces()) {
+      setForm((current) => ({
+        ...current,
+        phoneNumber: current.phoneNumber || user?.phoneNumber || "",
+      }));
+      setStep(2);
+    }
   };
 
-  const subtotal = items.reduce(
-    (total, item) => total + item.price * item.quantity,
-    0
-  );
+  const handleProvinceChange = async (provinceId: string) => {
+    setForm((current) => ({ ...current, provinceId, cityId: "" }));
+    setCities([]);
+    if (!provinceId) return;
+    setLoading(true);
+    setError("");
+    try {
+      setCities(await cartApi.getCities(provinceId));
+    } catch (reason) {
+      setError(getApiErrorMessage(reason));
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  const shipping = items.length > 0 ? 150000 : 0;
-  const total = subtotal + shipping;
+  const updateQuantity = async (itemId: string, quantity: number) => {
+    if (quantity < 1) return;
+    setPendingItemId(itemId);
+    setError("");
+    try {
+      setCart(await cartApi.updateQuantity(itemId, quantity));
+    } catch (reason) {
+      setError(getApiErrorMessage(reason));
+    } finally {
+      setPendingItemId(null);
+    }
+  };
+
+  const removeItem = async (itemId: string) => {
+    setPendingItemId(itemId);
+    setError("");
+    try {
+      await cartApi.removeItem(itemId);
+      setCart(await cartApi.get());
+    } catch (reason) {
+      setError(getApiErrorMessage(reason));
+    } finally {
+      setPendingItemId(null);
+    }
+  };
 
   const updateForm = (key: keyof typeof form, value: string) => {
-    setForm((current) => ({
-      ...current,
-      [key]: value,
-    }));
+    setForm((current) => ({ ...current, [key]: value }));
   };
 
+  const createOrder = async () => {
+    if (!form.fullName.trim())
+      return setError("نام و نام خانوادگی را وارد کنید.");
+    if (!isIranianMobile(form.phoneNumber))
+      return setError("شماره موبایل معتبر وارد کنید.");
+    if (!form.provinceId || !form.cityId)
+      return setError("استان و شهر را انتخاب کنید.");
+    if (!form.address.trim()) return setError("آدرس کامل را وارد کنید.");
+
+    const postalCode = toEnglishDigits(form.postalCode).replace(/\D/g, "");
+    if (postalCode.length !== 10)
+      return setError("کد پستی باید دقیقاً ۱۰ رقم باشد.");
+
+    setSubmitting(true);
+    setError("");
+    try {
+      const createdOrder = await cartApi.createOrder({
+        ...form,
+        fullName: form.fullName.trim(),
+        phoneNumber: normalizeIranianMobile(form.phoneNumber),
+        address: form.address.trim(),
+        postalCode,
+      });
+      setOrder(createdOrder);
+      setCart((current) =>
+        current
+          ? {
+              ...current,
+              items: [],
+              totalQuantity: 0,
+              productsTotalInRials: 0,
+              shippingCostInRials: 0,
+              totalAmountInRials: 0,
+            }
+          : current,
+      );
+      setStep(3);
+    } catch (reason) {
+      setError(getApiErrorMessage(reason));
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const authenticated = status === "authenticated";
+
   return (
-    <main dir="rtl" className="w-full flex justify-center">
-      <section className="w-full max-w-7xl px-6 sm:px-8 pt-28 pb-20">
-        <ScrollReveal direction="bottom" distance={30} duration={1}>
-          <div className="flex items-center justify-center gap-5 text-sm mb-16">
-            <span className={step === 1 ? "text-foreground font-medium" : "text-muted-foreground"}>
-              خانه
-            </span>
+    <main dir="rtl" className="flex w-full justify-center">
+      <section className="w-full max-w-7xl px-6 pt-28 pb-20 sm:px-8">
+        <div className="mx-auto mb-16 flex w-full max-w-3xl items-start">
+          <CheckoutStepItem
+            active={step === 1}
+            completed={step > 1}
+            icon={<ShoppingBag size={30} strokeWidth={1.5} />}
+            title="سبد خرید"
+            onClick={() => step < 3 && setStep(1)}
+          />
+          <StepLine completed={step > 1} />
+          <CheckoutStepItem
+            active={step === 2}
+            completed={step > 2}
+            icon={<Truck size={30} strokeWidth={1.5} />}
+            title="اطلاعات ارسال"
+            onClick={() => step === 2 && setStep(2)}
+          />
+          <StepLine completed={step > 2} />
+          <CheckoutStepItem
+            active={step === 3}
+            completed={false}
+            icon={<PackageCheck size={30} strokeWidth={1.5} />}
+            title="ثبت سفارش"
+            onClick={() => undefined}
+          />
+        </div>
 
-            <span className="text-muted-foreground">|</span>
-
-            <span className={step === 1 ? "text-foreground font-medium" : "text-muted-foreground"}>
-              سبد خرید
-            </span>
-          </div>
-        </ScrollReveal>
-
-        <ScrollReveal direction="bottom" distance={40} duration={1}>
-          <div className="w-full max-w-3xl mx-auto mb-20">
-            <div className="flex items-start">
-              <CheckoutStepItem
-                active={step === 1}
-                completed={step > 1}
-                icon={<ShoppingBag size={34} strokeWidth={1.5} />}
-                title="سبد خرید"
-                onClick={() => setStep(1)}
-              />
-
-              <div
-                className={`flex-1 h-[3px] mt-[38px] ${
-                  step > 1 ? "bg-foreground/40" : "bg-foreground/10"
-                }`}
-              />
-
-              <CheckoutStepItem
-                active={step === 2}
-                completed={step > 2}
-                icon={<Truck size={34} strokeWidth={1.5} />}
-                title="اطلاعات ارسال"
-                onClick={() => {
-                  if (step >= 2) setStep(2);
-                }}
-              />
-
-              <div
-                className={`flex-1 h-[3px] mt-[38px] ${
-                  step > 2 ? "bg-foreground/40" : "bg-foreground/10"
-                }`}
-              />
-
-              <CheckoutStepItem
-                active={step === 3}
-                completed={false}
-                icon={<CreditCard size={34} strokeWidth={1.5} />}
-                title="پرداخت"
-                onClick={() => {
-                  if (step >= 3) setStep(3);
-                }}
-              />
-            </div>
-          </div>
-        </ScrollReveal>
-
-        {step === 1 && (
-          <div className="flex flex-col lg:flex-row gap-12 lg:gap-20 items-start">
-            <div className="flex-1 w-full">
-              <ScrollReveal direction="right" distance={50}>
-                <div className="border-t border-foreground/10">
-                  {items.map((item, index) => (
-                    <ScrollReveal
-                      key={item.id}
-                      direction="right"
-                      distance={40}
-                      delay={index * 0.1}
-                    >
-                      <div className="flex flex-col sm:flex-row gap-6 py-7 border-b border-foreground/10">
-                        <div className="w-full sm:w-36 h-40 sm:h-44 shrink-0 rounded-md overflow-hidden bg-muted">
-                          <img
-                            src={item.image}
-                            alt={item.name}
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-
-                        <div className="flex-1 flex flex-col justify-between gap-6">
-                          <div className="flex justify-between items-start gap-6">
-                            <div>
-                              <h2 className="text-xl md:text-2xl font-medium">
-                                {item.name}
-                              </h2>
-
-                              <div className="mt-3 space-y-1 text-sm text-muted-foreground">
-                                <p>رنگ: {item.color}</p>
-                                <p>سایز: {item.size}</p>
-                              </div>
-                            </div>
-
-                            <p className="text-lg md:text-xl font-medium whitespace-nowrap">
-                              {formatPrice(item.price)}
-                            </p>
-                          </div>
-
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center border border-foreground/10 rounded-md h-11">
-                              <button
-                                onClick={() => updateQuantity(item.id, -1)}
-                                className="w-11 h-full flex items-center justify-center hover:bg-muted transition-colors"
-                              >
-                                <Minus size={16} />
-                              </button>
-
-                              <span className="w-10 text-center text-sm">
-                                {item.quantity.toLocaleString("fa-IR")}
-                              </span>
-
-                              <button
-                                onClick={() => updateQuantity(item.id, 1)}
-                                className="w-11 h-full flex items-center justify-center hover:bg-muted transition-colors"
-                              >
-                                <Plus size={16} />
-                              </button>
-                            </div>
-
-                            <button
-                              onClick={() => removeItem(item.id)}
-                              className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-                            >
-                              <Trash2 size={16} />
-                              حذف محصول
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </ScrollReveal>
-                  ))}
-                </div>
-              </ScrollReveal>
-            </div>
-
-            <OrderSummary
-              subtotal={subtotal}
-              shipping={shipping}
-              total={total}
-              buttonText="ادامه فرایند خرید"
-              onClick={() => setStep(2)}
-            />
-          </div>
-        )}
-
-        {step === 2 && (
-          <div className="flex flex-col lg:flex-row gap-12 lg:gap-20 items-start">
-            <ScrollReveal
-              direction="right"
-              distance={50}
-              className="flex-1 w-full"
+        {status === "loading" ||
+        (authenticated && loadedForUserId !== user?.id) ? (
+          <LoadingState />
+        ) : !authenticated ? (
+          <div className="border-foreground/10 mx-auto flex min-h-72 max-w-xl flex-col items-center justify-center rounded-2xl border p-8 text-center">
+            <ShoppingBag size={36} strokeWidth={1.4} />
+            <h1 className="mt-5 text-2xl font-medium">
+              سبد خرید شما محفوظ است
+            </h1>
+            <p className="text-muted-foreground mt-3 text-sm leading-7">
+              برای مشاهده سبد خرید و ثبت سفارش وارد حساب کاربری شوید.
+            </p>
+            <button
+              type="button"
+              onClick={openDialog}
+              className="bg-foreground text-background mt-7 h-12 rounded-xl px-8"
             >
-              <div className="w-full">
-                <div className="mb-10">
-                  <h1 className="text-3xl md:text-4xl font-medium">
+              ورود / ثبت‌نام
+            </button>
+          </div>
+        ) : (
+          <>
+            {error && (
+              <p
+                role="alert"
+                className="bg-destructive/10 text-destructive mx-auto mb-6 max-w-3xl rounded-xl p-4 text-sm"
+              >
+                {error}
+              </p>
+            )}
+
+            {step === 1 && (
+              <div className="flex flex-col items-start gap-12 lg:flex-row lg:gap-20">
+                <div className="w-full flex-1">
+                  {cart?.items.length ? (
+                    <div className="border-foreground/10 border-t">
+                      {cart.items.map((item) => (
+                        <div
+                          key={item.id}
+                          className="border-foreground/10 flex flex-col gap-6 border-b py-7 sm:flex-row"
+                        >
+                          <Link
+                            href={`/products/${item.productId}`}
+                            className="bg-muted h-44 w-full shrink-0 overflow-hidden rounded-md sm:w-36"
+                          >
+                            <img
+                              src={resolveCartImage(item.mainImageUrl)}
+                              alt={item.productName}
+                              className="h-full w-full object-contain"
+                            />
+                          </Link>
+                          <div className="flex flex-1 flex-col justify-between gap-6">
+                            <div className="flex items-start justify-between gap-6">
+                              <div>
+                                <Link
+                                  href={`/products/${item.productId}`}
+                                  className="text-xl font-medium"
+                                >
+                                  {item.productName}
+                                </Link>
+                                <div className="text-muted-foreground mt-3 space-y-1 text-sm">
+                                  <p>رنگ: {item.colorName}</p>
+                                  <p>سایز: {item.sizeName}</p>
+                                  {!item.isAvailable && (
+                                    <p className="text-destructive">
+                                      موجودی کافی نیست
+                                    </p>
+                                  )}
+                                </div>
+                              </div>
+                              <p className="text-lg font-medium whitespace-nowrap">
+                                {formatRialsAsTomans(item.lineTotalInRials)}
+                              </p>
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <div className="border-foreground/10 flex h-11 items-center rounded-md border">
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    updateQuantity(item.id, item.quantity - 1)
+                                  }
+                                  disabled={
+                                    pendingItemId === item.id ||
+                                    item.quantity <= 1
+                                  }
+                                  className="flex h-full w-11 items-center justify-center disabled:opacity-30"
+                                  aria-label="کاهش تعداد"
+                                >
+                                  <Minus size={16} />
+                                </button>
+                                <span className="w-10 text-center text-sm">
+                                  {pendingItemId === item.id ? (
+                                    <LoaderCircle
+                                      className="mx-auto animate-spin"
+                                      size={15}
+                                    />
+                                  ) : (
+                                    item.quantity.toLocaleString("fa-IR")
+                                  )}
+                                </span>
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    updateQuantity(item.id, item.quantity + 1)
+                                  }
+                                  disabled={
+                                    pendingItemId === item.id ||
+                                    item.quantity >= item.availableStockQuantity
+                                  }
+                                  className="flex h-full w-11 items-center justify-center disabled:opacity-30"
+                                  aria-label="افزایش تعداد"
+                                >
+                                  <Plus size={16} />
+                                </button>
+                              </div>
+                              <button
+                                type="button"
+                                onClick={() => removeItem(item.id)}
+                                disabled={pendingItemId === item.id}
+                                className="text-muted-foreground hover:text-destructive flex items-center gap-2 text-sm disabled:opacity-40"
+                              >
+                                <Trash2 size={16} /> حذف محصول
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="flex min-h-64 flex-col items-center justify-center text-center">
+                      <ShoppingBag size={34} strokeWidth={1.4} />
+                      <h1 className="mt-4 text-2xl font-medium">
+                        سبد خرید خالی است
+                      </h1>
+                      <Link href="/products" className="mt-5 text-sm underline">
+                        مشاهده محصولات
+                      </Link>
+                    </div>
+                  )}
+                </div>
+                <OrderSummary
+                  cart={cart}
+                  buttonText="ادامه فرایند خرید"
+                  onClick={continueToShipping}
+                />
+              </div>
+            )}
+
+            {step === 2 && cart && (
+              <div className="flex flex-col items-start gap-12 lg:flex-row lg:gap-20">
+                <div className="w-full flex-1">
+                  <h1 className="text-3xl font-medium md:text-4xl">
                     اطلاعات ارسال
                   </h1>
-
-                  <p className="mt-3 text-muted-foreground">
-                    اطلاعات لازم برای ارسال سفارش خود را وارد کنید.
+                  <p className="text-muted-foreground mt-3">
+                    اطلاعات تحویل سفارش را دقیق وارد کنید.
                   </p>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  <InputField
-                    label="نام و نام خانوادگی"
-                    placeholder="مثلاً امین طاهری"
-                    value={form.name}
-                    onChange={(value) => updateForm("name", value)}
-                  />
-
-                  <InputField
-                    label="شماره تماس"
-                    placeholder="۰۹۱۲۱۲۳۴۵۶۷"
-                    value={form.phone}
-                    onChange={(value) => updateForm("phone", value)}
-                  />
-
-                  <InputField
-                    label="استان"
-                    placeholder="تهران"
-                    value={form.province}
-                    onChange={(value) => updateForm("province", value)}
-                  />
-
-                  <InputField
-                    label="شهر"
-                    placeholder="تهران"
-                    value={form.city}
-                    onChange={(value) => updateForm("city", value)}
-                  />
-
-                  <div className="sm:col-span-2">
+                  <div className="mt-9 grid grid-cols-1 gap-6 sm:grid-cols-2">
                     <InputField
-                      label="آدرس"
-                      placeholder="آدرس کامل محل تحویل سفارش"
-                      value={form.address}
-                      onChange={(value) => updateForm("address", value)}
+                      label="نام و نام خانوادگی"
+                      value={form.fullName}
+                      onChange={(value) => updateForm("fullName", value)}
+                    />
+                    <InputField
+                      label="شماره تماس"
+                      value={form.phoneNumber}
+                      inputMode="tel"
+                      onChange={(value) => updateForm("phoneNumber", value)}
+                    />
+                    <SelectField
+                      label="استان"
+                      value={form.provinceId}
+                      options={provinces}
+                      onChange={handleProvinceChange}
+                    />
+                    <SelectField
+                      label="شهر"
+                      value={form.cityId}
+                      options={cities}
+                      disabled={!form.provinceId || loading}
+                      onChange={(value) => updateForm("cityId", value)}
+                    />
+                    <div className="sm:col-span-2">
+                      <InputField
+                        label="آدرس کامل"
+                        value={form.address}
+                        onChange={(value) => updateForm("address", value)}
+                      />
+                    </div>
+                    <InputField
+                      label="کد پستی"
+                      value={form.postalCode}
+                      inputMode="numeric"
+                      onChange={(value) => updateForm("postalCode", value)}
                     />
                   </div>
-
-                  <InputField
-                    label="کد پستی"
-                    placeholder="۱۲۳۴۵۶۷۸۹۰"
-                    value={form.postalCode}
-                    onChange={(value) => updateForm("postalCode", value)}
-                  />
+                  <div className="mt-10 flex gap-4">
+                    <button
+                      type="button"
+                      onClick={createOrder}
+                      disabled={submitting}
+                      className="bg-foreground text-background flex h-14 items-center gap-2 rounded-md px-10 font-medium disabled:opacity-50"
+                    >
+                      {submitting && (
+                        <LoaderCircle className="animate-spin" size={18} />
+                      )}
+                      ثبت نهایی سفارش
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setStep(1)}
+                      className="border-foreground/10 h-14 rounded-md border px-8"
+                    >
+                      بازگشت
+                    </button>
+                  </div>
                 </div>
-
-                <div className="flex gap-4 mt-10">
-                  <button
-                    onClick={() => setStep(3)}
-                    className="h-14 px-10 rounded-md bg-foreground text-background font-medium hover:opacity-90 transition-opacity"
-                  >
-                    ادامه و انتخاب درگاه
-                  </button>
-
-                  <button
-                    onClick={() => setStep(1)}
-                    className="h-14 px-8 rounded-md border border-foreground/10 hover:bg-muted transition-colors"
-                  >
-                    بازگشت
-                  </button>
-                </div>
+                <OrderSummary
+                  cart={cart}
+                  buttonText="ثبت نهایی سفارش"
+                  onClick={createOrder}
+                  disabled={submitting}
+                />
               </div>
-            </ScrollReveal>
+            )}
 
-            <OrderSummary
-              subtotal={subtotal}
-              shipping={shipping}
-              total={total}
-              buttonText="ادامه و انتخاب درگاه"
-              onClick={() => setStep(3)}
-            />
-          </div>
-        )}
-
-        {step === 3 && (
-          <div className="flex flex-col lg:flex-row gap-12 lg:gap-20 items-start">
-            <ScrollReveal
-              direction="right"
-              distance={50}
-              className="flex-1 w-full"
-            >
-              <div>
-                <div className="mb-10">
-                  <h1 className="text-3xl md:text-4xl font-medium">
-                    انتخاب درگاه پرداخت
-                  </h1>
-
-                  <p className="mt-3 text-muted-foreground">
-                    درگاه مورد نظر خود را برای پرداخت سفارش انتخاب کنید.
-                  </p>
+            {step === 3 && order && (
+              <div className="border-foreground/10 mx-auto flex min-h-96 max-w-2xl flex-col items-center justify-center rounded-3xl border p-8 text-center">
+                <div className="bg-primary/10 text-primary flex h-16 w-16 items-center justify-center rounded-full">
+                  <Check size={32} />
                 </div>
-
-                <div className="space-y-4">
-                  <PaymentGateway
-                    active={gateway === "mellat"}
-                    title="درگاه بانک ملت"
-                    description="پرداخت امن از طریق درگاه بانک ملت"
-                    onClick={() => setGateway("mellat")}
-                  />
-
-                  <PaymentGateway
-                    active={gateway === "zarinpal"}
-                    title="زرین پال"
-                    description="پرداخت آنلاین از طریق زرین پال"
-                    onClick={() => setGateway("zarinpal")}
-                  />
-                </div>
-
-                <div className="flex gap-4 mt-10">
-                  <button
-                    disabled={!gateway}
-                    className="h-14 px-10 rounded-md bg-foreground text-background font-medium disabled:opacity-30 hover:opacity-90 transition-opacity"
-                  >
-                    پرداخت {formatPrice(total)}
-                  </button>
-
-                  <button
-                    onClick={() => setStep(2)}
-                    className="h-14 px-8 rounded-md border border-foreground/10 hover:bg-muted transition-colors"
-                  >
-                    بازگشت
-                  </button>
-                </div>
+                <h1 className="mt-6 text-3xl font-medium">سفارش شما ثبت شد</h1>
+                <p className="text-muted-foreground mt-3">
+                  شماره سفارش:{" "}
+                  <span className="text-foreground font-medium">
+                    {order.orderNumber}
+                  </span>
+                </p>
+                <p className="text-muted-foreground mt-2 text-sm">
+                  مبلغ نهایی {formatRialsAsTomans(order.totalAmountInRials)}
+                </p>
+                <Link
+                  href="/products"
+                  className="bg-foreground text-background mt-8 rounded-xl px-8 py-3"
+                >
+                  بازگشت به فروشگاه
+                </Link>
               </div>
-            </ScrollReveal>
-
-            <OrderSummary
-              subtotal={subtotal}
-              shipping={shipping}
-              total={total}
-              buttonText="پرداخت"
-              onClick={() => {}}
-            />
-          </div>
+            )}
+          </>
         )}
       </section>
     </main>
+  );
+}
+
+function LoadingState() {
+  return (
+    <div className="text-muted-foreground flex min-h-72 items-center justify-center">
+      <LoaderCircle className="animate-spin" size={28} />
+    </div>
+  );
+}
+
+function StepLine({ completed }: { completed: boolean }) {
+  return (
+    <div
+      className={`mt-8 h-px flex-1 ${completed ? "bg-foreground/40" : "bg-foreground/10"}`}
+    />
   );
 }
 
@@ -409,86 +504,61 @@ function CheckoutStepItem({
 }) {
   return (
     <button
+      type="button"
       onClick={onClick}
-      className={`w-[110px] shrink-0 flex flex-col items-center gap-3 transition-colors ${
+      className={`flex w-28 shrink-0 flex-col items-center gap-3 ${
         active ? "text-foreground" : "text-muted-foreground"
       }`}
     >
-      <div className="relative">
-        {completed ? (
-          <div className="w-[38px] h-[38px] rounded-md bg-foreground text-background flex items-center justify-center">
-            <Check size={19} />
-          </div>
-        ) : (
-          icon
-        )}
-      </div>
-
-      <span className={`text-base ${active ? "font-medium" : ""}`}>
-        {title}
-      </span>
+      {completed ? (
+        <span className="bg-foreground text-background flex h-8 w-8 items-center justify-center rounded-full">
+          <Check size={17} />
+        </span>
+      ) : (
+        icon
+      )}
+      <span className={active ? "font-medium" : ""}>{title}</span>
     </button>
   );
 }
 
 function OrderSummary({
-  subtotal,
-  shipping,
-  total,
+  cart,
   buttonText,
   onClick,
+  disabled,
 }: {
-  subtotal: number;
-  shipping: number;
-  total: number;
+  cart: Cart | null;
   buttonText: string;
   onClick: () => void;
+  disabled?: boolean;
 }) {
   return (
-    <ScrollReveal
-      direction="left"
-      distance={50}
-      delay={0.2}
-      className="w-full lg:w-[360px]"
-    >
-      <div className="border border-foreground/10 rounded-md p-6 md:p-7 sticky top-28">
-        <h2 className="text-2xl font-medium">
-          خلاصه سفارش
-        </h2>
-
-        <div className="mt-8 space-y-5">
-          <div className="flex justify-between text-base">
-            <span className="text-muted-foreground">
-              مجموع محصولات
-            </span>
-
-            <span>{formatPrice(subtotal)}</span>
+    <ScrollReveal direction="left" distance={40} className="w-full lg:w-90">
+      <div className="border-foreground/10 sticky top-28 rounded-md border p-7">
+        <h2 className="text-2xl font-medium">خلاصه سفارش</h2>
+        <div className="mt-8 space-y-5 text-sm">
+          <div className="flex justify-between">
+            <span className="text-muted-foreground">مجموع محصولات</span>
+            <span>{formatRialsAsTomans(cart?.productsTotalInRials ?? 0)}</span>
           </div>
-
-          <div className="flex justify-between text-base">
-            <span className="text-muted-foreground">
-              هزینه ارسال
-            </span>
-
-            <span>{formatPrice(shipping)}</span>
+          <div className="flex justify-between">
+            <span className="text-muted-foreground">هزینه ارسال</span>
+            <span>{formatRialsAsTomans(cart?.shippingCostInRials ?? 0)}</span>
           </div>
         </div>
-
-        <div className="my-6 border-t border-foreground/10" />
-
-        <div className="flex justify-between items-center">
+        <div className="border-foreground/10 my-6 border-t" />
+        <div className="flex items-center justify-between">
+          <span className="font-medium">مبلغ نهایی</span>
           <span className="text-lg font-medium">
-            مبلغ نهایی
-          </span>
-
-          <span className="text-xl font-medium">
-            {formatPrice(total)}
+            {formatRialsAsTomans(cart?.totalAmountInRials ?? 0)}
           </span>
         </div>
-
         <button
+          type="button"
           onClick={onClick}
-          className="w-full h-14 mt-8 rounded-md bg-foreground text-background font-medium hover:opacity-90 transition-opacity"
+          disabled={disabled || !cart?.items.length}
+          className="bg-foreground text-background mt-8 h-14 w-full rounded-md font-medium disabled:cursor-not-allowed disabled:opacity-30"
         >
           {buttonText}
         </button>
@@ -499,70 +569,57 @@ function OrderSummary({
 
 function InputField({
   label,
-  placeholder,
   value,
   onChange,
+  inputMode,
 }: {
   label: string;
-  placeholder: string;
   value: string;
   onChange: (value: string) => void;
+  inputMode?: React.HTMLAttributes<HTMLInputElement>["inputMode"];
 }) {
   return (
-    <div>
-      <label className="block text-sm mb-3">
-        {label}
-      </label>
-
+    <label className="block text-sm">
+      <span className="mb-3 block">{label}</span>
       <input
         value={value}
+        inputMode={inputMode}
         onChange={(event) => onChange(event.target.value)}
-        placeholder={placeholder}
-        className="w-full h-14 px-5 rounded-md bg-muted/60 outline-none border border-foreground/10 focus:border-foreground/20 transition-colors"
+        className="border-foreground/10 bg-muted/60 focus:border-foreground/30 h-14 w-full rounded-md border px-5 outline-none"
       />
-    </div>
+    </label>
   );
 }
 
-function PaymentGateway({
-  active,
-  title,
-  description,
-  onClick,
+function SelectField({
+  label,
+  value,
+  options,
+  onChange,
+  disabled,
 }: {
-  active: boolean;
-  title: string;
-  description: string;
-  onClick: () => void;
+  label: string;
+  value: string;
+  options: Array<{ id: string; name: string }>;
+  onChange: (value: string) => void;
+  disabled?: boolean;
 }) {
   return (
-    <button
-      onClick={onClick}
-      className={`w-full flex items-center gap-5 p-5 rounded-md border text-right transition-colors ${
-        active
-          ? "border-foreground/40 bg-muted/60"
-          : "border-foreground/10 hover:border-foreground/20"
-      }`}
-    >
-      <div
-        className={`w-5 h-5 rounded-md border flex items-center justify-center shrink-0 ${
-          active ? "border-foreground" : "border-foreground/20"
-        }`}
+    <label className="block text-sm">
+      <span className="mb-3 block">{label}</span>
+      <select
+        value={value}
+        disabled={disabled}
+        onChange={(event) => onChange(event.target.value)}
+        className="border-foreground/10 bg-muted/60 focus:border-foreground/30 h-14 w-full rounded-md border px-5 outline-none disabled:opacity-50"
       >
-        {active && (
-          <div className="w-2.5 h-2.5 rounded-md bg-foreground" />
-        )}
-      </div>
-
-      <div>
-        <p className="text-lg font-medium">
-          {title}
-        </p>
-
-        <p className="mt-1 text-sm text-muted-foreground">
-          {description}
-        </p>
-      </div>
-    </button>
+        <option value="">انتخاب کنید</option>
+        {options.map((option) => (
+          <option key={option.id} value={option.id}>
+            {option.name}
+          </option>
+        ))}
+      </select>
+    </label>
   );
 }
