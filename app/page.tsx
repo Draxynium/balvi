@@ -6,18 +6,16 @@ import ScrollReveal from "@/components/scroll-reveal";
 import { Highlighter } from "@/components/ui/highlighter";
 import FlipCards from "@/components/landing/flip-cards";
 import ProductCategories from "@/components/landing/product-categories";
-import Link from "next/link";
 import GenderSection from "@/components/landing/gender-section";
-import BlogCard from "@/components/blog-card";
-import ItemsCarousel from "@/components/items-carousel";
+import { HomeArticles } from "@/components/articles/home-articles";
 
 export default function Home() {
   return (
-    <main className="w-full flex items-center justify-center flex-col overflow-x-hidden">
+    <main className="flex w-full flex-col items-center justify-center overflow-x-hidden">
       {/* ================= HERO ================= */}
       <section
         data-navbar-dark
-        className="relative flex justify-center flex-col items-center w-full"
+        className="relative flex w-full flex-col items-center justify-center"
       >
         <ScrollReveal direction="top" className="w-full">
           <div className="relative w-full">
@@ -27,18 +25,18 @@ export default function Home() {
               muted
               loop
               playsInline
-              className="w-full h-[90vh] object-cover"
+              className="h-[90vh] w-full object-cover"
             />
 
             <button
               type="button"
               aria-label="مشاهده محصولات"
-              className="absolute inset-0 z-10 flex flex-col justify-end items-center w-full h-full cursor-pointer group pointer-events-none"
+              className="group pointer-events-none absolute inset-0 z-10 flex h-full w-full cursor-pointer flex-col items-center justify-end"
             >
-              <span className="z-30 p-6 sm:p-8 md:p-12 text-lg sm:text-xl md:text-2xl font-light text-background whitespace-nowrap pointer-events-auto">
+              <span className="text-background pointer-events-auto z-30 p-6 text-lg font-light whitespace-nowrap sm:p-8 sm:text-xl md:p-12 md:text-2xl">
                 مشاهده محصولات
               </span>
-              <div className="absolute bottom-0 inset-x-0 mx-auto rounded-3xl z-20 transition-all duration-1000 ease-in group-hover:ease-out w-48 sm:w-60 h-12 sm:h-14 group-hover:w-full group-hover:h-full group-hover:rounded-md backdrop-blur-xl pointer-events-none bg-foreground/0 group-hover:bg-foreground/60 mb-6 sm:mb-8 md:mb-9 group-hover:mb-0" />
+              <div className="bg-foreground/0 group-hover:bg-foreground/60 pointer-events-none absolute inset-x-0 bottom-0 z-20 mx-auto mb-6 h-12 w-48 rounded-3xl backdrop-blur-xl transition-all duration-1000 ease-in group-hover:mb-0 group-hover:h-full group-hover:w-full group-hover:rounded-md group-hover:ease-out sm:mb-8 sm:h-14 sm:w-60 md:mb-9" />
             </button>
           </div>
         </ScrollReveal>
@@ -48,23 +46,22 @@ export default function Home() {
       <GenderSection />
 
       {/* ================= ABOUT ================= */}
-      <section className="relative flex justify-center flex-col items-center w-full gap-8 sm:gap-10 md:gap-12 pb-8 sm:pb-10 md:pb-12">
-        <div className="flex flex-col md:flex-row gap-8 md:gap-10 lg:gap-12 max-w-5xl w-full">
+      <section className="relative flex w-full flex-col items-center justify-center gap-8 pb-8 sm:gap-10 sm:pb-10 md:gap-12 md:pb-12">
+        <div className="flex w-full max-w-5xl flex-col gap-8 md:flex-row md:gap-10 lg:gap-12">
           {/* Text */}
-          <div className="order-2 md:order-2 text-right md:flex-2 flex items-center justify-center px-2 sm:px-4 md:px-0">
+          <div className="order-2 flex items-center justify-center px-2 text-right sm:px-4 md:order-2 md:flex-2 md:px-0">
             <ScrollReveal direction="left" distance={50} delay={0.25}>
-              <p className="text-sm sm:text-base md:text-lg leading-7 sm:leading-8 text-foreground max-md:text-center">
-                بالوی تنها یک نام تجاری نیست؛ بلکه نمایانگر دهه ها هنر,
-                اصالت ایرانی و تخصص در صنعت تولید کفش است. ما با سال ها
-                تجربه تخصصی و تمرکز بر کیفیت در تولیدی کفش چرم,
-                مفتخریم که انتخاب اول کسانی باشیم که به دنبال راحتی,
-                دوام و زیبایی بی نظیر هستند.
+              <p className="text-foreground text-sm leading-7 max-md:text-center sm:text-base sm:leading-8 md:text-lg">
+                بالوی تنها یک نام تجاری نیست؛ بلکه نمایانگر دهه ها هنر, اصالت
+                ایرانی و تخصص در صنعت تولید کفش است. ما با سال ها تجربه تخصصی و
+                تمرکز بر کیفیت در تولیدی کفش چرم, مفتخریم که انتخاب اول کسانی
+                باشیم که به دنبال راحتی, دوام و زیبایی بی نظیر هستند.
               </p>
             </ScrollReveal>
           </div>
 
           {/* Image + Heading */}
-          <div className="relative order-1 md:order-1 flex justify-center items-center md:flex-1 w-full min-h-[220px] sm:min-h-[280px] md:min-h-[320px]">
+          <div className="relative order-1 flex min-h-[220px] w-full items-center justify-center sm:min-h-[280px] md:order-1 md:min-h-[320px] md:flex-1">
             <ScrollReveal
               direction="bottom"
               distance={30}
@@ -88,7 +85,7 @@ export default function Home() {
             </ScrollReveal>
 
             <ScrollReveal direction="right" distance={60} delay={0.1}>
-              <h2 className="relative z-10 max-w-md px-4 text-center text-2xl sm:text-3xl md:text-4xl font-black leading-normal whitespace-nowrap">
+              <h2 className="relative z-10 max-w-md px-4 text-center text-2xl leading-normal font-black whitespace-nowrap sm:text-3xl md:text-4xl">
                 چرم بالوی
                 <br />
                 <Highlighter action="highlight" color="#e0b069">
@@ -112,7 +109,7 @@ export default function Home() {
         >
           <div
             data-navbar-dark
-            className="aspect-video sm:aspect-video md:aspect-16/7 w-full overflow-hidden"
+            className="aspect-video w-full overflow-hidden sm:aspect-video md:aspect-16/7"
           >
             <video
               src="/videos/compressed/video-b.mp4"
@@ -126,79 +123,22 @@ export default function Home() {
         </ScrollReveal>
       </section>
 
-      <ProductCategories/>
+      <ProductCategories />
 
       <FlipCards />
 
       {/* ============ BLOG ============ */}
-      <section className="relative flex justify-center flex-col items-center w-full pt-8 sm:pt-10 md:pt-12 px-4 sm:px-6 lg:px-8 max-w-7xl">
+      <section className="relative flex w-full max-w-7xl flex-col items-center justify-center px-4 pt-8 sm:px-6 sm:pt-10 md:pt-12 lg:px-8">
         <ScrollReveal direction="right" distance={40} className="w-full">
-          <p className="text-sm sm:text-base text-secondary font-medium tracking-wider text-right w-full pr-1 sm:pr-2 mb-2">
+          <p className="text-secondary mb-2 w-full pr-1 text-right text-sm font-medium tracking-wider sm:pr-2 sm:text-base">
             یادداشت‌های بالوی
           </p>
-          <h2 className="text-2xl sm:text-3xl font-bold text-right w-full pr-1 sm:pr-2 pb-4">
+          <h2 className="w-full pr-1 pb-4 text-right text-2xl font-bold sm:pr-2 sm:text-3xl">
             مقاله ها
           </h2>
         </ScrollReveal>
 
-        <ItemsCarousel>
-          <BlogCard
-            item={{
-              name: "مقاله اول",
-              description: "لورم ایپسوم متن ساختگی.",
-              image: "/images/blog.png",
-            }}
-          />
-          <BlogCard
-            item={{
-              name: "مقاله دوم",
-              description: "لورم ایپسوم متن ساختگی.",
-              image: "/images/blog.png",
-            }}
-          />
-          <BlogCard
-            item={{
-              name: "مقاله سوم",
-              description: "لورم ایپسوم متن ساختگی.",
-              image: "/images/blog.png",
-            }}
-          />
-          <BlogCard
-            item={{
-              name: "مقاله چهارم",
-              description: "لورم ایپسوم متن ساختگی.",
-              image: "/images/blog.png",
-            }}
-          />
-          <BlogCard
-            item={{
-              name: "مقاله پنجم",
-              description: "لورم ایپسوم متن ساختگی.",
-              image: "/images/blog.png",
-            }}
-          />
-          <BlogCard
-            item={{
-              name: "مقاله ششم",
-              description: "لورم ایپسوم متن ساختگی.",
-              image: "/images/blog.png",
-            }}
-          />
-          <BlogCard
-            item={{
-              name: "مقاله هفتم",
-              description: "لورم ایپسوم متن ساختگی.",
-              image: "/images/blog.png",
-            }}
-          />
-          <BlogCard
-            item={{
-              name: "مقاله هشتم",
-              description: "لورم ایپسوم متن ساختگی.",
-              image: "/images/blog.png",
-            }}
-          />
-        </ItemsCarousel>
+        <HomeArticles />
       </section>
 
       <Marquees />

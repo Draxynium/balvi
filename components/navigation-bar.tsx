@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { cn } from "cn";
 import { useAuth } from "@/features/auth/hooks/use-auth";
+import { useCart } from "@/features/cart/hooks/use-cart";
 
 /* ------------------------------ sidebar data ----------------------------- */
 
@@ -105,6 +106,7 @@ export default function NavigationBar() {
   const [sideMenuOpen, setSideMenuOpen] = useState(false);
   const [openSection, setOpenSection] = useState<string | null>("men");
   const { user, status: authStatus, openDialog } = useAuth();
+  const { totalQuantity } = useCart();
 
   const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -496,10 +498,20 @@ export default function NavigationBar() {
 
           <Link
             href="/cart"
-            className={`flex h-full w-12 items-center justify-center gap-2 text-sm font-medium transition-colors lg:w-28 ${textColor} ${hoverColor}`}
+            className={`relative flex h-full w-12 items-center justify-center gap-2 text-sm font-medium transition-colors lg:w-28 ${textColor} ${hoverColor}`}
           >
             <ShoppingCart size={18} />
             <p className="hidden lg:block">سبد خرید</p>
+            {totalQuantity > 0 && (
+              <span
+                aria-label={`${totalQuantity.toLocaleString("fa-IR")} کالا در سبد خرید`}
+                className="absolute top-0.5 right-0.5 grid min-h-5 min-w-5 place-items-center rounded-full bg-[#b17b42] px-1 text-[10px] leading-none font-bold text-white shadow-sm lg:right-2"
+              >
+                {totalQuantity > 99
+                  ? "+۹۹"
+                  : totalQuantity.toLocaleString("fa-IR")}
+              </span>
+            )}
           </Link>
         </div>
       </nav>

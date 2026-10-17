@@ -12,6 +12,12 @@
   font-display: swap;
 }
 
+@layer components {
+  .admin-input {
+    @apply h-12 w-full rounded-xl border border-[#173f37]/12 bg-[#f8f6f1] px-4 text-sm transition outline-none focus:border-[#d7a66c] focus:ring-4 focus:ring-[#d7a66c]/10;
+  }
+}
+
 @font-face {
   font-family: "Ravi";
   src: url("/fonts/Ravi/Ravi-Light.ttf") format("truetype");
@@ -264,4 +270,3 @@
     }
   }
 }
-

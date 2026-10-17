@@ -1,5 +1,5 @@
 import { adminRequest } from "@/features/admin/shared/api";
-import type { CatalogInput, CatalogItem } from "./types";
+import type { CatalogInput, CatalogItem, CatalogResource } from "./types";
 
 export type CatalogAdminApi = {
   list: () => Promise<CatalogItem[]>;
@@ -8,7 +8,7 @@ export type CatalogAdminApi = {
   remove: (id: string) => Promise<void>;
 };
 
-function createCatalogApi(resource: "brands" | "colors"): CatalogAdminApi {
+function createCatalogApi(resource: CatalogResource): CatalogAdminApi {
   const body = (input: CatalogInput) =>
     resource === "colors"
       ? { name: input.name, hexCode: input.hexCode }
@@ -36,3 +36,6 @@ function createCatalogApi(resource: "brands" | "colors"): CatalogAdminApi {
 
 export const brandAdminApi = createCatalogApi("brands");
 export const colorAdminApi = createCatalogApi("colors");
+export const sizeAdminApi = createCatalogApi("sizes");
+export const materialAdminApi = createCatalogApi("materials");
+export const liningAdminApi = createCatalogApi("linings");

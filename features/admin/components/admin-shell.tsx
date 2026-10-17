@@ -4,21 +4,67 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
+  CalendarClock,
+  CreditCard,
   FolderTree,
   LayoutDashboard,
+  Layers3,
   LoaderCircle,
   LogOut,
   Menu,
+  PackageSearch,
   Palette,
+  Newspaper,
+  ReceiptText,
+  Ruler,
+  Scissors,
+  Settings2,
   ShieldCheck,
   Store,
   Tags,
+  Users,
   X,
 } from "lucide-react";
 import { useAuth } from "@/features/auth/hooks/use-auth";
 import { cn } from "@/lib/utils";
 
 const navigation = [
+  {
+    href: "/admin/articles",
+    label: "مقالات",
+    description: "محتوا، تصاویر و انتشار",
+    icon: Newspaper,
+  },
+  {
+    href: "/admin/products",
+    label: "محصولات",
+    description: "محصول، موجودی و تصاویر",
+    icon: PackageSearch,
+  },
+  {
+    href: "/admin/orders",
+    label: "سفارش‌ها",
+    description: "پیگیری سفارش‌های مشتریان",
+    icon: ReceiptText,
+  },
+  {
+    href: "/admin/payments",
+    label: "پرداخت‌ها",
+    description: "تراکنش‌های موفق و ناموفق",
+    icon: CreditCard,
+  },
+  {
+    href: "/admin/users",
+    label: "کاربران",
+    description: "حساب‌ها و دسترسی کاربران",
+    icon: Users,
+  },
+  {
+    href: "/admin/delivery-schedule",
+    label: "تقویم ارسال",
+    description: "روزها و ساعت‌های تحویل",
+    icon: CalendarClock,
+  },
   {
     href: "/admin/categories",
     label: "دسته‌بندی‌ها",
@@ -36,6 +82,30 @@ const navigation = [
     label: "رنگ‌ها",
     description: "رنگ‌های محصولات",
     icon: Palette,
+  },
+  {
+    href: "/admin/sizes",
+    label: "سایزها",
+    description: "سایزهای تنوع محصول",
+    icon: Ruler,
+  },
+  {
+    href: "/admin/materials",
+    label: "جنس‌ها",
+    description: "جنس محصولات",
+    icon: Layers3,
+  },
+  {
+    href: "/admin/linings",
+    label: "آسترها",
+    description: "آستر محصولات",
+    icon: Scissors,
+  },
+  {
+    href: "/admin/settings",
+    label: "تنظیمات",
+    description: "مالیات و هزینه ارسال",
+    icon: Settings2,
   },
 ];
 
@@ -127,7 +197,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
         </div>
       </div>
 
-      <nav className="flex-1 space-y-2 p-4">
+      <nav className="flex-1 space-y-2 overflow-y-auto p-4">
         <p className="mb-3 px-3 text-[11px] font-medium tracking-wider text-white/35">
           مدیریت محتوا
         </p>
@@ -155,8 +225,15 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
                 <Icon className="size-5" />
               </span>
               <span>
-                <span className="block text-sm font-semibold">{item.label}</span>
-                <span className={cn("text-[11px]", active ? "text-[#173f37]/50" : "text-white/35")}>
+                <span className="block text-sm font-semibold">
+                  {item.label}
+                </span>
+                <span
+                  className={cn(
+                    "text-[11px]",
+                    active ? "text-[#173f37]/50" : "text-white/35",
+                  )}
+                >
                   {item.description}
                 </span>
               </span>
@@ -179,7 +256,11 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
           disabled={loggingOut}
           className="flex h-11 w-full items-center gap-3 rounded-xl px-3 text-sm text-white/65 transition hover:bg-red-500/15 hover:text-red-200 disabled:opacity-50"
         >
-          {loggingOut ? <LoaderCircle className="size-4 animate-spin" /> : <LogOut className="size-4" />}
+          {loggingOut ? (
+            <LoaderCircle className="size-4 animate-spin" />
+          ) : (
+            <LogOut className="size-4" />
+          )}
           خروج از حساب
         </button>
       </div>
@@ -205,7 +286,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
               type="button"
               aria-label="بستن منو"
               onClick={() => setMobileOpen(false)}
-              className="absolute left-4 top-4 grid size-9 place-items-center rounded-xl bg-white/10"
+              className="absolute top-4 left-4 grid size-9 place-items-center rounded-xl bg-white/10"
             >
               <X className="size-5" />
             </button>
@@ -230,7 +311,9 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
                 <LayoutDashboard className="size-3.5" />
                 پنل مدیریت
               </div>
-              <p className="mt-1 text-sm font-semibold">خوش آمدید، {user.phoneNumber}</p>
+              <p className="mt-1 text-sm font-semibold">
+                خوش آمدید، {user.phoneNumber}
+              </p>
             </div>
           </div>
           <span className="rounded-full border border-emerald-700/15 bg-emerald-700/10 px-3 py-1.5 text-xs font-semibold text-emerald-800">

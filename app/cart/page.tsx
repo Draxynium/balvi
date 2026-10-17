@@ -1,9 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
+  CalendarDays,
   Check,
+  Clock3,
   LoaderCircle,
   Minus,
   PackageCheck,
@@ -25,7 +28,15 @@ import {
   normalizeIranianMobile,
   toEnglishDigits,
 } from "@/features/auth/lib/validation";
-import { getApiErrorMessage } from "@/lib/api/client";
+import { ApiError, getApiErrorMessage } from "@/lib/api/client";
+import { cn } from "@/lib/utils";
+import { useCart } from "@/features/cart/hooks/use-cart";
+import { deliveryApi } from "@/features/delivery/api/delivery-api";
+import {
+  formatDeliveryTime,
+  formatPersianDeliveryDate,
+} from "@/features/delivery/lib/persian-calendar";
+import type { AvailableDeliverySchedule } from "@/features/delivery/model/types";
 
 type CheckoutStep = 1 | 2 | 3;
 
@@ -36,15 +47,21 @@ const initialForm = {
   cityId: "",
   address: "",
   postalCode: "",
+  deliveryDate: "",
+  deliveryTimeSlotId: "",
 };
 
 export default function CartPage() {
-  const { user, status, openDialog } = useAuth();
+  const router = useRouter();
+  const { user, status } = useAuth();
+  const { syncCart } = useCart();
   const [step, setStep] = useState<CheckoutStep>(1);
   const [cart, setCart] = useState<Cart | null>(null);
   const [loadedForUserId, setLoadedForUserId] = useState<string | null>(null);
   const [provinces, setProvinces] = useState<Province[]>([]);
   const [cities, setCities] = useState<City[]>([]);
+  const [deliverySchedule, setDeliverySchedule] =
+    useState<AvailableDeliverySchedule | null>(null);
   const [form, setForm] = useState(initialForm);
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(false);
@@ -52,16 +69,37 @@ export default function CartPage() {
   const [pendingItemId, setPendingItemId] = useState<string | null>(null);
   const [error, setError] = useState("");
 
+  const goToLogin = useCallback(
+    (returnPath = "/cart") => {
+      router.push(`/login?next=${encodeURIComponent(returnPath)}`);
+    },
+    [router],
+  );
+
+  const handleProtectedError = useCallback(
+    (reason: unknown, returnPath = "/cart") => {
+      if (reason instanceof ApiError && reason.status === 401) {
+        goToLogin(returnPath);
+        return;
+      }
+      setError(getApiErrorMessage(reason));
+    },
+    [goToLogin],
+  );
+
   useEffect(() => {
     if (status !== "authenticated") return;
     let active = true;
     cartApi
       .get()
       .then((result) => {
-        if (active) setCart(result);
+        if (active) {
+          setCart(result);
+          syncCart(result);
+        }
       })
       .catch((reason) => {
-        if (active) setError(getApiErrorMessage(reason));
+        if (active) handleProtectedError(reason);
       })
       .finally(() => {
         if (active) setLoadedForUserId(user?.id ?? null);
@@ -69,14 +107,59 @@ export default function CartPage() {
     return () => {
       active = false;
     };
-  }, [status, user?.id]);
+  }, [handleProtectedError, status, syncCart, user?.id]);
 
-  const loadProvinces = async () => {
-    if (provinces.length) return true;
+  useEffect(() => {
+    if (
+      status !== "authenticated" ||
+      loadedForUserId !== user?.id ||
+      !cart?.items.length ||
+      step !== 1 ||
+      new URLSearchParams(window.location.search).get("checkout") !== "1"
+    ) {
+      return;
+    }
+
+    let active = true;
+    Promise.all([cartApi.getProvinces(), deliveryApi.getAvailable()])
+      .then(([provinceResult, scheduleResult]) => {
+        if (!active) return;
+        setError("");
+        setProvinces(provinceResult);
+        setDeliverySchedule(scheduleResult);
+        setForm((current) => ({
+          ...current,
+          phoneNumber: current.phoneNumber || user?.phoneNumber || "",
+        }));
+        setStep(2);
+        window.history.replaceState(window.history.state, "", "/cart");
+      })
+      .catch((reason) => {
+        if (active) setError(getApiErrorMessage(reason));
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [
+    cart?.items.length,
+    loadedForUserId,
+    status,
+    step,
+    user?.id,
+    user?.phoneNumber,
+  ]);
+
+  const loadCheckoutData = async () => {
     setLoading(true);
     setError("");
     try {
-      setProvinces(await cartApi.getProvinces());
+      const [provinceResult, scheduleResult] = await Promise.all([
+        provinces.length ? Promise.resolve(provinces) : cartApi.getProvinces(),
+        deliveryApi.getAvailable(),
+      ]);
+      setProvinces(provinceResult);
+      setDeliverySchedule(scheduleResult);
       return true;
     } catch (reason) {
       setError(getApiErrorMessage(reason));
@@ -88,7 +171,11 @@ export default function CartPage() {
 
   const continueToShipping = async () => {
     if (!cart?.items.length) return;
-    if (await loadProvinces()) {
+    if (status !== "authenticated" || !user) {
+      goToLogin("/cart?checkout=1");
+      return;
+    }
+    if (await loadCheckoutData()) {
       setForm((current) => ({
         ...current,
         phoneNumber: current.phoneNumber || user?.phoneNumber || "",
@@ -117,9 +204,11 @@ export default function CartPage() {
     setPendingItemId(itemId);
     setError("");
     try {
-      setCart(await cartApi.updateQuantity(itemId, quantity));
+      const updatedCart = await cartApi.updateQuantity(itemId, quantity);
+      setCart(updatedCart);
+      syncCart(updatedCart);
     } catch (reason) {
-      setError(getApiErrorMessage(reason));
+      handleProtectedError(reason);
     } finally {
       setPendingItemId(null);
     }
@@ -130,9 +219,11 @@ export default function CartPage() {
     setError("");
     try {
       await cartApi.removeItem(itemId);
-      setCart(await cartApi.get());
+      const updatedCart = await cartApi.get();
+      setCart(updatedCart);
+      syncCart(updatedCart);
     } catch (reason) {
-      setError(getApiErrorMessage(reason));
+      handleProtectedError(reason);
     } finally {
       setPendingItemId(null);
     }
@@ -143,6 +234,10 @@ export default function CartPage() {
   };
 
   const createOrder = async () => {
+    if (status !== "authenticated" || !user) {
+      goToLogin("/cart?checkout=1");
+      return;
+    }
     if (!form.fullName.trim())
       return setError("نام و نام خانوادگی را وارد کنید.");
     if (!isIranianMobile(form.phoneNumber))
@@ -154,6 +249,8 @@ export default function CartPage() {
     const postalCode = toEnglishDigits(form.postalCode).replace(/\D/g, "");
     if (postalCode.length !== 10)
       return setError("کد پستی باید دقیقاً ۱۰ رقم باشد.");
+    if (!form.deliveryDate || !form.deliveryTimeSlotId)
+      return setError("روز و بازه زمانی تحویل را انتخاب کنید.");
 
     setSubmitting(true);
     setError("");
@@ -173,20 +270,26 @@ export default function CartPage() {
               items: [],
               totalQuantity: 0,
               productsTotalInRials: 0,
+              taxAmountInRials: 0,
               shippingCostInRials: 0,
               totalAmountInRials: 0,
             }
           : current,
       );
+      syncCart(null);
       setStep(3);
+      router.push(`/orders/${createdOrder.id}/payment`);
     } catch (reason) {
-      setError(getApiErrorMessage(reason));
+      handleProtectedError(reason, "/cart?checkout=1");
     } finally {
       setSubmitting(false);
     }
   };
 
   const authenticated = status === "authenticated";
+  const selectedDeliveryDay = deliverySchedule?.days.find(
+    (day) => day.date === form.deliveryDate,
+  );
 
   return (
     <main dir="rtl" className="flex w-full justify-center">
@@ -229,13 +332,12 @@ export default function CartPage() {
             <p className="text-muted-foreground mt-3 text-sm leading-7">
               برای مشاهده سبد خرید و ثبت سفارش وارد حساب کاربری شوید.
             </p>
-            <button
-              type="button"
-              onClick={openDialog}
+            <Link
+              href={`/login?next=${encodeURIComponent("/cart")}`}
               className="bg-foreground text-background mt-7 h-12 rounded-xl px-8"
             >
               ورود / ثبت‌نام
-            </button>
+            </Link>
           </div>
         ) : (
           <>
@@ -413,11 +515,96 @@ export default function CartPage() {
                       onChange={(value) => updateForm("postalCode", value)}
                     />
                   </div>
+                  <section className="border-foreground/10 mt-9 rounded-3xl border p-5 sm:p-6">
+                    <div className="flex items-start gap-3">
+                      <span className="bg-primary/10 text-primary grid size-10 shrink-0 place-items-center rounded-xl">
+                        <CalendarDays size={20} />
+                      </span>
+                      <div>
+                        <h2 className="font-medium">زمان تحویل سفارش</h2>
+                        <p className="text-muted-foreground mt-1 text-xs leading-6">
+                          یکی از روزها و بازه‌های فعال فروشگاه را انتخاب کنید.
+                        </p>
+                      </div>
+                    </div>
+
+                    {loading && !deliverySchedule ? (
+                      <div className="text-muted-foreground mt-6 flex items-center gap-2 text-sm">
+                        <LoaderCircle className="animate-spin" size={17} />
+                        در حال دریافت زمان‌های ارسال…
+                      </div>
+                    ) : !deliverySchedule?.days.length ? (
+                      <div className="mt-6 rounded-2xl bg-amber-50 px-4 py-3 text-sm leading-7 text-amber-800">
+                        در حال حاضر زمان فعالی برای تحویل ثبت نشده است. لطفاً
+                        بعداً دوباره بررسی کنید.
+                      </div>
+                    ) : (
+                      <>
+                        <div className="mt-6 grid gap-2 sm:grid-cols-2">
+                          {deliverySchedule.days.map((day) => (
+                            <button
+                              key={day.id}
+                              type="button"
+                              onClick={() =>
+                                setForm((current) => ({
+                                  ...current,
+                                  deliveryDate: day.date,
+                                  deliveryTimeSlotId: "",
+                                }))
+                              }
+                              className={cn(
+                                "rounded-2xl border px-4 py-3 text-right text-sm transition",
+                                form.deliveryDate === day.date
+                                  ? "border-foreground bg-foreground text-background"
+                                  : "border-foreground/10 hover:border-foreground/30",
+                              )}
+                            >
+                              {formatPersianDeliveryDate(day.date)}
+                            </button>
+                          ))}
+                        </div>
+
+                        {selectedDeliveryDay && (
+                          <div className="mt-5">
+                            <p className="text-muted-foreground mb-2 flex items-center gap-2 text-xs">
+                              <Clock3 size={15} />
+                              بازه زمانی
+                            </p>
+                            <div className="flex flex-wrap gap-2">
+                              {selectedDeliveryDay.timeSlots.map((slot) => (
+                                <button
+                                  key={slot.id}
+                                  type="button"
+                                  onClick={() =>
+                                    updateForm("deliveryTimeSlotId", slot.id)
+                                  }
+                                  className={cn(
+                                    "rounded-xl border px-4 py-2.5 text-sm transition",
+                                    form.deliveryTimeSlotId === slot.id
+                                      ? "border-primary bg-primary/10 text-primary"
+                                      : "border-foreground/10",
+                                  )}
+                                >
+                                  {slot.label ? slot.label + " · " : ""}
+                                  {formatDeliveryTime(slot.startTime)} تا{" "}
+                                  {formatDeliveryTime(slot.endTime)}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </>
+                    )}
+                  </section>
                   <div className="mt-10 flex gap-4">
                     <button
                       type="button"
                       onClick={createOrder}
-                      disabled={submitting}
+                      disabled={
+                        submitting ||
+                        !deliverySchedule?.days.length ||
+                        !form.deliveryTimeSlotId
+                      }
                       className="bg-foreground text-background flex h-14 items-center gap-2 rounded-md px-10 font-medium disabled:opacity-50"
                     >
                       {submitting && (
@@ -438,7 +625,11 @@ export default function CartPage() {
                   cart={cart}
                   buttonText="ثبت نهایی سفارش"
                   onClick={createOrder}
-                  disabled={submitting}
+                  disabled={
+                    submitting ||
+                    !deliverySchedule?.days.length ||
+                    !form.deliveryTimeSlotId
+                  }
                 />
               </div>
             )}
@@ -448,7 +639,9 @@ export default function CartPage() {
                 <div className="bg-primary/10 text-primary flex h-16 w-16 items-center justify-center rounded-full">
                   <Check size={32} />
                 </div>
-                <h1 className="mt-6 text-3xl font-medium">سفارش شما ثبت شد</h1>
+                <h1 className="mt-6 text-3xl font-medium">
+                  خرید شما با موفقیت ثبت شد
+                </h1>
                 <p className="text-muted-foreground mt-3">
                   شماره سفارش:{" "}
                   <span className="text-foreground font-medium">
@@ -457,6 +650,9 @@ export default function CartPage() {
                 </p>
                 <p className="text-muted-foreground mt-2 text-sm">
                   مبلغ نهایی {formatRialsAsTomans(order.totalAmountInRials)}
+                </p>
+                <p className="text-muted-foreground mt-2 text-xs leading-6">
+                  موجودی کالاهای خریداری‌شده از فروشگاه کسر شد.
                 </p>
                 <Link
                   href="/products"
@@ -541,6 +737,13 @@ function OrderSummary({
           <div className="flex justify-between">
             <span className="text-muted-foreground">مجموع محصولات</span>
             <span>{formatRialsAsTomans(cart?.productsTotalInRials ?? 0)}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-muted-foreground">
+              مالیات
+              {cart ? ` (${cart.taxPercentage.toLocaleString("fa-IR")}٪)` : ""}
+            </span>
+            <span>{formatRialsAsTomans(cart?.taxAmountInRials ?? 0)}</span>
           </div>
           <div className="flex justify-between">
             <span className="text-muted-foreground">هزینه ارسال</span>

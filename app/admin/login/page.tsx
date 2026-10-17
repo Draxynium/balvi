@@ -12,7 +12,7 @@ import {
   ShieldCheck,
   UserRound,
 } from "lucide-react";
-import { AuthApiError } from "@/features/auth/api/auth-api";
+import { getAuthErrorMessage } from "@/features/auth/api/auth-api";
 import { useAuth } from "@/features/auth/hooks/use-auth";
 
 function isAdmin(role: string | null | undefined) {
@@ -30,7 +30,9 @@ export default function AdminLoginPage() {
 
   useEffect(() => {
     if (status === "authenticated" && isAdmin(user?.role)) {
-      const requestedPath = new URLSearchParams(window.location.search).get("next");
+      const requestedPath = new URLSearchParams(window.location.search).get(
+        "next",
+      );
       const destination = requestedPath?.startsWith("/admin/")
         ? requestedPath
         : "/admin/categories";
@@ -58,20 +60,16 @@ export default function AdminLoginPage() {
         return;
       }
 
-      const requestedPath = new URLSearchParams(window.location.search).get("next");
+      const requestedPath = new URLSearchParams(window.location.search).get(
+        "next",
+      );
       router.replace(
         requestedPath?.startsWith("/admin/")
           ? requestedPath
           : "/admin/categories",
       );
     } catch (reason) {
-      if (reason instanceof AuthApiError && reason.status === 400) {
-        setError(reason.problem?.detail || "شماره موبایل واردشده معتبر نیست.");
-      } else if (reason instanceof AuthApiError && reason.status === 401) {
-        setError("شماره موبایل یا رمز عبور صحیح نیست.");
-      } else {
-        setError("ورود به پنل ممکن نشد. ارتباط با سرور را بررسی کنید.");
-      }
+      setError(getAuthErrorMessage(reason));
     } finally {
       setSubmitting(false);
     }
@@ -80,9 +78,9 @@ export default function AdminLoginPage() {
   return (
     <main className="relative grid min-h-screen overflow-hidden bg-[#f3f0e9] lg:grid-cols-[1.05fr_0.95fr]">
       <section className="relative hidden overflow-hidden bg-[#173f37] p-12 text-white lg:flex lg:flex-col lg:justify-between">
-        <div className="absolute -left-24 -top-24 size-80 rounded-full border border-white/10" />
-        <div className="absolute -left-10 -top-10 size-52 rounded-full border border-[#d7a66c]/30" />
-        <div className="absolute bottom-[-8rem] right-[-5rem] size-[28rem] rounded-full bg-[#d7a66c]/10 blur-2xl" />
+        <div className="absolute -top-24 -left-24 size-80 rounded-full border border-white/10" />
+        <div className="absolute -top-10 -left-10 size-52 rounded-full border border-[#d7a66c]/30" />
+        <div className="absolute right-[-5rem] bottom-[-8rem] size-[28rem] rounded-full bg-[#d7a66c]/10 blur-2xl" />
 
         <div className="relative flex items-center gap-3">
           <div className="grid size-12 place-items-center rounded-2xl bg-[#d7a66c] text-[#173f37]">
@@ -95,14 +93,17 @@ export default function AdminLoginPage() {
         </div>
 
         <div className="relative max-w-lg">
-          <p className="mb-5 text-sm font-medium text-[#d7a66c]">فضای اختصاصی مدیران</p>
-          <h1 className="text-4xl font-bold leading-[1.55] xl:text-5xl">
+          <p className="mb-5 text-sm font-medium text-[#d7a66c]">
+            فضای اختصاصی مدیران
+          </p>
+          <h1 className="text-4xl leading-[1.55] font-bold xl:text-5xl">
             مدیریت ساده،
             <br />
             تصمیم‌های دقیق‌تر.
           </h1>
           <p className="mt-6 max-w-md text-sm leading-8 text-white/55">
-            ساختار دسته‌بندی‌های فروشگاه را از یک محیط امن و یکپارچه مدیریت کنید.
+            ساختار دسته‌بندی‌های فروشگاه را از یک محیط امن و یکپارچه مدیریت
+            کنید.
           </p>
         </div>
 
@@ -125,7 +126,9 @@ export default function AdminLoginPage() {
                 <ShieldCheck className="size-7" />
               </div>
               <p className="text-xs font-semibold text-[#b17b42]">ورود امن</p>
-              <h2 className="mt-2 text-3xl font-bold text-[#173f37]">ورود به پنل مدیریت</h2>
+              <h2 className="mt-2 text-3xl font-bold text-[#173f37]">
+                ورود به پنل مدیریت
+              </h2>
               <p className="mt-3 text-sm leading-7 text-[#173f37]/55">
                 اطلاعات حساب مدیر را وارد کنید.
               </p>
@@ -133,9 +136,11 @@ export default function AdminLoginPage() {
 
             <form onSubmit={handleSubmit} className="space-y-5">
               <label className="block">
-                <span className="mb-2 block text-sm font-medium text-[#173f37]">شماره موبایل</span>
+                <span className="mb-2 block text-sm font-medium text-[#173f37]">
+                  شماره موبایل
+                </span>
                 <span className="relative block">
-                  <UserRound className="absolute right-4 top-1/2 size-5 -translate-y-1/2 text-[#173f37]/35" />
+                  <UserRound className="absolute top-1/2 right-4 size-5 -translate-y-1/2 text-[#173f37]/35" />
                   <input
                     type="text"
                     value={phoneNumber}
@@ -143,7 +148,7 @@ export default function AdminLoginPage() {
                     autoComplete="tel"
                     inputMode="tel"
                     dir="ltr"
-                    className="h-14 w-full rounded-2xl border border-[#173f37]/12 bg-[#f8f6f1] px-12 text-left outline-none transition focus:border-[#d7a66c] focus:ring-4 focus:ring-[#d7a66c]/10"
+                    className="h-14 w-full rounded-2xl border border-[#173f37]/12 bg-[#f8f6f1] px-12 text-left transition outline-none focus:border-[#d7a66c] focus:ring-4 focus:ring-[#d7a66c]/10"
                     placeholder="09120274606"
                     disabled={submitting}
                   />
@@ -151,16 +156,18 @@ export default function AdminLoginPage() {
               </label>
 
               <label className="block">
-                <span className="mb-2 block text-sm font-medium text-[#173f37]">رمز عبور</span>
+                <span className="mb-2 block text-sm font-medium text-[#173f37]">
+                  رمز عبور
+                </span>
                 <span className="relative block">
-                  <LockKeyhole className="absolute right-4 top-1/2 size-5 -translate-y-1/2 text-[#173f37]/35" />
+                  <LockKeyhole className="absolute top-1/2 right-4 size-5 -translate-y-1/2 text-[#173f37]/35" />
                   <input
                     type={showPassword ? "text" : "password"}
                     value={password}
                     onChange={(event) => setPassword(event.target.value)}
                     autoComplete="current-password"
                     dir="ltr"
-                    className="h-14 w-full rounded-2xl border border-[#173f37]/12 bg-[#f8f6f1] px-12 text-left outline-none transition focus:border-[#d7a66c] focus:ring-4 focus:ring-[#d7a66c]/10"
+                    className="h-14 w-full rounded-2xl border border-[#173f37]/12 bg-[#f8f6f1] px-12 text-left transition outline-none focus:border-[#d7a66c] focus:ring-4 focus:ring-[#d7a66c]/10"
                     placeholder="••••••••••"
                     disabled={submitting}
                   />
@@ -168,15 +175,22 @@ export default function AdminLoginPage() {
                     type="button"
                     onClick={() => setShowPassword((value) => !value)}
                     aria-label={showPassword ? "پنهان کردن رمز" : "نمایش رمز"}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 text-[#173f37]/35 transition hover:text-[#173f37]"
+                    className="absolute top-1/2 left-4 -translate-y-1/2 text-[#173f37]/35 transition hover:text-[#173f37]"
                   >
-                    {showPassword ? <EyeOff className="size-5" /> : <Eye className="size-5" />}
+                    {showPassword ? (
+                      <EyeOff className="size-5" />
+                    ) : (
+                      <Eye className="size-5" />
+                    )}
                   </button>
                 </span>
               </label>
 
               {error && (
-                <div role="alert" className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm leading-6 text-red-700">
+                <div
+                  role="alert"
+                  className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm leading-6 text-red-700"
+                >
                   {error}
                 </div>
               )}

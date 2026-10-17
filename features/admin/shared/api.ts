@@ -13,7 +13,10 @@ export class AdminApiError extends Error {
 async function parseResponse(response: Response) {
   if (response.status === 204) return undefined;
   const contentType = response.headers.get("content-type") ?? "";
-  if (contentType.includes("application/json") || contentType.includes("+json")) {
+  if (
+    contentType.includes("application/json") ||
+    contentType.includes("+json")
+  ) {
     return response.json();
   }
   return undefined;
@@ -35,6 +38,7 @@ export async function adminRequest<T>(
   retryAfterRefresh = true,
 ): Promise<T> {
   let response: Response;
+  const isFormData = init.body instanceof FormData;
 
   try {
     response = await fetch(`/api/admin/${path.replace(/^\//, "")}`, {
@@ -43,7 +47,9 @@ export async function adminRequest<T>(
       credentials: "same-origin",
       headers: {
         Accept: "application/json",
-        ...(init.body ? { "Content-Type": "application/json" } : {}),
+        ...(init.body && !isFormData
+          ? { "Content-Type": "application/json" }
+          : {}),
         ...init.headers,
       },
     });
@@ -61,7 +67,10 @@ export async function adminRequest<T>(
 
   const payload = await parseResponse(response);
   if (!response.ok) {
-    throw new AdminApiError(response.status, payload as ProblemDetails | undefined);
+    throw new AdminApiError(
+      response.status,
+      payload as ProblemDetails | undefined,
+    );
   }
 
   return payload as T;
@@ -78,7 +87,24 @@ export function getAdminApiErrorMessage(error: unknown, subject: string) {
   if (error.status === 403) return "این عملیات فقط برای مدیر سیستم مجاز است.";
   if (error.status === 404) return `${subject} موردنظر پیدا نشد.`;
   if (error.status === 409) {
-    return error.problem?.detail || `${subject} قابل حذف یا تغییر نیست.`;
+    return (
+      getPersianProblemMessage(error.problem) ||
+      `${subject} قابل حذف یا تغییر نیست.`
+    );
   }
-  return error.problem?.detail || "اطلاعات واردشده معتبر نیست.";
+  return (
+    getPersianProblemMessage(error.problem) ||
+    "اطلاعات واردشده معتبر نیست. لطفاً موارد واردشده را بررسی کنید."
+  );
+}
+
+function getPersianProblemMessage(problem?: ProblemDetails) {
+  const messages = [
+    ...(problem?.errors ? Object.values(problem.errors).flat() : []),
+    problem?.detail,
+  ];
+  return messages.find(
+    (message): message is string =>
+      typeof message === "string" && /[\u0600-\u06ff]/.test(message),
+  );
 }

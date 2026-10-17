@@ -3,6 +3,7 @@ import type {
   Cart,
   City,
   CreateOrderInput,
+  MyOrdersPage,
   Order,
   Province,
 } from "@/features/cart/model/types";
@@ -42,4 +43,13 @@ export const cartApi = {
     }),
 
   getOrder: (id: string) => apiRequest<Order>(`orders/${id}`),
+
+  getOrders: (page = 1, pageSize = 20) =>
+    apiRequest<MyOrdersPage>(`orders?page=${page}&pageSize=${pageSize}`),
+
+  processTestPayment: (id: string, succeeded: boolean) =>
+    apiRequest<Order>(`orders/${id}/payments/test`, {
+      method: "POST",
+      body: JSON.stringify({ succeeded }),
+    }),
 };

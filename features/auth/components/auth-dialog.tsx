@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import {
   ArrowRight,
   Check,
   LoaderCircle,
   LogOut,
+  ReceiptText,
   ShieldCheck,
   X,
 } from "lucide-react";
@@ -358,11 +360,19 @@ export function AuthDialog({ open, onClose }: AuthDialogProps) {
               {error && (
                 <p className="text-destructive mt-4 text-xs">{error}</p>
               )}
+              <Link
+                href="/orders"
+                onClick={onClose}
+                className="border-primary/20 text-primary hover:bg-primary/5 mt-7 flex h-12 w-full items-center justify-center gap-2 rounded-2xl border text-sm transition-colors"
+              >
+                <ReceiptText size={17} />
+                سفارش‌های من
+              </Link>
               <button
                 type="button"
                 onClick={handleLogout}
                 disabled={submitting}
-                className="border-destructive/25 text-destructive hover:bg-destructive/5 mt-7 flex h-12 w-full items-center justify-center gap-2 rounded-2xl border text-sm transition-colors disabled:opacity-50"
+                className="border-destructive/25 text-destructive hover:bg-destructive/5 mt-3 flex h-12 w-full items-center justify-center gap-2 rounded-2xl border text-sm transition-colors disabled:opacity-50"
               >
                 {submitting ? (
                   <LoaderCircle className="animate-spin" size={17} />

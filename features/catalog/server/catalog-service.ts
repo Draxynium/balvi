@@ -36,7 +36,7 @@ function flattenCategories(categories: CategoryNode[]): CategoryNode[] {
 async function readJson<T>(path: string): Promise<T> {
   const response = await backendFetch(path, {
     headers: { Accept: "application/json" },
-    next: { revalidate: 60 },
+    cache: "no-store",
   });
   if (!response.ok) throw new Error(`Shop API returned ${response.status}`);
   return response.json() as Promise<T>;
@@ -84,7 +84,7 @@ export async function getCatalogProduct(id: string) {
     `/api/products/${encodeURIComponent(id)}`,
     {
       headers: { Accept: "application/json" },
-      next: { revalidate: 60 },
+      cache: "no-store",
     },
   );
 

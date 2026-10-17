@@ -9,6 +9,7 @@ import {
   setSessionCookies,
 } from "@/features/auth/server/session-cookies";
 import { backendFetch } from "@/lib/api/server/backend";
+import { isSameOrigin } from "@/lib/api/server/same-origin";
 
 const MAX_REQUEST_BYTES = 16 * 1024;
 
@@ -37,25 +38,20 @@ function problem(status: number, title: string, detail: string) {
   );
 }
 
-function isSameOrigin(request: NextRequest) {
-  const origin = request.headers.get("origin");
-  return !origin || origin === request.nextUrl.origin;
-}
-
 async function readJsonBody(request: NextRequest) {
   const contentType = request.headers.get("content-type") ?? "";
   const contentLength = Number(request.headers.get("content-length") ?? 0);
 
   if (!contentType.toLowerCase().includes("application/json")) {
-    throw new Response("Unsupported Media Type", { status: 415 });
+    throw new Response("نوع محتوای درخواست پشتیبانی نمی‌شود.", { status: 415 });
   }
   if (contentLength > MAX_REQUEST_BYTES) {
-    throw new Response("Payload Too Large", { status: 413 });
+    throw new Response("حجم درخواست بیشتر از حد مجاز است.", { status: 413 });
   }
 
   const body = await request.text();
   if (new TextEncoder().encode(body).byteLength > MAX_REQUEST_BYTES) {
-    throw new Response("Payload Too Large", { status: 413 });
+    throw new Response("حجم درخواست بیشتر از حد مجاز است.", { status: 413 });
   }
 
   try {
@@ -64,7 +60,7 @@ async function readJsonBody(request: NextRequest) {
       throw new Error("Invalid JSON object");
     }
   } catch {
-    throw new Response("Invalid JSON", { status: 400 });
+    throw new Response("ساختار اطلاعات ارسالی معتبر نیست.", { status: 400 });
   }
 
   return body;
@@ -141,8 +137,8 @@ export async function handleAuthGet(
   if (path.join("/") !== "me") {
     return problem(
       404,
-      "Not Found",
-      "The requested authentication endpoint was not found.",
+      "مسیر پیدا نشد",
+      "مسیر درخواستی احراز هویت وجود ندارد.",
     );
   }
 
@@ -164,8 +160,8 @@ export async function handleAuthGet(
     if (!refreshed) {
       const response = problem(
         401,
-        "Unauthorized",
-        "No active session was found.",
+        "نیاز به ورود",
+        "نشست فعالی پیدا نشد. لطفاً دوباره وارد شوید.",
       );
       clearSessionCookies(response);
       return response;
@@ -178,8 +174,8 @@ export async function handleAuthGet(
   } catch {
     return problem(
       502,
-      "Bad Gateway",
-      "The authentication service is unavailable.",
+      "اختلال در ارتباط",
+      "در حال حاضر ارتباط با سرویس احراز هویت برقرار نیست.",
     );
   }
 }
@@ -189,7 +185,11 @@ export async function handleAuthPost(
   context: RouteContext,
 ) {
   if (!isSameOrigin(request)) {
-    return problem(403, "Forbidden", "Cross-origin requests are not allowed.");
+    return problem(
+      403,
+      "دسترسی غیرمجاز",
+      "ارسال درخواست از این مبدأ مجاز نیست.",
+    );
   }
 
   const { path } = await context.params;
@@ -201,8 +201,8 @@ export async function handleAuthPost(
   if (!isPublic && !isSession && !isOther) {
     return problem(
       404,
-      "Not Found",
-      "The requested authentication endpoint was not found.",
+      "مسیر پیدا نشد",
+      "مسیر درخواستی احراز هویت وجود ندارد.",
     );
   }
 
@@ -212,8 +212,8 @@ export async function handleAuthPost(
       if (!refreshed) {
         const response = problem(
           401,
-          "Unauthorized",
-          "The session could not be refreshed.",
+          "نیاز به ورود",
+          "نشست کاربری قابل تمدید نیست. لطفاً دوباره وارد شوید.",
         );
         clearSessionCookies(response);
         return response;
@@ -253,8 +253,8 @@ export async function handleAuthPost(
     if (error instanceof Response) return error;
     return problem(
       502,
-      "Bad Gateway",
-      "The authentication service is unavailable.",
+      "اختلال در ارتباط",
+      "در حال حاضر ارتباط با سرویس احراز هویت برقرار نیست.",
     );
   }
 }

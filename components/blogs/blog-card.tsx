@@ -1,10 +1,8 @@
-import Image from "next/image";
 import Link from "next/link";
-
-import { Blog } from "@/lib/blogs/types";
+import type { ArticleListItem } from "@/features/articles/model/types";
 
 type Props = {
-  blog: Blog;
+  blog: ArticleListItem;
 };
 
 function formatDate(iso: string): string {
@@ -22,36 +20,32 @@ function formatDate(iso: string): string {
 }
 
 export default function BlogCard({ blog }: Props) {
-  const dateLabel = formatDate(blog.date);
+  const dateLabel = formatDate(blog.publishedAtUtc);
 
   return (
-    <Link href={`/blogs/${blog.slug}`} className="group flex flex-col">
-      <div className="relative aspect-[4/3] overflow-hidden rounded-md bg-muted">
-        {blog.cover ? (
-          <Image
+    <Link href={`/blogs/${blog.id}`} className="group flex flex-col">
+      <div className="bg-muted relative aspect-[4/3] overflow-hidden rounded-md">
+        {blog.mainImage ? (
+          <img
             data-navbar-dark
-            src={blog.cover}
+            src={blog.mainImage.url}
             alt={blog.title}
-            fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            className="object-cover transition-transform duration-700 group-hover:scale-105"
+            className="size-full object-cover transition-transform duration-700 group-hover:scale-105"
           />
         ) : null}
       </div>
 
       <div className="flex flex-col gap-3 pt-5">
-        <span className="text-xs text-foreground/40">{blog.category}</span>
+        <span className="text-foreground/40 text-xs">{blog.author}</span>
 
         <h2 className="text-2xl leading-tight">{blog.title}</h2>
 
-        <p className="text-sm leading-7 text-foreground/50">
-          {blog.description}
-        </p>
+        <p className="text-foreground/50 text-sm leading-7">{blog.summary}</p>
 
         {dateLabel ? (
           <time
-            dateTime={blog.date}
-            className="text-sm text-foreground/40"
+            dateTime={blog.publishedAtUtc}
+            className="text-foreground/40 text-sm"
             dir="rtl"
           >
             {dateLabel}

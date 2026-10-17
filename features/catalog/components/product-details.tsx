@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Check, LoaderCircle, Minus, Plus, ShoppingBag } from "lucide-react";
 import ScrollReveal from "@/components/scroll-reveal";
 import ProductCard from "@/components/products/product-card";
@@ -9,9 +10,11 @@ import { cartApi } from "@/features/cart/api/cart-api";
 import { formatProductPrice } from "@/features/catalog/lib/format";
 import type { Product } from "@/features/catalog/model/types";
 import { useAuth } from "@/features/auth/hooks/use-auth";
-import { getApiErrorMessage } from "@/lib/api/client";
+import { ApiError, getApiErrorMessage } from "@/lib/api/client";
+import { useCart } from "@/features/cart/hooks/use-cart";
 
 export function ProductDetails({ product }: { product: Product }) {
+  const router = useRouter();
   const firstColor = product.colorOptions.find((color) => color.isAvailable);
   const firstSize = firstColor?.sizes.find((size) => size.isAvailable);
   const [colorId, setColorId] = useState(firstColor?.id ?? "");
@@ -20,7 +23,8 @@ export function ProductDetails({ product }: { product: Product }) {
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
-  const { status, openDialog } = useAuth();
+  const { status } = useAuth();
+  const { syncCart } = useCart();
 
   const selectedColor = product.colorOptions.find(
     (color) => color.id === colorId,
@@ -48,7 +52,9 @@ export function ProductDetails({ product }: { product: Product }) {
 
   const addToCart = async () => {
     if (status !== "authenticated") {
-      openDialog();
+      router.push(
+        `/login?next=${encodeURIComponent(`/products/${product.id}`)}`,
+      );
       return;
     }
     if (!selectedColor || !selectedSize?.isAvailable) {
@@ -60,14 +66,21 @@ export function ProductDetails({ product }: { product: Product }) {
     setError("");
     setMessage("");
     try {
-      await cartApi.addItem({
+      const cart = await cartApi.addItem({
         productId: product.id,
         colorId: selectedColor.id,
         sizeId: selectedSize.id,
         quantity,
       });
+      syncCart(cart);
       setMessage("محصول به سبد خرید اضافه شد.");
     } catch (reason) {
+      if (reason instanceof ApiError && reason.status === 401) {
+        router.push(
+          `/login?next=${encodeURIComponent(`/products/${product.id}`)}`,
+        );
+        return;
+      }
       setError(getApiErrorMessage(reason));
     } finally {
       setSubmitting(false);

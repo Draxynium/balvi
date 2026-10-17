@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { AuthProvider } from "@/features/auth/context/auth-context";
 import { AuthDialogHost } from "@/features/auth/components/auth-dialog-host";
 import { SiteShell } from "@/components/site-shell";
+import { CartProvider } from "@/features/cart/context/cart-context";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -27,8 +28,10 @@ export default function RootLayout({
     >
       <body className="flex min-h-full flex-col overflow-x-hidden">
         <AuthProvider>
-          <SiteShell>{children}</SiteShell>
-          <AuthDialogHost />
+          <CartProvider>
+            <SiteShell>{children}</SiteShell>
+            <AuthDialogHost />
+          </CartProvider>
         </AuthProvider>
       </body>
     </html>

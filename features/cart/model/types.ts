@@ -20,6 +20,8 @@ export type Cart = {
   items: CartItem[];
   totalQuantity: number;
   productsTotalInRials: number;
+  taxPercentage: number;
+  taxAmountInRials: number;
   shippingCostInRials: number;
   totalAmountInRials: number;
 };
@@ -34,6 +36,8 @@ export type CreateOrderInput = {
   cityId: string;
   address: string;
   postalCode: string;
+  deliveryDate: string;
+  deliveryTimeSlotId: string;
 };
 
 export type OrderItem = {
@@ -51,17 +55,60 @@ export type OrderItem = {
   mainImageUrl: string | null;
 };
 
-export type Order = CreateOrderInput & {
+export type Payment = {
+  id: string;
+  amountInRials: number;
+  status: "Succeeded" | "Failed";
+  provider: string;
+  referenceNumber: string | null;
+  failureReason: string | null;
+  createdAtUtc: string;
+};
+
+export type Order = Omit<
+  CreateOrderInput,
+  "deliveryDate" | "deliveryTimeSlotId"
+> & {
   id: string;
   orderNumber: string;
   userId: string;
   status: string;
+  deliveryDate: string | null;
+  deliveryTimeSlotId: string | null;
   provinceName: string;
   cityName: string;
   items: OrderItem[];
+  payments: Payment[];
   totalQuantity: number;
   productsTotalInRials: number;
+  taxPercentage: number;
+  taxAmountInRials: number;
   shippingCostInRials: number;
   totalAmountInRials: number;
+  deliveryWindowStart: string | null;
+  deliveryWindowEnd: string | null;
   createdAtUtc: string;
+};
+
+export type MyOrderListItem = {
+  id: string;
+  orderNumber: string;
+  status: string;
+  itemCount: number;
+  totalQuantity: number;
+  totalAmountInRials: number;
+  deliveryDate: string | null;
+  deliveryWindowStart: string | null;
+  deliveryWindowEnd: string | null;
+  createdAtUtc: string;
+};
+
+export type MyOrdersPage = {
+  items: MyOrderListItem[];
+  page: number;
+  pageSize: number;
+  totalCount: number;
+  totalPages: number;
+  hasPreviousPage: boolean;
+  hasNextPage: boolean;
 };

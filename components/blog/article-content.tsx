@@ -3,7 +3,6 @@
 import Image from "next/image";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import rehypeRaw from "rehype-raw";
 import rehypeSlug from "rehype-slug";
 
 type ArticleContentProps = {
@@ -15,7 +14,7 @@ export default function ArticleContent({ content }: ArticleContentProps) {
     <article dir="rtl" className="text-foreground w-full max-w-3xl min-w-0">
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
-        rehypePlugins={[rehypeRaw, rehypeSlug]}
+        rehypePlugins={[rehypeSlug]}
         components={{
           h1: ({ children, id }) => (
             <h1

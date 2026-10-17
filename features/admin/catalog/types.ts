@@ -9,4 +9,5 @@ export type CatalogInput = {
   hexCode?: string;
 };
 
-export type CatalogResource = "brands" | "colors";
+export type CatalogResource =
+  "brands" | "colors" | "sizes" | "materials" | "linings";

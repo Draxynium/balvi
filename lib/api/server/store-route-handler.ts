@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 import type { ProblemDetails } from "@/features/auth/model/types";
 import { ACCESS_TOKEN_COOKIE } from "@/features/auth/server/session-cookies";
 import { backendFetch } from "@/lib/api/server/backend";
+import { isSameOrigin } from "@/lib/api/server/same-origin";
 
 const UUID =
   "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}";
@@ -13,13 +14,20 @@ const PUBLIC_GET_ROUTES = [
   /^products$/,
   new RegExp(`^products/${UUID}$`),
   /^categories$/,
+  /^articles$/,
+  new RegExp(`^articles/${UUID}$`),
   /^locations\/provinces$/,
   new RegExp(`^locations/provinces/${UUID}/cities$`),
+  /^delivery-schedule\/available$/,
 ];
 
 const PROTECTED_ROUTES: Record<string, RegExp[]> = {
-  GET: [/^cart$/, new RegExp(`^orders/${UUID}$`)],
-  POST: [/^cart\/items$/, /^orders$/],
+  GET: [/^cart$/, /^orders$/, new RegExp(`^orders/${UUID}$`)],
+  POST: [
+    /^cart\/items$/,
+    /^orders$/,
+    new RegExp(`^orders/${UUID}/payments/test$`),
+  ],
   PUT: [new RegExp(`^cart/items/${UUID}$`)],
   DELETE: [new RegExp(`^cart/items/${UUID}$`)],
 };
@@ -37,24 +45,19 @@ function matches(path: string, patterns: RegExp[]) {
   return patterns.some((pattern) => pattern.test(path));
 }
 
-function isSameOrigin(request: NextRequest) {
-  const origin = request.headers.get("origin");
-  return !origin || origin === request.nextUrl.origin;
-}
-
 async function readBody(request: NextRequest) {
   const contentType = request.headers.get("content-type") ?? "";
   const contentLength = Number(request.headers.get("content-length") ?? 0);
   if (!contentType.toLowerCase().includes("application/json")) {
-    throw new Response("Unsupported Media Type", { status: 415 });
+    throw new Response("نوع محتوای درخواست پشتیبانی نمی‌شود.", { status: 415 });
   }
   if (contentLength > MAX_REQUEST_BYTES) {
-    throw new Response("Payload Too Large", { status: 413 });
+    throw new Response("حجم درخواست بیشتر از حد مجاز است.", { status: 413 });
   }
 
   const body = await request.text();
   if (new TextEncoder().encode(body).byteLength > MAX_REQUEST_BYTES) {
-    throw new Response("Payload Too Large", { status: 413 });
+    throw new Response("حجم درخواست بیشتر از حد مجاز است.", { status: 413 });
   }
   try {
     const parsed = JSON.parse(body) as unknown;
@@ -62,7 +65,7 @@ async function readBody(request: NextRequest) {
       throw new Error("JSON object required");
     }
   } catch {
-    throw new Response("Invalid JSON", { status: 400 });
+    throw new Response("ساختار اطلاعات ارسالی معتبر نیست.", { status: 400 });
   }
   return body;
 }
@@ -78,19 +81,23 @@ async function handle(
   const isProtected = matches(path, PROTECTED_ROUTES[method] ?? []);
 
   if (!isPublicGet && !isProtected) {
-    return problem(
-      404,
-      "Not Found",
-      "The requested store endpoint was not found.",
-    );
+    return problem(404, "مسیر پیدا نشد", "مسیر درخواستی فروشگاه وجود ندارد.");
   }
   if (method !== "GET" && !isSameOrigin(request)) {
-    return problem(403, "Forbidden", "Cross-origin requests are not allowed.");
+    return problem(
+      403,
+      "دسترسی غیرمجاز",
+      "ارسال درخواست از این مبدأ مجاز نیست.",
+    );
   }
 
   const accessToken = request.cookies.get(ACCESS_TOKEN_COOKIE)?.value;
   if (isProtected && !accessToken) {
-    return problem(401, "Unauthorized", "Authentication is required.");
+    return problem(
+      401,
+      "نیاز به ورود",
+      "برای ادامه باید وارد حساب کاربری شوید.",
+    );
   }
 
   try {
@@ -119,7 +126,11 @@ async function handle(
     });
   } catch (error) {
     if (error instanceof Response) return error;
-    return problem(502, "Bad Gateway", "The store service is unavailable.");
+    return problem(
+      502,
+      "اختلال در ارتباط",
+      "در حال حاضر ارتباط با سرویس فروشگاه برقرار نیست.",
+    );
   }
 }
 
