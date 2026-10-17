@@ -318,6 +318,7 @@ export default function ProductCategories() {
                 >
                   <div className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl bg-foreground/[0.06]">
                     <img
+                      data-navbar-dark
                       src={category.image}
                       alt={category.title}
                       draggable={false}
