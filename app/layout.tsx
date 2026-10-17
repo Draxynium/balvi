@@ -1,13 +1,10 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import NavigationBar from "@/components/navigation-bar";
 import { Geist } from "next/font/google";
 import { cn } from "@/lib/utils";
-import Footer from "@/components/footer";
-import SmoothScroll from "@/components/smooth-scroll";
-import PageTransition from "@/components/page-transition";
 import { AuthProvider } from "@/features/auth/context/auth-context";
 import { AuthDialogHost } from "@/features/auth/components/auth-dialog-host";
+import { SiteShell } from "@/components/site-shell";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -30,12 +27,7 @@ export default function RootLayout({
     >
       <body className="flex min-h-full flex-col overflow-x-hidden">
         <AuthProvider>
-          <PageTransition>
-            <NavigationBar />
-            {children}
-            <Footer />
-            <SmoothScroll />
-          </PageTransition>
+          <SiteShell>{children}</SiteShell>
           <AuthDialogHost />
         </AuthProvider>
       </body>
