@@ -36,8 +36,8 @@ export default async function BlogPage({ params }: PageProps<"/blogs/[id]">) {
       </header>
 
       {article.mainImage && (
-        <div className="flex w-full max-w-4xl justify-center px-6">
-          <div className="bg-foreground/5 relative aspect-[16/7] w-full overflow-hidden rounded-2xl">
+        <div className="flex w-full max-w-3xl justify-center px-6">
+          <div className="bg-foreground/5 relative h-56 w-full overflow-hidden rounded-2xl sm:h-64 md:h-72 lg:h-80">
             <img
               src={article.mainImage.url}
               alt={article.title}

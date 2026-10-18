@@ -72,6 +72,7 @@ export default function TestPaymentPage() {
   const payable =
     order?.status === "PendingPayment" || order?.status === "PaymentFailed";
   const latestPayment = order?.payments[0];
+  const paymentSucceeded = latestPayment?.status === "Succeeded";
 
   return (
     <main
@@ -82,6 +83,46 @@ export default function TestPaymentPage() {
         {!order && !error ? (
           <div className="text-muted-foreground grid min-h-64 place-items-center">
             <LoaderCircle className="animate-spin" size={30} />
+          </div>
+        ) : paymentSucceeded && order ? (
+          <div className="flex min-h-96 flex-col items-center justify-center text-center">
+            <div className="bg-emerald-100 text-emerald-700 grid size-16 place-items-center rounded-full">
+              <CheckCircle2 size={34} />
+            </div>
+            <h1 className="mt-6 text-3xl font-medium">
+              خرید شما با موفقیت انجام شد
+            </h1>
+            <p className="text-muted-foreground mt-3">
+              شماره سفارش:{" "}
+              <span className="text-foreground font-medium">
+                {order.orderNumber}
+              </span>
+            </p>
+            <p className="text-muted-foreground mt-2 text-sm">
+              مبلغ پرداخت‌شده {formatRialsAsTomans(order.totalAmountInRials)}
+            </p>
+            {latestPayment.referenceNumber && (
+              <p className="text-muted-foreground mt-3 text-xs">
+                شماره پیگیری:{" "}
+                <span className="text-foreground font-mono" dir="ltr">
+                  {latestPayment.referenceNumber}
+                </span>
+              </p>
+            )}
+            <div className="mt-8 flex flex-wrap justify-center gap-3">
+              <Link
+                href={`/orders/${order.id}`}
+                className="bg-foreground text-background rounded-xl px-6 py-3 text-sm"
+              >
+                مشاهده جزئیات سفارش
+              </Link>
+              <Link
+                href="/products"
+                className="border-foreground/15 rounded-xl border px-6 py-3 text-sm"
+              >
+                بازگشت به فروشگاه
+              </Link>
+            </div>
           </div>
         ) : (
           <>

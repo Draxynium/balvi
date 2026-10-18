@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation";
+import { DashboardManager } from "@/features/admin/dashboard/dashboard-manager";
 
 export default function AdminPage() {
-  redirect("/admin/categories");
+  return <DashboardManager />;
 }

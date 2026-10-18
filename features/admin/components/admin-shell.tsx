@@ -30,6 +30,12 @@ import { cn } from "@/lib/utils";
 
 const navigation = [
   {
+    href: "/admin",
+    label: "داشبورد",
+    description: "نمای کلی عملکرد فروشگاه",
+    icon: LayoutDashboard,
+  },
+  {
     href: "/admin/articles",
     label: "مقالات",
     description: "محتوا، تصاویر و انتشار",

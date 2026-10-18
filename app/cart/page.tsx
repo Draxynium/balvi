@@ -7,9 +7,9 @@ import {
   CalendarDays,
   Check,
   Clock3,
+  CreditCard,
   LoaderCircle,
   Minus,
-  PackageCheck,
   Plus,
   ShoppingBag,
   Trash2,
@@ -22,7 +22,7 @@ import {
   formatRialsAsTomans,
   resolveCartImage,
 } from "@/features/cart/lib/format";
-import type { Cart, City, Order, Province } from "@/features/cart/model/types";
+import type { Cart, City, Province } from "@/features/cart/model/types";
 import {
   isIranianMobile,
   normalizeIranianMobile,
@@ -38,7 +38,7 @@ import {
 } from "@/features/delivery/lib/persian-calendar";
 import type { AvailableDeliverySchedule } from "@/features/delivery/model/types";
 
-type CheckoutStep = 1 | 2 | 3;
+type CheckoutStep = 1 | 2;
 
 const initialForm = {
   fullName: "",
@@ -63,7 +63,6 @@ export default function CartPage() {
   const [deliverySchedule, setDeliverySchedule] =
     useState<AvailableDeliverySchedule | null>(null);
   const [form, setForm] = useState(initialForm);
-  const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [pendingItemId, setPendingItemId] = useState<string | null>(null);
@@ -262,26 +261,10 @@ export default function CartPage() {
         address: form.address.trim(),
         postalCode,
       });
-      setOrder(createdOrder);
-      setCart((current) =>
-        current
-          ? {
-              ...current,
-              items: [],
-              totalQuantity: 0,
-              productsTotalInRials: 0,
-              taxAmountInRials: 0,
-              shippingCostInRials: 0,
-              totalAmountInRials: 0,
-            }
-          : current,
-      );
       syncCart(null);
-      setStep(3);
-      router.push(`/orders/${createdOrder.id}/payment`);
+      router.replace(`/orders/${createdOrder.id}/payment`);
     } catch (reason) {
       handleProtectedError(reason, "/cart?checkout=1");
-    } finally {
       setSubmitting(false);
     }
   };
@@ -300,22 +283,22 @@ export default function CartPage() {
             completed={step > 1}
             icon={<ShoppingBag size={30} strokeWidth={1.5} />}
             title="سبد خرید"
-            onClick={() => step < 3 && setStep(1)}
+            onClick={() => setStep(1)}
           />
           <StepLine completed={step > 1} />
           <CheckoutStepItem
             active={step === 2}
-            completed={step > 2}
+            completed={false}
             icon={<Truck size={30} strokeWidth={1.5} />}
             title="اطلاعات ارسال"
             onClick={() => step === 2 && setStep(2)}
           />
-          <StepLine completed={step > 2} />
+          <StepLine completed={false} />
           <CheckoutStepItem
-            active={step === 3}
+            active={false}
             completed={false}
-            icon={<PackageCheck size={30} strokeWidth={1.5} />}
-            title="ثبت سفارش"
+            icon={<CreditCard size={30} strokeWidth={1.5} />}
+            title="پرداخت"
             onClick={() => undefined}
           />
         </div>
@@ -634,34 +617,6 @@ export default function CartPage() {
               </div>
             )}
 
-            {step === 3 && order && (
-              <div className="border-foreground/10 mx-auto flex min-h-96 max-w-2xl flex-col items-center justify-center rounded-3xl border p-8 text-center">
-                <div className="bg-primary/10 text-primary flex h-16 w-16 items-center justify-center rounded-full">
-                  <Check size={32} />
-                </div>
-                <h1 className="mt-6 text-3xl font-medium">
-                  خرید شما با موفقیت ثبت شد
-                </h1>
-                <p className="text-muted-foreground mt-3">
-                  شماره سفارش:{" "}
-                  <span className="text-foreground font-medium">
-                    {order.orderNumber}
-                  </span>
-                </p>
-                <p className="text-muted-foreground mt-2 text-sm">
-                  مبلغ نهایی {formatRialsAsTomans(order.totalAmountInRials)}
-                </p>
-                <p className="text-muted-foreground mt-2 text-xs leading-6">
-                  موجودی کالاهای خریداری‌شده از فروشگاه کسر شد.
-                </p>
-                <Link
-                  href="/products"
-                  className="bg-foreground text-background mt-8 rounded-xl px-8 py-3"
-                >
-                  بازگشت به فروشگاه
-                </Link>
-              </div>
-            )}
           </>
         )}
       </section>

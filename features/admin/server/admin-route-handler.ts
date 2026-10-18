@@ -14,6 +14,7 @@ const MAX_UPLOAD_BYTES = 100 * 1024 * 1024;
 
 const ALLOWED_PATHS: Record<string, RegExp[]> = {
   GET: [
+    /^dashboard$/,
     /^categories$/,
     new RegExp(`^categories/${UUID}$`),
     /^brands$/,
