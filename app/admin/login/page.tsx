@@ -97,9 +97,7 @@ export default function AdminLoginPage() {
             فضای اختصاصی مدیران
           </p>
           <h1 className="text-4xl leading-[1.55] font-bold xl:text-5xl">
-            مدیریت ساده،
-            <br />
-            تصمیم‌های دقیق‌تر.
+            مدیریت سایت
           </h1>
           <p className="mt-6 max-w-md text-sm leading-8 text-white/55">
             ساختار دسته‌بندی‌های فروشگاه را از یک محیط امن و یکپارچه مدیریت
