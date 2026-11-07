@@ -129,12 +129,29 @@ export default function Footer() {
           </div>
 
           {/* ---------- MASCOT ---------- */}
-          <div className="flex shrink-0 items-center justify-center">
+          <div className="flex shrink-0 flex-col items-center justify-center gap-5">
             <img
               src="/mascot.svg"
               alt="Mascot"
               className="h-28 w-auto sm:h-36 md:h-56 lg:h-64"
             />
+
+            <a
+              referrerPolicy="origin"
+              target="_blank"
+              rel="noopener noreferrer"
+              href="https://trustseal.enamad.ir/?id=8481757&Code=VO8kjeqNgpfEJcuH508gNj1O3xu5QoOL"
+              aria-label="مشاهده نماد اعتماد الکترونیکی فروشگاه بالوی"
+              className="flex h-28 w-28 items-center justify-center rounded-xl bg-white p-2 shadow-sm transition-transform hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary sm:h-32 sm:w-32"
+            >
+              <img
+                referrerPolicy="origin"
+                src="https://trustseal.enamad.ir/logo.aspx?id=8481757&Code=VO8kjeqNgpfEJcuH508gNj1O3xu5QoOL"
+                alt="نماد اعتماد الکترونیکی فروشگاه بالوی"
+                className="h-full w-full cursor-pointer object-contain"
+                {...{ code: "VO8kjeqNgpfEJcuH508gNj1O3xu5QoOL" }}
+              />
+            </a>
           </div>
         </div>
       </motion.div>
