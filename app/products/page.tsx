@@ -72,15 +72,18 @@ export default async function ProductsPage({
   ];
 
   return (
-    <main dir="rtl" className="flex w-full flex-col items-center">
+    <main
+      dir="rtl"
+      className="flex w-full min-w-0 flex-col items-center overflow-x-clip"
+    >
       <ProductsCategoryNav />
 
       <div className="w-full pt-24" />
 
-      <section className="flex w-full flex-col items-center">
-        <div className="flex w-[95%] items-center justify-between gap-4 py-6">
-          <div className="text-foreground/50 flex items-center gap-6 text-xs">
-            <div className="flex items-center gap-2">
+      <section className="flex w-full min-w-0 flex-col items-center">
+        <div className="flex w-full min-w-0 flex-col gap-3 px-4 py-5 sm:px-6 md:flex-row md:items-center md:justify-between md:gap-4 md:py-6">
+          <div className="text-foreground/50 flex min-w-0 flex-wrap items-center gap-x-4 gap-y-3 text-xs sm:gap-x-6">
+            <div className="flex shrink-0 items-center gap-2">
               {genderOptions.map((opt) => {
                 const isActive = (gender ?? undefined) === opt.value;
 
@@ -105,7 +108,7 @@ export default async function ProductsPage({
               })}
             </div>
 
-            <span className="bg-foreground/15 h-4 w-px" />
+            <span className="bg-foreground/15 hidden h-4 w-px sm:block" />
 
             {[
               { value: undefined, label: "جدیدترین" },
@@ -122,8 +125,8 @@ export default async function ProductsPage({
                 })}
                 className={
                   (sort ?? undefined) === option.value
-                    ? "text-foreground"
-                    : "hover:text-foreground transition-colors"
+                    ? "text-foreground shrink-0"
+                    : "hover:text-foreground shrink-0 transition-colors"
                 }
               >
                 {option.label}
@@ -131,7 +134,7 @@ export default async function ProductsPage({
             ))}
           </div>
 
-          <span className="text-foreground/45 text-xs">
+          <span className="text-foreground/45 shrink-0 self-end text-xs md:self-auto">
             {products.totalCount.toLocaleString("fa-IR")} محصول
           </span>
         </div>

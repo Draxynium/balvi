@@ -38,6 +38,7 @@ export default function ProductsCategoryNav() {
 
     const createObserver = () => {
       const navbarHeight = 128;
+      const bottomMargin = Math.max(0, window.innerHeight - navbarHeight);
 
       const observer = new IntersectionObserver(
         (entries) => {
@@ -48,7 +49,7 @@ export default function ProductsCategoryNav() {
           setDarkBackground(activeDarkSection);
         },
         {
-          rootMargin: `0px 0px -${window.innerHeight - navbarHeight}px 0px`,
+          rootMargin: `0px 0px -${bottomMargin}px 0px`,
           threshold: 0,
         },
       );
@@ -98,7 +99,7 @@ export default function ProductsCategoryNav() {
       className="fixed top-0 left-1/2 z-198 flex w-full -translate-x-1/2 items-center justify-center transition-all duration-500"
     >
       <div
-        className={`flex w-full items-center justify-center overflow-hidden border px-4 py-1 pt-14 backdrop-blur-2xl transition-all duration-500 ease-out ${
+        className={`flex w-full min-w-0 items-center justify-center overflow-hidden border px-4 py-1 pt-14 backdrop-blur-2xl transition-all duration-500 ease-out ${
           darkBackground
             ? "divide-primary/20 border-primary/20 bg-secondary/50"
             : "divide-border/40 border-border/20 bg-background/20"
@@ -110,7 +111,7 @@ export default function ProductsCategoryNav() {
               : "border-border/0!"
         }`}
       >
-        <div className="scrollbar-hide flex h-10 max-w-full items-center justify-start gap-8 overflow-x-auto sm:h-12 md:h-14">
+        <div className="scrollbar-hide flex h-10 w-full min-w-0 items-center justify-start gap-5 overflow-x-auto sm:h-12 sm:gap-8 md:h-14">
           {categories.map((category) => {
             const params = new URLSearchParams();
 

@@ -140,6 +140,7 @@ export default function NavigationBar() {
 
     const createObserver = () => {
       const navbarHeight = 64;
+      const bottomMargin = Math.max(0, window.innerHeight - navbarHeight);
 
       const observer = new IntersectionObserver(
         (entries) => {
@@ -150,7 +151,7 @@ export default function NavigationBar() {
           setDarkBackground(activeDarkSection);
         },
         {
-          rootMargin: `0px 0px -${window.innerHeight - navbarHeight}px 0px`,
+          rootMargin: `0px 0px -${bottomMargin}px 0px`,
           threshold: 0,
         },
       );
@@ -381,8 +382,9 @@ export default function NavigationBar() {
 
       {/* ------------------------------- burger ------------------------------- */}
       <button
+        type="button"
         className={cn(
-          "fixed top-2 right-2 z-203 aspect-square h-12 gap-1 rounded-md border p-4 backdrop-blur-2xl transition-all duration-300 max-md:scale-80",
+          "fixed top-2 right-2 z-203 aspect-square h-12 gap-1 rounded-md border p-4 backdrop-blur-2xl transition-all duration-300",
           darkBackground
             ? "border-primary/20 bg-secondary/50"
             : "border-border/20 bg-background/20",
@@ -411,9 +413,9 @@ export default function NavigationBar() {
       </button>
 
       {/* ------------------------------ navbar -------------------------------- */}
-      <nav className="fixed z-199 flex h-16 w-full items-center justify-center px-4 py-2">
+      <nav className="fixed z-199 flex h-16 w-full items-center justify-center py-2 pr-16 pl-2 md:px-4">
         <div
-          className={`main-navbar flex h-full max-w-full items-center justify-center divide-x rounded-md border px-4 py-2 backdrop-blur-2xl transition-all duration-500 ease-out max-md:scale-80 md:w-md lg:w-3xl ${
+          className={`main-navbar flex h-full w-full max-w-sm min-w-0 items-center justify-center divide-x rounded-md border px-2 py-2 backdrop-blur-2xl transition-all duration-500 ease-out md:w-md md:max-w-full md:px-4 lg:w-3xl ${
             darkBackground
               ? "divide-primary/20 border-primary/20 bg-secondary/50"
               : "divide-border/40 border-border/20 bg-background/20"
@@ -427,7 +429,7 @@ export default function NavigationBar() {
         >
           <button
             onClick={() => setSearchOpen(true)}
-            className={`flex h-full w-12 items-center justify-center gap-2 text-sm font-medium transition-colors lg:w-28 ${textColor} ${hoverColor}`}
+            className={`flex h-full min-w-0 flex-1 items-center justify-center gap-2 text-sm font-medium transition-colors md:w-12 md:flex-none lg:w-28 ${textColor} ${hoverColor}`}
           >
             <Search size={18} />
             <p className="hidden lg:block">جستجو</p>
@@ -435,7 +437,7 @@ export default function NavigationBar() {
 
           <Link
             href="/products"
-            className={`flex h-full w-12 items-center justify-center gap-2 text-sm font-medium transition-colors lg:w-28 ${textColor} ${hoverColor}`}
+            className={`flex h-full min-w-0 flex-1 items-center justify-center gap-2 text-sm font-medium transition-colors md:w-12 md:flex-none lg:w-28 ${textColor} ${hoverColor}`}
           >
             <ShoppingBag size={18} />
             <p className="hidden lg:block">محصولات</p>
@@ -443,7 +445,7 @@ export default function NavigationBar() {
 
           <Link
             href="/about"
-            className={`flex h-full w-12 items-center justify-center gap-2 text-sm font-medium transition-colors lg:w-28 ${textColor} ${hoverColor}`}
+            className={`hidden h-full w-12 items-center justify-center gap-2 text-sm font-medium transition-colors md:flex lg:w-28 ${textColor} ${hoverColor}`}
           >
             <Info size={18} />
             <p className="hidden lg:block">درباره ما</p>
@@ -451,9 +453,9 @@ export default function NavigationBar() {
 
           <Link
             href="/"
-            className={`flex h-full w-12 flex-1 items-center justify-center gap-2 text-sm font-medium transition-colors lg:w-28 ${textColor} ${hoverColor} `}
+            className={`flex h-full min-w-0 flex-[1.35] items-center justify-center gap-2 text-sm font-medium transition-colors md:w-12 md:flex-1 lg:w-28 ${textColor} ${hoverColor} `}
           >
-            <div className="relative h-8 w-32 overflow-hidden">
+            <div className="relative h-8 w-20 overflow-hidden sm:w-24 md:w-32">
               <img
                 src="/logo.svg"
                 alt=""
@@ -475,7 +477,7 @@ export default function NavigationBar() {
 
           <Link
             href="/contact"
-            className={`flex h-full w-12 items-center justify-center gap-2 text-sm font-medium transition-colors lg:w-28 ${textColor} ${hoverColor}`}
+            className={`hidden h-full w-12 items-center justify-center gap-2 text-sm font-medium transition-colors md:flex lg:w-28 ${textColor} ${hoverColor}`}
           >
             <Phone size={18} />
             <p className="hidden lg:block">تماس با ما</p>
@@ -484,7 +486,7 @@ export default function NavigationBar() {
           <button
             type="button"
             onClick={openDialog}
-            className={`flex h-full w-12 items-center justify-center gap-2 text-sm font-medium transition-colors lg:w-28 ${textColor} ${hoverColor}`}
+            className={`flex h-full min-w-0 flex-1 items-center justify-center gap-2 text-sm font-medium transition-colors md:w-12 md:flex-none lg:w-28 ${textColor} ${hoverColor}`}
           >
             <User size={18} />
             <p className="hidden lg:block">
@@ -498,7 +500,7 @@ export default function NavigationBar() {
 
           <Link
             href="/cart"
-            className={`relative flex h-full w-12 items-center justify-center gap-2 text-sm font-medium transition-colors lg:w-28 ${textColor} ${hoverColor}`}
+            className={`relative flex h-full min-w-0 flex-1 items-center justify-center gap-2 text-sm font-medium transition-colors md:w-12 md:flex-none lg:w-28 ${textColor} ${hoverColor}`}
           >
             <ShoppingCart size={18} />
             <p className="hidden lg:block">سبد خرید</p>

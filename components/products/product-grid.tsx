@@ -21,8 +21,8 @@ export default function ProductGrid({ products }: ProductGridProps) {
   const hasMore = visibleCount < products.length;
 
   return (
-    <div className="hp flex w-full flex-col">
-      <div className="grid w-full grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4">
+    <div className="hp flex w-full min-w-0 flex-col">
+      <div className="grid w-full min-w-0 grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 xl:grid-cols-4">
         {visibleProducts.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
