@@ -11,7 +11,10 @@ function normalizeOrigin(value: string) {
 }
 
 function configuredOrigins() {
-  return (process.env.APP_ORIGIN ?? "https://195.254.165.41:8843")
+  return (
+    process.env.APP_ORIGIN ??
+    "https://balviofficial.com,https://balviofficial.ir"
+  )
     .split(",")
     .map((value) => normalizeOrigin(value.trim()))
     .filter((value): value is string => value !== null);

@@ -1,5 +1,5 @@
 export const PUBLIC_SHOP_API_URL = (
-  process.env.NEXT_PUBLIC_SHOP_API_URL ?? "https://195.254.165.41"
+  process.env.NEXT_PUBLIC_SHOP_API_URL ?? "https://api.balviofficial.com"
 ).replace(/\/$/, "");
 
 export function resolveApiAssetUrl(path: string | null | undefined) {

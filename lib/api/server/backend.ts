@@ -1,7 +1,7 @@
 import "server-only";
 
 const SHOP_API_URL = (
-  process.env.SHOP_API_URL ?? "https://195.254.165.41"
+  process.env.SHOP_API_URL ?? "https://api.balviofficial.com"
 ).replace(/\/$/, "");
 const DEFAULT_TIMEOUT_MS = 15_000;
 
